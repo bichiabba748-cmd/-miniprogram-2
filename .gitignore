@@ -1,0 +1,4 @@
+# 忽略文件
+backup/
+node_modules/
+.git/
