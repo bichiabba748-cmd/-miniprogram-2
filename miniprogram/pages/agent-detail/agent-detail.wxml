@@ -1,0 +1,52 @@
+<view class="container">
+  <view class="hero-banner">
+    <view class="hero-content">
+      <text class="hero-tag">STARK PLAN · 官方战报</text>
+      <text class="hero-title">链家直播大区\n实战获客突破 100,000 组</text>
+      <view class="hero-line"></view>
+    </view>
+  </view>
+
+  <view class="news-ticker">
+    <view class="ticker-icon icon-lightning"></view>
+    <swiper vertical="true" autoplay="true" circular="true" interval="3000" class="ticker-swiper">
+      <swiper-item><text class="ticker-text">天津战区河西店昨日通过脚本获客 +12组</text></swiper-item>
+      <swiper-item><text class="ticker-text">和平大悦城店王金牌单条视频播放破 5w</text></swiper-item>
+    </swiper>
+  </view>
+
+  <view class="section-title">
+    <view class="section-icon icon-fire"></view>
+    <text>全球实战案例精选</text>
+    <view class="title-line"></view>
+  </view>
+
+  <view class="agent-list">
+    <block wx:for="{{agentCases}}" wx:key="id">
+      <view class="agent-card" bindtap="goToDetail" data-id="{{item.id}}">
+        <view class="card-cover" style="background-image: url({{item.cover}})">
+          <view class="case-tag">{{item.tag}}</view>
+        </view>
+        <view class="card-info">
+          <text class="case-title">{{item.title}}</text>
+          <view class="case-metrics">
+            <view class="m-item"><text class="m-val">{{item.conversion}}</text><text class="m-lab">转化率</text></view>
+            <view class="m-item"><text class="m-val">{{item.leads}}</text><text class="m-lab">实战获客</text></view>
+            <view class="m-item"><text class="m-val">{{item.learnCount}}</text><text class="m-lab">学习人数</text></view>
+          </view>
+          <view class="case-footer">
+            <text class="author">贡献: {{item.author}}</text>
+            <view class="btn-check">查看逻辑拆解 ></view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="fixed-footer">
+    <button class="join-action-btn" bindtap="goToJoin">
+      <view class="btn-icon icon-rocket"></view>
+      我也要加入星火计划
+    </button>
+  </view>
+</view>

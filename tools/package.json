@@ -1,0 +1,21 @@
+{
+  "name": "spark-plan-tools",
+  "version": "1.0.0",
+  "description": "星火计划小程序开发工具集",
+  "main": "index.js",
+  "scripts": {
+    "check-consistency": "node code-db-consistency.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wechat",
+    "miniprogram",
+    "tools"
+  ],
+  "author": "Trae AI Assistant",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}

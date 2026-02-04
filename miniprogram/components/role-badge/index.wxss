@@ -1,0 +1,43 @@
+.role-badge {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.role-badge.admin {
+  background-color: #D4B083;
+  color: #0a0a0a;
+}
+
+.role-badge.broker {
+  background-color: #2a2a2a;
+  color: #D4B083;
+  border: 1rpx solid #D4B083;
+}
+
+.role-badge.anchor {
+  background-color: #3a3a3a;
+  color: #D4B083;
+  border: 1rpx solid #D4B083;
+}
+
+.role-badge.student {
+  background-color: #4a4a4a;
+  color: #D4B083;
+  border: 1rpx solid #D4B083;
+}
+
+.role-badge.tenant {
+  background-color: #2a2a2a;
+  color: #D4B083;
+  border: 1rpx solid #D4B083;
+}
+
+.role-badge.visitor {
+  background-color: #5a5a5a;
+  color: #999;
+  border: 1rpx solid #999;
+}

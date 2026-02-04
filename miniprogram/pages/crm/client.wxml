@@ -1,0 +1,94 @@
+<view class="container">
+  <view class="header-stat">
+    <view class="stat-box">
+      <text class="stat-num">12</text>
+      <text class="stat-label">本月新增</text>
+    </view>
+    <view class="stat-line"></view>
+    <view class="stat-box">
+      <text class="stat-num gold">3</text>
+      <text class="stat-label">重点跟进</text>
+    </view>
+    <view class="stat-line"></view>
+    <view class="stat-box">
+      <text class="stat-num">1</text>
+      <text class="stat-label">本月成交</text>
+    </view>
+  </view>
+
+  <view class="filter-section">
+    <view class="search-box">
+      <icon type="search" size="14" color="#666"></icon>
+      <input class="search-input" 
+             placeholder="搜索客户姓名/手机号..." 
+             placeholder-class="ph" 
+             bindinput="onSearchInput"
+             value="{{searchText}}" />
+      <view class="clear-btn" wx:if="{{searchText}}" bindtap="onClearSearch">✕</view>
+    </view>
+    
+    <view class="tab-row">
+      <view class="tab-item {{currentTab === 'all' ? 'active' : ''}}" bindtap="onTabChange" data-tab="all">全部</view>
+      <view class="tab-item {{currentTab === 'follow' ? 'active' : ''}}" bindtap="onTabChange" data-tab="follow">跟进中</view>
+      <view class="tab-item {{currentTab === 'deal' ? 'active' : ''}}" bindtap="onTabChange" data-tab="deal">已成交</view>
+    </view>
+  </view>
+
+  <view class="client-list">
+    <block wx:for="{{clientList}}" wx:key="id">
+      <view class="client-card" bindtap="goDetail" data-id="{{item.id}}">
+        
+        <view class="card-left">
+          <view class="info-row-1">
+            <text class="c-name">{{item.name}}</text>
+            <view class="c-tag {{item.status === 'deal' ? 'deal' : ''}}">
+              {{item.status === 'deal' ? '已成交' : '跟进中'}}
+            </view>
+          </view>
+          
+          <view class="info-row-2">
+            <text class="c-source">{{item.source}}</text>
+            <text class="c-date">{{item.date}}</text>
+          </view>
+
+          <view class="info-row-spec">
+            <block wx:if="{{isBroker}}">
+              <view class="spec-tag">来自: {{item.anchorName}}</view>
+              <view class="spec-tag warn" wx:if="{{item.status !== 'deal'}}">
+                <view class="spec-icon icon-warning"></view>
+                剩{{item.daysLeft}}天流转
+              </view>
+            </block>
+            <block wx:if="{{isAnchor}}">
+               <view class="spec-tag">跟进: {{item.brokerName}}</view>
+               <view class="spec-tag info">
+                 <view class="spec-icon icon-rotate"></view>
+                 第{{item.rotationCount}}轮
+               </view>
+            </block>
+          </view>
+
+          <view class="info-row-3">
+            <block wx:for="{{[1,2,3,4,5]}}" wx:for-item="star" wx:key="*this">
+              <view class="star-mini {{star <= item.level ? 'active' : ''}} icon-star-full"></view>
+            </block>
+          </view>
+        </view>
+
+        <view class="card-right" catchtap="onCall" data-phone="{{item.phone}}">
+          <view class="call-btn icon-phone"></view>
+        </view>
+
+      </view>
+    </block>
+
+    <view class="empty-tip" wx:if="{{clientList.length === 0}}">
+      <text wx:if="{{searchText}}">没有找到匹配的客户</text>
+      <text wx:else>暂无客源，快去录入吧</text>
+    </view>
+  </view>
+
+  <view class="fab-add" bindtap="goToClue">
+    <text class="plus">+</text>
+  </view>
+</view>

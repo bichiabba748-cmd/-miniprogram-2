@@ -1,0 +1,276 @@
+page {
+  background: #0a0a0a;
+  color: #fff;
+  font-family: 'DIN', 'PingFang SC', sans-serif;
+}
+
+.container {
+  padding: 30rpx;
+  padding-bottom: 180rpx;
+}
+
+/* A. 核心档案卡 - 黑金磨砂玻璃质感 */
+.profile-card {
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(13, 13, 13, 0.98) 100%);
+  border-radius: 24rpx;
+  padding: 40rpx 30rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid rgba(212, 176, 131, 0.2);
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20rpx);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 30rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 3rpx solid #D4B083;
+  background: #1a1a1a;
+}
+
+.user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.meta {
+  display: flex;
+  gap: 20rpx;
+}
+
+.uid,
+.join-days {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.badge {
+  padding: 8rpx 16rpx;
+  background: linear-gradient(135deg, #D4B083 0%, #B8942F 100%);
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 4rpx 12rpx rgba(212, 176, 131, 0.3);
+}
+
+.divider {
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 176, 131, 0.3) 50%, transparent 100%);
+  margin: 30rpx 0;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-around;
+  gap: 20rpx;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.stat-value {
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #D4B083;
+  font-family: 'DIN';
+}
+
+.stat-label {
+  font-size: 20rpx;
+  color: #666;
+}
+
+/* B. 基础信息区 */
+.info-section {
+  background: #111;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid #1a1a1a;
+}
+
+.section-title {
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 20rpx;
+  font-weight: bold;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+}
+
+.info-label {
+  font-size: 26rpx;
+  color: #666;
+  width: 180rpx;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 26rpx;
+  color: #fff;
+  flex: 1;
+  text-align: right;
+}
+
+.info-value-with-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16rpx;
+}
+
+.action-btn {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 176, 131, 0.1);
+  border-radius: 8rpx;
+  border: 1rpx solid rgba(212, 176, 131, 0.3);
+}
+
+.action-text {
+  font-size: 20rpx;
+  color: #D4B083;
+}
+
+/* C. 入伍档案区 */
+.enlist-section {
+  background: #111;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid #1a1a1a;
+}
+
+.pain-points {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pain-tag {
+  padding: 6rpx 16rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  color: #888;
+}
+
+/* D. 状态控制 */
+.status-section {
+  background: #111;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  border: 1rpx solid #1a1a1a;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 16rpx;
+}
+
+.status-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12rpx;
+  border: 1rpx solid #1a1a1a;
+  transition: all 0.3s;
+}
+
+.status-btn.active {
+  background: rgba(212, 176, 131, 0.2);
+  border-color: #D4B083;
+}
+
+.status-icon {
+  font-size: 24rpx;
+}
+
+.status-text {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.status-btn.active .status-text {
+  color: #D4B083;
+  font-weight: bold;
+}
+
+/* E. 底部指挥栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20rpx);
+  border-top: 1rpx solid rgba(212, 176, 131, 0.2);
+  padding: 20rpx 30rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 20rpx;
+}
+
+.bottom-btn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: none;
+}
+
+.call-btn {
+  background: #1a1a1a;
+  border: 2rpx solid #D4B083;
+  color: #D4B083;
+}
+
+.permission-btn {
+  background: linear-gradient(135deg, #D4B083 0%, #B8942F 100%);
+  color: #000;
+  box-shadow: 0 4rpx 12rpx rgba(212, 176, 131, 0.3);
+}
+
+.btn-text {
+  font-size: 28rpx;
+}

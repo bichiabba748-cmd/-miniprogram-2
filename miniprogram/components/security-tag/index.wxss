@@ -1,0 +1,26 @@
+.security-tag {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.security-tag.secret {
+  background-color: #331a1a;
+  color: #ff4444;
+  border: 1rpx solid #ff4444;
+}
+
+.security-tag.internal {
+  background-color: #1a2a3a;
+  color: #4488ff;
+  border: 1rpx solid #4488ff;
+}
+
+.security-tag.public {
+  background-color: #1a3a1a;
+  color: #44ff44;
+  border: 1rpx solid #44ff44;
+}

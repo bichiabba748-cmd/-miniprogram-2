@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "openapi": [],
+    "db": [
+      {
+        "collectionName": "contracts",
+        "actions": ["add", "remove", "update", "get", "count"]
+      },
+      {
+        "collectionName": "renewals",
+        "actions": ["add", "remove", "update", "get", "count"]
+      },
+      {
+        "collectionName": "materials",
+        "actions": ["add", "remove", "update", "get", "count"]
+      }
+    ]
+  }
+}

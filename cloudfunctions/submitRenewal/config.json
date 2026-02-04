@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "openapi": [],
+    "cloudbase": {
+      "invoke": [],
+      "database": {
+        "renewals": {
+          "create": true
+        },
+        "contracts": {
+          "get": true
+        }
+      }
+    }
+  }
+}

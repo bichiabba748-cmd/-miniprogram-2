@@ -1,0 +1,14 @@
+<view class="frost-card {{size}}">
+  <view class="card-header" wx:if="{{title || showHeader}}">
+    <text class="card-title">{{title}}</text>
+    <view class="card-header-right" wx:if="{{showHeaderRight}}">
+      <slot name="header-right"></slot>
+    </view>
+  </view>
+  <view class="card-content">
+    <slot></slot>
+  </view>
+  <view class="card-footer" wx:if="{{showFooter}}">
+    <slot name="footer"></slot>
+  </view>
+</view>

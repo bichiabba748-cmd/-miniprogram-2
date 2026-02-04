@@ -1,0 +1,87 @@
+<view class="container">
+  <view class="header">
+    <text class="title">门店管理</text>
+    <text class="sub">组织架构管理与门店信息维护</text>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索门店名称或代码" bindinput="onSearchInput" />
+    <view class="search-btn" bindtap="onSearch">搜索</view>
+  </view>
+
+  <!-- 门店列表 -->
+  <view class="store-list" wx:if="{{stores.length > 0}}">
+    <block wx:for="{{stores}}" wx:key="_id">
+      <view class="store-item" bindtap="viewStoreDetail" data-id="{{item._id}}">
+        <view class="store-info">
+          <text class="store-name">{{item.name}}</text>
+          <text class="store-code">代码: {{item.code}}</text>
+          <text class="store-address">{{item.address}}</text>
+          <text class="store-manager">负责人: {{item.managerName}}</text>
+          <text class="store-phone">电话: {{item.phone}}</text>
+          <text class="store-status {{item.status === 'active' ? 'active' : 'inactive'}}">
+            {{item.status === 'active' ? '正常' : '已停用'}}
+          </text>
+        </view>
+        <view class="store-actions">
+          <button class="action-btn edit" size="mini" bindtap="editStore" data-id="{{item._id}}">编辑</button>
+          <button class="action-btn delete" size="mini" bindtap="deleteStore" data-id="{{item._id}}">停用</button>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:else>
+    <text class="empty-text">暂无门店数据</text>
+    <text class="empty-tip">点击右下角按钮创建首个门店</text>
+  </view>
+
+  <!-- 创建门店按钮 -->
+  <view class="create-btn" bindtap="createStore">
+    <text class="create-btn-text">+</text>
+  </view>
+
+  <!-- 门店编辑弹窗 -->
+  <view class="modal" wx:if="{{showModal}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">{{isEdit ? '编辑门店' : '创建门店'}}</text>
+        <view class="modal-close" bindtap="closeModal">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="form-item">
+          <text class="form-label">门店名称</text>
+          <input class="form-input" value="{{formData.name}}" bindinput="onFormInput" data-field="name" placeholder="请输入门店名称" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">门店代码</text>
+          <input class="form-input" value="{{formData.code}}" bindinput="onFormInput" data-field="code" placeholder="请输入门店代码" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">门店地址</text>
+          <input class="form-input" value="{{formData.address}}" bindinput="onFormInput" data-field="address" placeholder="请输入门店地址" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">负责人姓名</text>
+          <input class="form-input" value="{{formData.managerName}}" bindinput="onFormInput" data-field="managerName" placeholder="请输入负责人姓名" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">联系电话</text>
+          <input class="form-input" value="{{formData.phone}}" bindinput="onFormInput" data-field="phone" placeholder="请输入联系电话" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">状态</text>
+          <picker mode="selector" range="['正常', '已停用']" value="{{formData.status === 'active' ? 0 : 1}}" bindchange="onStatusChange">
+            <view class="form-picker">{{formData.status === 'active' ? '正常' : '已停用'}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="closeModal">取消</button>
+        <button class="modal-btn confirm" bindtap="submitForm">{{isEdit ? '保存修改' : '创建门店'}}</button>
+      </view>
+    </view>
+  </view>
+</view>

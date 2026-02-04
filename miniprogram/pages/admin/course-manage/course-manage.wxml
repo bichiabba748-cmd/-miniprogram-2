@@ -1,0 +1,96 @@
+<view class="container">
+  <view class="header">
+    <view class="header-content">
+      <view class="header-line"></view>
+      <text class="title">课程管理</text>
+    </view>
+  </view>
+
+  <view class="course-list">
+    <view class="course-item" wx:for="{{courses}}" wx:key="id" bindtap="onEditCourse" data-id="{{item.id}}">
+      <view class="ci-cover">
+        <image class="ci-image" src="{{item.coverUrl}}" mode="aspectFill"></image>
+      </view>
+      <view class="ci-info">
+        <text class="ci-title">{{item.title}}</text>
+        <view class="ci-meta">
+          <text class="ci-category">{{item.category}}</text>
+          <text class="ci-duration">{{item.duration}}</text>
+        </view>
+        <view class="ci-stats">
+          <text class="ci-view">{{item.view}}次学习</text>
+          <text class="ci-badge">{{item.badge}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{courses.length === 0}}">
+    <text class="empty-text">暂无课程</text>
+    <button class="empty-btn" bindtap="onAddCourse">立即添加</button>
+  </view>
+
+  <view class="fab-btn" bindtap="onAddCourse">
+    <text class="fab-icon">+</text>
+  </view>
+</view>
+
+<view class="modal" wx:if="{{showModal}}">
+  <view class="modal-mask" bindtap="onCloseModal"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">{{isEdit ? '编辑课程' : '新增课程'}}</text>
+      <text class="modal-close" bindtap="onCloseModal">×</text>
+    </view>
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">课程标题</text>
+        <input class="form-input" placeholder="请输入课程标题" value="{{form.title}}" bindinput="onTitleInput" maxlength="100"/>
+      </view>
+      <view class="form-item">
+        <text class="form-label">课程分类</text>
+        <picker mode="selector" range="{{categories}}" bindchange="onCategoryChange" value="{{form.categoryIndex}}">
+          <view class="form-picker">{{form.category || '请选择分类'}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">作者</text>
+        <input class="form-input" placeholder="请输入作者" value="{{form.author}}" bindinput="onAuthorInput"/>
+      </view>
+      <view class="form-item">
+        <text class="form-label">时长（分:秒）</text>
+        <view class="time-inputs">
+          <input class="time-input" type="number" placeholder="分" value="{{form.minutes}}" bindinput="onMinutesInput"/>
+          <text class="time-separator">:</text>
+          <input class="time-input" type="number" placeholder="秒" value="{{form.seconds}}" bindinput="onSecondsInput"/>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">课程链接</text>
+        <input class="form-input" placeholder="请输入课程链接" value="{{form.mediaUrl}}" bindinput="onMediaUrlInput"/>
+      </view>
+      <view class="form-item">
+        <text class="form-label">封面图片</text>
+        <view class="cover-upload" bindtap="onChooseCover">
+          <image class="cover-preview" src="{{form.coverUrl}}" mode="aspectFill" wx:if="{{form.coverUrl}}"></image>
+          <view class="cover-placeholder" wx:else>
+            <text class="cover-icon">+</text>
+            <text class="cover-text">上传封面</text>
+          </view>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">课程简介</text>
+        <textarea class="form-textarea" placeholder="请输入课程简介" value="{{form.description}}" bindinput="onDescriptionInput" maxlength="500"></textarea>
+      </view>
+      <view class="form-item">
+        <text class="form-label">标签</text>
+        <input class="form-input" placeholder="如：热门、必修、高阶" value="{{form.badge}}" bindinput="onBadgeInput"/>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel" bindtap="onCloseModal">取消</button>
+      <button class="modal-btn confirm" bindtap="onSaveCourse">保存</button>
+    </view>
+  </view>
+</view>

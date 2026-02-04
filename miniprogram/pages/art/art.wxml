@@ -1,0 +1,185 @@
+<view class="container">
+  <!-- 访客模式 -->
+  <block wx:if="{{userRole === 'visitor'}}">
+    <view class="status-bar" bindtap="switchRole">
+      <view class="status-tag visitor">
+        <view class="status-dot"></view>
+        <view class="status-text">访客模式 · 受限</view>
+      </view>
+    </view>
+
+    <view class="search-wrapper">
+      <view class="search-box">
+        <icon type="search" size="14" color="#D4B083"></icon>
+        <input class="search-input" placeholder="搜索战术脚本档案..." placeholder-class="ph" bindinput="onSearchInput"/>
+      </view>
+    </view>
+
+    <view class="tabs">
+      <block wx:for="{{['全部', '口播', '探盘', '口盘', 'IP', '避坑']}}" wx:key="*this">
+        <view class="tab {{currentTab === item ? 'active' : ''}}" bindtap="onTabChange" data-tab="{{item}}">
+          {{item}}
+          <view class="tab-line" wx:if="{{currentTab === item}}"></view>
+        </view>
+      </block>
+      <view class="total-count">
+        共 {{totalArticles}} 条
+      </view>
+    </view>
+
+    <view class="script-list">
+      <block wx:if="{{filteredScripts.length > 0}}">
+        <view class="script-card" wx:for="{{filteredScripts}}" wx:key="id" bindtap="onDetailTap" data-id="{{item.id}}">
+          
+          <!-- 标题区：永远清晰 -->
+          <view class="card-header">
+            <view class="code-area">
+              <text class="code-text">{{item.code}}</text>
+              <text class="security-tag">{{item.securityLevel}}</text>
+            </view>
+            <view class="star-btn" catchtap="onCollect" data-id="{{item.id}}">
+              <view class="star-icon icon-star-empty"></view>
+            </view>
+          </view>
+          
+          <text class="card-title">{{item.title}}</text>
+          
+          <!-- 所有用户看到的内容 -->
+          <view class="card-body">
+            <view class="data-bar">
+              <view class="data-group gold" wx:if="{{item.sourceType === 'internal'}}">
+                <view class="data-icon icon-trophy"></view>
+                <text>获客 {{item.stats.leads}}</text>
+              </view>
+              <view class="data-group white" wx:else>
+                <view class="data-icon icon-thumbs-up"></view>
+                <text>点赞 {{item.stats.likes}}</text>
+              </view>
+              <view class="data-group">
+                <view class="data-icon icon-bolt"></view>
+                <text>热度 {{item.stats.heat}}%</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="card-footer">
+            <text class="more-link" catchtap="onDetailTap" data-id="{{item.id}}">档案详情 ></text>
+            <view class="copy-pill"
+                  catchtap="onCopy"
+                  data-text="{{item.fullContent}}">
+              复制脚本
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <!-- 访客：显示空状态提示 -->
+        <view class="empty-state">
+          <view class="empty-icon icon-search"></view>
+          <text class="empty-text">暂无相关文案</text>
+          <text class="empty-hint">试试其他关键词</text>
+        </view>
+      </block>
+    </view>
+  </block>
+  
+  <!-- 内部人员模式 -->
+  <block wx:else>
+    <view class="status-bar" bindtap="switchRole">
+      <view class="status-tag insider">
+        <view class="status-dot"></view>
+        <view class="status-text">
+          {{userRole === 'admin' ? '上帝视角 · 指挥官' : 
+           (userRole === 'anchor' ? '主播模式 · 全功能' : 
+           (userRole === 'broker' ? '经纪人模式 · 全功能' : 
+           (userRole === 'student' ? '星火学员 · 成长版' : '访客模式 · 受限')))}}
+        </view>
+      </view>
+    </view>
+
+    <view class="search-wrapper">
+      <view class="search-box">
+        <icon type="search" size="14" color="#D4B083"></icon>
+        <input class="search-input" placeholder="搜索战术脚本档案..." placeholder-class="ph" bindinput="onSearchInput"/>
+      </view>
+    </view>
+
+    <view class="tabs">
+      <block wx:for="{{['全部', '口播', '探盘', '口盘', 'IP', '避坑']}}" wx:key="*this">
+        <view class="tab {{currentTab === item ? 'active' : ''}}" bindtap="onTabChange" data-tab="{{item}}">
+          {{item}}
+          <view class="tab-line" wx:if="{{currentTab === item}}"></view>
+        </view>
+      </block>
+      <view class="tab {{currentTab === '已收藏' ? 'active' : ''}}" bindtap="goToCollections">
+        已收藏
+        <view class="tab-line" wx:if="{{currentTab === '已收藏'}}"></view>
+      </view>
+      <view class="total-count">
+        共 {{totalArticles}} 条
+      </view>
+    </view>
+
+    <view class="script-list">
+      <block wx:if="{{filteredScripts.length > 0}}">
+        <view class="script-card" wx:for="{{filteredScripts}}" wx:key="id" bindtap="onDetailTap" data-id="{{item.id}}">
+          
+          <!-- 标题区：永远清晰 -->
+          <view class="card-header">
+            <view class="code-area">
+              <text class="code-text">{{item.code}}</text>
+              <text class="security-tag">{{item.securityLevel}}</text>
+            </view>
+            <view class="star-btn {{item.isCollected ? 'active' : ''}}" catchtap="onCollect" data-id="{{item.id}}">
+              <view class="star-icon {{item.isCollected ? 'icon-star-full' : 'icon-star-empty'}}"></view>
+            </view>
+          </view>
+          
+          <text class="card-title">{{item.title}}</text>
+          
+          <!-- 所有用户看到的内容 -->
+          <view class="card-body">
+            <view class="data-bar">
+              <view class="data-group gold" wx:if="{{item.sourceType === 'internal'}}">
+                <view class="data-icon icon-trophy"></view>
+                <text>获客 {{item.stats.leads}}</text>
+              </view>
+              <view class="data-group white" wx:else>
+                <view class="data-icon icon-thumbs-up"></view>
+                <text>点赞 {{item.stats.likes}}</text>
+              </view>
+              <view class="data-group">
+                <view class="data-icon icon-bolt"></view>
+                <text>热度 {{item.stats.heat}}%</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="card-footer">
+            <text class="more-link" catchtap="onDetailTap" data-id="{{item.id}}">档案详情 ></text>
+            <view class="copy-pill"
+                  catchtap="onCopy"
+                  data-text="{{item.fullContent}}">
+              复制脚本
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <!-- 内部人员：显示空状态提示 -->
+        <view class="empty-state">
+          <view class="empty-icon icon-search"></view>
+          <text class="empty-text">暂无相关文案</text>
+          <text class="empty-hint">试试其他关键词</text>
+        </view>
+      </block>
+    </view>
+
+    <view class="fab-btn" wx:if="{{userRole === 'anchor' || userRole === 'admin'}}" bindtap="goToContribute">
+      <text class="fab-icon">+</text>
+    </view>
+
+  </block>
+</view>

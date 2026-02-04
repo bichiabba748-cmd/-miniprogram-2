@@ -1,0 +1,3 @@
+<view class="security-tag {{level}}" wx:if="{{level}}">
+  {{levelText}}
+</view>

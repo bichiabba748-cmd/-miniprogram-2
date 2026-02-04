@@ -1,0 +1,17 @@
+.service-container { min-height: 100vh; background: #0a0a0a; padding-bottom: 32rpx; }
+.tabs { display: flex; background: #111; border-bottom: 2rpx solid #222; }
+.tab { flex: 1; text-align: center; padding: 32rpx 0; font-size: 32rpx; color: #666; position: relative; }
+.tab.active { color: #D4B083; font-weight: bold; }
+.tab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80rpx; height: 4rpx; background: #D4B083; }
+.list { padding: 24rpx; }
+.item { background: #111; border-radius: 16rpx; padding: 32rpx; margin-bottom: 24rpx; border: 2rpx solid #222; }
+.header { display: flex; justify-content: space-between; margin-bottom: 20rpx; padding-bottom: 16rpx; border-bottom: 1rpx solid #222; }
+.name { color: #fff; font-size: 32rpx; font-weight: bold; }
+.status { padding: 8rpx 16rpx; border-radius: 8rpx; font-size: 24rpx; background: rgba(212,176,131,0.1); color: #D4B083; }
+.body { margin-bottom: 20rpx; }
+.row { display: flex; margin-bottom: 12rpx; }
+.row.full { flex-direction: column; }
+.label { color: #666; font-size: 26rpx; width: 120rpx; }
+.value { color: #fff; font-size: 26rpx; flex: 1; }
+.row.full .value { margin-top: 8rpx; }
+.btn { background: #D4B083; color: #0a0a0a; font-size: 28rpx; padding: 20rpx 0; border-radius: 8rpx; width: 100%; }

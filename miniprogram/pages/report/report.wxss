@@ -1,0 +1,20 @@
+page { background: #000; color: #fff; }
+.container { padding: 40rpx 30rpx; }
+
+.header { margin-bottom: 40rpx; display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 20rpx; border-bottom: 1rpx solid #222; }
+.h-title { font-size: 36rpx; font-weight: bold; border-left: 8rpx solid #ff9a00; padding-left: 20rpx; color: #fff; }
+.h-sub { font-size: 22rpx; color: #666; }
+
+.row { 
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 36rpx; background: #111; border-bottom: 1rpx solid #222; 
+  margin-bottom: 20rpx; border-radius: 16rpx; border: 1rpx solid #222;
+}
+.row-left { display: flex; flex-direction: column; }
+.date { font-size: 30rpx; font-weight: bold; margin-bottom: 10rpx; color: #eee; }
+.data-detail { font-size: 24rpx; color: #888; }
+.hl { color: #ccc; font-weight: bold; margin-right: 10rpx; }
+
+.status { font-size: 22rpx; padding: 6rpx 16rpx; border-radius: 8rpx; font-weight: bold; }
+.status.pass { color: #00ae66; background: rgba(0,174,102,0.15); }
+.status.wait { color: #ff9a00; background: rgba(255,154,0,0.15); }

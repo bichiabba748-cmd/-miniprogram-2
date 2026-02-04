@@ -1,0 +1,141 @@
+<!-- 云函数状态监控详情页面 -->
+<view class="detail-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-left" bindtap="navigateBack">
+      <text class="nav-back">← 返回</text>
+    </view>
+    <view class="nav-title">云函数状态</view>
+    <view class="nav-right">
+      <button class="refresh-btn" bindtap="refreshFunctions">
+        <text class="btn-text">刷新</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 云函数概览 -->
+  <view class="overview-section">
+    <view class="overview-card">
+      <view class="overview-title">云函数概览</view>
+      <view class="overview-stats">
+        <view class="stat-item">
+          <view class="stat-value">{{functionStats.total}}</view>
+          <view class="stat-label">云函数总数</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value {{functionStats.highRisk > 0 ? 'warning' : ''}}">{{functionStats.highRisk}}</view>
+          <view class="stat-label">高风险函数</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{functionStats.avgResponse}}ms</view>
+          <view class="stat-label">平均响应时间</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{functionStats.avgMemory}}MB</view>
+          <view class="stat-label">平均内存使用</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 云函数列表 -->
+  <view class="functions-section">
+    <view class="section-title">云函数列表</view>
+    <view class="function-list">
+      <view class="function-item" wx:for="{{cloudFunctions}}" wx:key="index">
+        <view class="function-header">
+          <view class="function-name">{{item.name}}</view>
+          <view class="function-status {{item.status}}">{{item.statusText}}</view>
+        </view>
+        <view class="function-details">
+          <view class="detail-row">
+            <view class="detail-item">
+              <view class="detail-label">执行时间</view>
+              <view class="detail-value {{getExecutionTimeClass(item.executionTime)}}">{{item.executionTime}}ms</view>
+            </view>
+            <view class="detail-item">
+              <view class="detail-label">内存使用</view>
+              <view class="detail-value {{getMemoryUsageClass(item.memoryUsage)}}">{{item.memoryUsage}}</view>
+            </view>
+          </view>
+          <view class="detail-row">
+            <view class="detail-item">
+              <view class="detail-label">依赖数</view>
+              <view class="detail-value">{{item.dependencies}}</view>
+            </view>
+            <view class="detail-item">
+              <view class="detail-label">最近执行</view>
+              <view class="detail-value">{{item.lastExecution}}</view>
+            </view>
+          </view>
+        </view>
+        <view class="function-actions">
+          <button class="action-btn view" bindtap="viewFunctionDetail" data-index="{{index}}">
+            <text class="btn-text">详情</text>
+          </button>
+          <button class="action-btn optimize" bindtap="optimizeFunction" data-index="{{index}}">
+            <text class="btn-text">优化</text>
+          </button>
+          <button class="action-btn test" bindtap="testFunction" data-index="{{index}}">
+            <text class="btn-text">测试</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 性能分析 -->
+  <view class="performance-section">
+    <view class="section-title">性能分析</view>
+    <view class="performance-card">
+      <view class="performance-chart">
+        <view class="chart-title">执行时间分布</view>
+        <view class="chart-container">
+          <view class="chart-bars">
+            <view class="bar-item" wx:for="{{performanceData.executionTime}}" wx:key="index">
+              <view class="bar-label">{{item.range}}</view>
+              <view class="bar-container">
+                <view class="bar-fill" style="height: {{item.count * 10}}rpx; background-color: {{getBarColor(item.range)}}"></view>
+              </view>
+              <view class="bar-count">{{item.count}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 依赖分析 -->
+  <view class="dependencies-section">
+    <view class="section-title">依赖分析</view>
+    <view class="dependencies-card">
+      <view class="dependency-list">
+        <view class="dependency-item" wx:for="{{dependencies}}" wx:key="index">
+          <view class="dependency-info">
+            <view class="dependency-name">{{item.name}}</view>
+            <view class="dependency-version">{{item.version}}</view>
+          </view>
+          <view class="dependency-status {{item.status}}">{{item.statusText}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 优化建议 -->
+  <view class="suggestions-section">
+    <view class="section-title">优化建议</view>
+    <view class="suggestion-list">
+      <view class="suggestion-item" wx:for="{{optimizationSuggestions}}" wx:key="index">
+        <view class="suggestion-icon">{{item.icon}}</view>
+        <view class="suggestion-content">
+          <view class="suggestion-title">{{item.title}}</view>
+          <view class="suggestion-desc">{{item.description}}</view>
+          <view class="suggestion-impact">预期影响: {{item.impact}}</view>
+        </view>
+        <view class="suggestion-action" bindtap="applySuggestion" data-index="{{index}}">
+          <text class="action-text">应用</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

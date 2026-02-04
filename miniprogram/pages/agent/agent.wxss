@@ -1,0 +1,19 @@
+/* 强化 Banner 视觉：增加数据叠加层 */
+.hero-banner {
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::after {
+  content: "TOP SECRET / 2026";
+  position: absolute; top: 40rpx; right: -40rpx;
+  background: #ff9a00; color: #000; font-size: 18rpx;
+  padding: 4rpx 100rpx; transform: rotate(45deg);
+  font-weight: 900;
+}
+
+/* 案例卡片增强：增加“实战地图标记” */
+.case-location {
+  font-size: 18rpx; color: #ff9a00; margin-bottom: 10rpx;
+  display: flex; align-items: center;
+}
+.case-location::before { content: "📍"; margin-right: 6rpx; }

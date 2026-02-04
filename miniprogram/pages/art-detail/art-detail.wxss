@@ -1,0 +1,191 @@
+/* 黑金实验室风格 */
+
+/* 通用样式 */
+page { background-color: #000; color: #ccc; font-family: "PingFang SC", sans-serif; }
+.container { padding-bottom: 240rpx; }
+
+/* 研报头部 */
+.report-header {
+  padding: 60rpx 40rpx 50rpx;
+  background: linear-gradient(to bottom, #161616, #000);
+  border-bottom: 1rpx solid #222;
+}
+
+.tag-row { 
+  display: flex; 
+  gap: 16rpx; 
+  margin-bottom: 30rpx;
+  flex-wrap: wrap;
+}
+
+.lab-badge {
+  background: #D4B083;
+  color: #000;
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  font-weight: bold;
+  border-radius: 4rpx;
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+/* 图标组件 */
+.icon-star::before {
+  content: '★';
+}
+
+.status-badge {
+  border: 1rpx solid #444;
+  color: #888;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+}
+
+.category-badge {
+  background: rgba(212, 176, 131, 0.15);
+  color: #D4B083;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+  border: 1rpx solid rgba(212, 176, 131, 0.3);
+}
+
+.status-internal { background: rgba(255, 77, 79, 0.1); color: #ff4d4f; border-color: rgba(255, 77, 79, 0.3); }
+.status-public { background: rgba(82, 196, 26, 0.1); color: #52c41a; border-color: rgba(82, 196, 26, 0.3); }
+.status-top-secret { background: rgba(255, 165, 0, 0.1); color: #ffa500; border-color: rgba(255, 165, 0, 0.3); }
+
+.report-title {
+  font-size: 44rpx;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.4;
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+/* 通用板块 */
+.section { padding: 60rpx 40rpx 0; }
+
+.sec-head { display: flex; align-items: center; margin-bottom: 40rpx; }
+
+.sec-num {
+  font-size: 36rpx;
+  font-family: 'DIN';
+  font-weight: bold;
+  color: #333;
+  margin-right: 20rpx;
+}
+
+.sec-name { font-size: 30rpx; font-weight: bold; color: #777; letter-spacing: 2rpx; }
+
+/* 战绩数据卡片 */
+.stats-card {
+  background: #111;
+  padding: 40rpx;
+  border-radius: 12rpx;
+  display: flex;
+  justify-content: space-between;
+  border: 1rpx solid #222;
+}
+
+.stat-item { text-align: center; }
+
+.stat-label {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.stat-val {
+  font-size: 36rpx;
+  color: #fff;
+  font-weight: bold;
+  display: block;
+}
+
+.gold { color: #D4B083; }
+
+/* 逻辑拆解 */
+.logic-block { display: flex; flex-direction: column; gap: 40rpx; }
+
+.l-tag {
+  font-size: 22rpx;
+  color: #D4B083;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+  letter-spacing: 1rpx;
+}
+
+.l-box {
+  background: #0a0a0a;
+  border-left: 6rpx solid #D4B083;
+  padding: 24rpx 30rpx;
+}
+
+.l-content { font-size: 28rpx; color: #bbb; line-height: 1.6; }
+
+/* 脚本正文 */
+.script-box {
+  background: #161616;
+  padding: 40rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid #222;
+  margin-bottom: 40rpx;
+}
+
+.script-text { font-size: 30rpx; color: #eee; line-height: 1.8; }
+
+.copy-btn-large {
+  background: #D4B083;
+  color: #000;
+  font-weight: 900;
+  height: 100rpx;
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+/* 底部免责 */
+.disclaimer-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.95);
+  padding: 30rpx 40rpx 60rpx;
+  border-top: 1rpx solid #222;
+}
+
+.disclaimer-content {
+  background: #1a1a1a;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: flex-start;
+}
+
+.d-icon { font-size: 32rpx; margin-right: 16rpx; }
+
+.d-text { font-size: 20rpx; color: #555; line-height: 1.5; }
+
+/* 图标组件 */
+.icon-trophy::before {
+  content: '🏆';
+}
+
+.icon-eye::before {
+  content: '👁️';
+}
+
+.icon-list::before {
+  content: '📋';
+}
+
+.icon-balance::before {
+  content: '⚖️';
+}

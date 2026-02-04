@@ -1,0 +1,3 @@
+<view class="gold-button {{size}} {{type}} {{disabled ? 'disabled' : ''}}" bindtap="handleTap">
+  <text class="button-text">{{text}}</text>
+</view>

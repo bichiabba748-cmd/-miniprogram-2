@@ -1,0 +1,220 @@
+/* 页面容器 */
+.life-container {
+  min-height: 100vh;
+  background: #0a0a0a;
+  padding: 32rpx;
+}
+
+/* 页面标题 */
+.page-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #D4B083;
+  margin-bottom: 32rpx;
+  font-family: 'DIN Alternate', sans-serif;
+}
+
+/* 生活圈加入卡片 */
+.join-card {
+  background: linear-gradient(135deg, rgba(212, 176, 131, 0.15) 0%, rgba(45, 45, 45, 0.3) 100%);
+  backdrop-filter: blur(20rpx);
+  border-radius: 24rpx;
+  padding: 40rpx;
+  margin-bottom: 32rpx;
+  border: 2rpx solid rgba(212, 176, 131, 0.2);
+}
+
+.join-header {
+  margin-bottom: 24rpx;
+}
+
+.join-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.join-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.desc-item {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+.join-btn {
+  background: linear-gradient(135deg, #D4B083 0%, #8B7355 100%);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #0a0a0a;
+}
+
+/* 生活服务卡片 */
+.life-card {
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(45, 45, 45, 0.6) 100%);
+  backdrop-filter: blur(20rpx);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  border: 2rpx solid rgba(212, 176, 131, 0.15);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid rgba(212, 176, 131, 0.2);
+}
+
+.card-icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #D4B083;
+}
+
+/* 地点列表 */
+.place-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.place-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  padding: 24rpx;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(212, 176, 131, 0.1);
+}
+
+.place-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.place-info,
+.place-time,
+.place-distance,
+.place-route,
+.place-review,
+.place-price {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.5;
+}
+
+.place-review {
+  color: rgba(212, 176, 131, 0.8);
+  font-style: italic;
+}
+
+.place-price {
+  color: #D4B083;
+  font-family: 'DIN Alternate', sans-serif;
+}
+
+/* 图标组件 */
+.icon-houses::before {
+  content: '🏘️';
+}
+
+.icon-shopping::before {
+  content: '🛒';
+}
+
+.icon-car::before {
+  content: '🚗';
+}
+
+.icon-house::before {
+  content: '🏠';
+}
+
+.icon-store::before {
+  content: '🏪';
+}
+
+.icon-clock::before {
+  content: '🕐';
+}
+
+.icon-walk::before {
+  content: '🚶';
+}
+
+.icon-hospital::before {
+  content: '🏥';
+}
+
+.icon-ambulance::before {
+  content: '🚑';
+}
+
+.icon-taxi::before {
+  content: '🚗';
+}
+
+.icon-package::before {
+  content: '📦';
+}
+
+.icon-noodle::before {
+  content: '🍜';
+}
+
+.icon-speech::before {
+  content: '🗣️';
+}
+
+.icon-money::before {
+  content: '💰';
+}
+
+.icon-subway::before {
+  content: '🚇';
+}
+
+.icon-bank::before {
+  content: '🏦';
+}
+
+.join-title {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 12rpx;
+}
+
+.card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.desc-icon,
+.place-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8rpx;
+}

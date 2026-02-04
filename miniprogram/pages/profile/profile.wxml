@@ -1,0 +1,272 @@
+<view class="container">
+  <view class="header-card">
+    <view class="user-info-section">
+      <view class="simple-avatar-box">
+        <image class="simple-avatar-img" src="{{userInfo.avatarUrl || '/images/icons/avatar.png'}}" mode="aspectFill" bindtap="handleAvatarClick"></image>
+        <view class="role-badge {{userRole}}">{{roleName}}</view>
+      </view>
+      <view class="info-text">
+        <text class="name">星火 · {{roleName}}</text>
+        <text class="desc">天津战区 · {{roleDesc}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="dashboard-section {{userRole === 'visitor' ? 'visitor-blur' : ''}}">
+    <block wx:if="{{userRole === 'student' || userRole === 'visitor'}}">
+      <view class="dash-card {{userRole === 'visitor' ? 'locked' : ''}}" bindtap="goToCourse">
+        <view class="dash-top">
+          <text class="dash-label">学习进度</text>
+          <view class="dash-icon icon-video"></view>
+        </view>
+        <text class="dash-value">{{myStats.courseProgress}}<text class="unit">%</text></text>
+        <view class="dash-progress"><view class="fill" style="width: {{myStats.courseProgress + '%'}}"></view></view>
+        <view wx:if="{{userRole === 'visitor'}}" class="visitor-lock">未解锁</view>
+      </view>
+      
+      <view class="dash-card {{userRole === 'visitor' ? 'locked' : ''}}" bindtap="goToArtCollection">
+        <view class="dash-top">
+          <text class="dash-label">我的收藏</text>
+          <view class="dash-icon icon-bookmark"></view>
+        </view>
+        <text class="dash-value">{{myStats.collectionCount}}<text class="unit">篇</text></text>
+        <text class="dash-sub">已存入个人库</text>
+        <view wx:if="{{userRole === 'visitor'}}" class="visitor-lock">未解锁</view>
+      </view>
+      
+      <view class="dash-card {{userRole === 'visitor' ? 'locked' : ''}}" bindtap="handleViewTap">
+        <view class="dash-top">
+          <text class="dash-label">学习时长</text>
+          <view class="dash-icon icon-phone"></view>
+        </view>
+        <text class="dash-value">{{myStats.studyDuration}}<text class="unit">小时</text></text>
+        <text class="dash-sub">累计学习</text>
+        <view wx:if="{{userRole === 'visitor'}}" class="visitor-lock">未解锁</view>
+      </view>
+    </block>
+    
+    <block wx:if="{{userRole === 'anchor' || userRole === 'broker'}}">
+      <view class="dash-card" bindtap="handleViewTap">
+        <view class="dash-top">
+          <text class="dash-label">全区排名</text>
+          <view class="dash-icon icon-trophy"></view>
+        </view>
+        <text class="dash-value">{{myStats.rank}}<text class="unit">名</text></text>
+        <text class="dash-sub">天津战区</text>
+      </view>
+      
+      <view class="dash-card" bindtap="handleViewTap">
+        <view class="dash-top">
+          <text class="dash-label">贡献数</text>
+          <view class="dash-icon icon-chart"></view>
+        </view>
+        <text class="dash-value">{{myStats.contributionCount}}<text class="unit">篇</text></text>
+        <text class="dash-sub">已贡献内容</text>
+      </view>
+      
+      <view class="dash-card" bindtap="handleViewTap">
+        <view class="dash-top">
+          <text class="dash-label">获客数</text>
+          <view class="dash-icon icon-users"></view>
+        </view>
+        <text class="dash-value">{{myStats.leadsCount}}<text class="unit">组</text></text>
+        <text class="dash-sub">已获客</text>
+      </view>
+    </block>
+    
+    <!-- 主播贡献按钮 -->
+    <block wx:if="{{userRole === 'anchor'}}">
+      <view class="dashboard-wrapper">
+        <view class="contribute-btn" bindtap="goToContribute">
+          <text class="btn-text">+ 去贡献</text>
+        </view>
+      </view>
+    </block>
+  </view>
+  
+  <!-- 新秀榜预览 (仅新主播可见) -->
+  <view class="rookie-preview" wx:if="{{userRole === 'anchor' && isNewcomer}}" bindtap="goToRank" data-tab="new">
+    <view class="rp-header">
+      <text class="rp-title">新秀赛道预览</text>
+      <text class="rp-more">查看全量排名 ></text>
+    </view>
+    <view class="rp-content">
+      <view class="rp-avatars">
+        <view class="rp-av-box">
+          <image class="rp-av" src="/images/icons/avatars/top1.png"></image>
+          <view class="rp-rank-tag r1">1</view>
+        </view>
+        <view class="rp-av-box">
+          <image class="rp-av" src="/images/icons/avatars/top2.png"></image>
+          <view class="rp-rank-tag r2">2</view>
+        </view>
+        <view class="rp-av-box">
+          <image class="rp-av" src="/images/icons/avatars/top3.png"></image>
+          <view class="rp-rank-tag r3">3</view>
+        </view>
+      </view>
+      <text class="rp-desc">距上一名还差 <text style="color:#ff9a00; font-weight:bold;">2</text> 个获客，加油！</text>
+    </view>
+  </view>
+
+  <view class="content-card" bindtap="handleViewTap">
+    <view class="card-header">
+      <text class="card-title">最近学习</text>
+      <text class="card-action" bindtap="goToCourse">查看全部 ></text>
+    </view>
+    <view class="recent-item">
+      <view class="recent-cover"></view>
+      <view class="recent-info">
+        <text class="r-title">{{lastCourse.title}}</text>
+        <text class="r-status">已学至 {{lastCourse.progress}}%</text>
+      </view>
+      <view class="resume-btn" bindtap="goToCourse">继续</view>
+    </view>
+  </view>
+
+  <view class="content-card" bindtap="handleViewTap">
+    <view class="card-header">
+      <text class="card-title">勋章墙</text>
+    </view>
+    <scroll-view scroll-x="true" class="medal-scroll">
+      <view class="medal-flex">
+        <view class="medal-item {{item.locked ? 'locked' : ''}}" wx:for="{{medals}}" wx:key="name" bindtap="showMedalDetail" data-index="{{index}}">
+          <text class="m-icon">{{item.icon}}</text>
+          <text class="m-name">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 保护战果：学员页面的学习打卡模块 -->
+  <block wx:if="{{userRole === 'student'}}">
+    <view class="content-card">
+      <view class="card-header">
+        <text class="card-title">学习打卡</text>
+        <text class="card-action gold">今日已打卡</text>
+      </view>
+      <view class="study-calendar">
+        <view class="calendar-grid">
+          <view class="calendar-day">日</view>
+          <view class="calendar-day">一</view>
+          <view class="calendar-day">二</view>
+          <view class="calendar-day">三</view>
+          <view class="calendar-day">四</view>
+          <view class="calendar-day">五</view>
+          <view class="calendar-day">六</view>
+          
+          <!-- 模拟本月打卡记录 -->
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date checked">1</view>
+          <view class="calendar-date checked">2</view>
+          <view class="calendar-date checked">3</view>
+          <view class="calendar-date checked">4</view>
+          <view class="calendar-date checked">5</view>
+          <view class="calendar-date checked">6</view>
+          <view class="calendar-date checked">7</view>
+          <view class="calendar-date checked">8</view>
+          <view class="calendar-date today">9</view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+          <view class="calendar-date"></view>
+        </view>
+        <view class="calendar-tip">坚持学习，每天进步一点点</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 榜单区域 -->
+  <view class="content-card" wx:if="{{userRole !== 'student'}}">
+    <view class="card-header">
+      <text class="card-title">大区榜单</text>
+      <text class="card-action gold" bindtap="goToRank" data-tab="all">全量榜单 ></text>
+    </view>
+    <view class="rank-list">
+      <!-- 访客显示前3名，主播/经纪人显示全量 -->
+      <block wx:for="{{(userRole === 'visitor') ? displayRank.slice(0, 3) : displayRank}}" wx:key="id">
+        <view class="rank-row">
+          <text class="row-idx {{index < 3 ? 'gold-idx' : ''}}">{{index + 1}}</text>
+          <!-- 放大后的榜单头像 -->
+          <image class="row-avatar" src="/images/icons/avatars/top{{index + 1}}.png"></image>
+          <view class="row-info">
+            <text class="row-name">{{item.name}}</text>
+            <text class="row-store">{{item.store}}</text>
+          </view>
+          <text class="row-val">
+            <block wx:if="{{userRole === 'broker'}}">{{item.stats.showings}} 带看</block>
+            <block wx:else>{{item.stats.leads}} 获客</block>
+          </text>
+        </view>
+      </block>
+    </view>
+    <!-- 访客显示底部锁，主播/经纪人不显示 -->
+    <view wx:if="{{userRole === 'visitor'}}" class="lock-footer" bindtap="goToJoin">
+      <text>加入星火计划，解锁全量榜单</text>
+    </view>
+  </view>
+
+  <view class="admin-test-bar" style="padding-bottom: 40rpx;">
+    <button class="t-btn switch" style="width: 100%; background: #333; color: #D4B083;" bindtap="handleRoleSwitch">切换测试身份 (6角色)</button>
+  </view>
+
+  <!-- 勋章详情弹窗 -->
+  <view class="medal-modal" wx:if="{{showMedalModal}}" catchtap="closeMedalModal">
+    <view class="medal-modal-content" catchtap="">
+      <view class="medal-modal-header">
+        <text class="medal-modal-icon">{{currentMedal.icon}}</text>
+        <text class="medal-modal-name">{{currentMedal.name}}</text>
+        <text class="medal-modal-status">{{currentMedal.locked ? '未解锁' : '已解锁'}}</text>
+      </view>
+      <view class="medal-modal-body">
+        <view class="medal-progress">
+          <text class="progress-label">完成进度</text>
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{currentMedal.progress}}%;"></view>
+          </view>
+          <text class="progress-value">{{currentMedal.progress}}%</text>
+        </view>
+        <view class="medal-condition">
+          <text class="condition-label">解锁条件</text>
+          <text class="condition-desc">{{currentMedal.condition}}</text>
+        </view>
+      </view>
+      <view class="medal-modal-footer">
+        <button class="close-btn" bindtap="closeMedalModal">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

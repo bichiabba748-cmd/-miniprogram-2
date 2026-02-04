@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="tab-bar">
+    <view class="tab {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">待续约</view>
+    <view class="tab {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">在租中</view>
+    <view class="tab {{currentTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-index="2">已到期</view>
+  </view>
+
+  <view class="contract-list">
+    <view class="contract-card" wx:for="{{contracts}}" wx:key="index" bindtap="callTenant" data-phone="{{item.tenantPhone}}">
+      <view class="card-header">
+        <view class="address">{{item.propertyAddress}}</view>
+        <view class="rent">¥{{item.rent}}/月</view>
+      </view>
+      <view class="card-info">
+        <text class="tenant-name">租客：{{item.tenantName}}</text>
+        <text class="expire-date">到期：{{item.endDate}}</text>
+      </view>
+      <view class="days-left" wx:if="{{currentTab === 0}}">剩余 {{item.daysLeft}} 天</view>
+    </view>
+
+    <view class="empty" wx:if="{{contracts.length === 0}}">暂无合同</view>
+  </view>
+</view>

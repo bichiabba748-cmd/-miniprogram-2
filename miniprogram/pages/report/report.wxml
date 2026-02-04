@@ -1,0 +1,20 @@
+<view class="container">
+  <view class="header">
+    <text class="h-title">历史提报记录</text>
+    <text class="h-sub">仅展示最近30天数据</text>
+  </view>
+
+  <view class="list">
+    <block wx:for="{{reports}}" wx:key="id">
+      <view class="row">
+        <view class="row-left">
+          <text class="date">{{item.date}}</text>
+          <text class="data-detail">获客: <text class="hl">{{item.leads}}</text> | 视频: <text class="hl">{{item.videos}}</text> | 直播: <text class="hl">{{item.lives}}</text></text>
+        </view>
+        <view class="row-right">
+          <text class="status {{item.status === 'pass' ? 'pass' : 'wait'}}">{{item.statusText}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

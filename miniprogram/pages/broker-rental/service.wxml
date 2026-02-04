@@ -1,0 +1,37 @@
+<view class="service-container">
+  <view class="tabs">
+    <view class="tab {{currentTab === 'renewal' ? 'active' : ''}}" bindtap="onTabChange" data-tab="renewal">续租申请</view>
+    <view class="tab {{currentTab === 'consult' ? 'active' : ''}}" bindtap="onTabChange" data-tab="consult">在线咨询</view>
+  </view>
+
+  <view wx:if="{{currentTab === 'renewal'}}" class="list">
+    <view wx:for="{{renewalList}}" wx:key="id" class="item">
+      <view class="header">
+        <text class="name">{{item.tenantName}}</text>
+        <text class="status">{{item.statusText}}</text>
+      </view>
+      <view class="body">
+        <view class="row"><text class="label">房源</text><text class="value">{{item.address}}</text></view>
+        <view class="row"><text class="label">租金</text><text class="value">¥{{item.currentRent}}</text></view>
+        <view class="row"><text class="label">到期</text><text class="value">{{item.expireDate}}</text></view>
+        <view class="row"><text class="label">申请</text><text class="value">{{item.applyTime}}</text></view>
+      </view>
+      <button class="btn" bindtap="onContact" data-phone="{{item.phone}}">联系租客</button>
+    </view>
+  </view>
+
+  <view wx:if="{{currentTab === 'consult'}}" class="list">
+    <view wx:for="{{consultList}}" wx:key="id" class="item">
+      <view class="header">
+        <text class="name">{{item.tenantName}}</text>
+        <text class="status">待回复</text>
+      </view>
+      <view class="body">
+        <view class="row"><text class="label">类型</text><text class="value">{{item.type}}</text></view>
+        <view class="row full"><text class="label">内容</text><text class="value">{{item.content}}</text></view>
+        <view class="row"><text class="label">时间</text><text class="value">{{item.submitTime}}</text></view>
+      </view>
+      <button class="btn" bindtap="onContact" data-phone="{{item.phone}}">联系租客</button>
+    </view>
+  </view>
+</view>

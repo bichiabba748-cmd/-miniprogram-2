@@ -1,0 +1,78 @@
+<view class="contract-page"> 
+  
+  <!-- 房源信息卡片 --> 
+  <view class="house-card"> 
+    <view class="card-header"> 
+      <view class="house-icon icon-house"></view>
+      <view class="house-info"> 
+        <text class="house-addr">{{contractInfo.propertyAddress}}</text> 
+        <text class="house-size">3室1厅 · 80㎡</text> 
+      </view> 
+    </view> 
+    
+    <view class="card-body"> 
+      <view class="info-row"> 
+        <view class="label icon-calendar"></view>
+        <text class="value">{{contractInfo.startDate}} 至 {{contractInfo.endDate}}</text>
+      </view>
+      <view class="info-row"> 
+        <view class="label icon-money"></view>
+        <text class="value">¥{{contractInfo.rent}}</text>
+      </view>
+      <view class="info-row"> 
+        <view class="label icon-key"></view>
+        <text class="value">¥{{contractInfo.deposit}}</text>
+      </view>
+    </view> 
+  </view> 
+  
+  <!-- 租住数据卡片 --> 
+  <view class="data-card"> 
+    <view class="card-title-icon icon-chart"></view>
+    <text class="card-title">租住数据</text>
+    <view class="data-row"> 
+      <view class="data-item"> 
+        <text class="data-value">{{daysLived}}</text> 
+        <text class="data-label">已住天数</text> 
+      </view> 
+      <view class="data-item"> 
+        <text class="data-value">{{daysLeft}}</text> 
+        <text class="data-label">剩余天数</text> 
+      </view> 
+    </view> 
+    <view class="data-total"> 
+      <text>累计租金: ¥{{totalRent}}</text> 
+    </view> 
+  </view> 
+  
+  <!-- 业主信息卡片 --> 
+  <view class="contact-card"> 
+    <view class="card-title-icon icon-user"></view>
+    <text class="card-title">业主信息</text>
+    <view class="contact-info"> 
+      <text class="contact-name">{{contractInfo.landlordName}}</text> 
+      <text class="contact-phone">{{maskedPhone}}</text> 
+    </view> 
+    <button class="btn-call" bindtap="onCallLandlord">拨打电话</button> 
+  </view> 
+  
+  <!-- 物业信息卡片 --> 
+  <view class="contact-card"> 
+    <view class="card-title-icon icon-building"></view>
+    <text class="card-title">物业信息</text>
+    <view class="contact-info"> 
+      <text class="contact-name">{{contractInfo.propertyManagement.company}}</text> 
+      <text class="contact-phone">{{contractInfo.propertyManagement.phone}}</text> 
+    </view> 
+    <button class="btn-call" bindtap="onCallProperty">拨打电话</button> 
+  </view> 
+  
+  <!-- 续租按钮 --> 
+  <view class="renew-section"> 
+    <button class="btn-renew" bindtap="onRenew">
+      <view class="btn-icon icon-fire"></view>
+      我要续租
+    </button>
+  </view> 
+  
+</view>

@@ -1,0 +1,367 @@
+page { background: #000; color: #fff; font-family: 'DIN', sans-serif; }
+
+/* 1. 状态栏 */
+.status-bar { padding: 30rpx 40rpx 10rpx; display: flex; justify-content: flex-end; }
+
+.status-tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48rpx;
+  padding: 0 24rpx;
+  border-radius: 30rpx;
+  font-size: 22rpx;
+  background: #111;
+  border: 1rpx solid #333;
+  color: #666;
+  box-sizing: border-box;
+}
+
+.status-text {
+  font-size: 22rpx;
+  line-height: 1;
+  display: block;
+}
+
+/* 内部人员统一金光 */
+.status-tag.insider {
+  background: rgba(212, 176, 131, 0.1);
+  color: #D4B083;
+  border: 1rpx solid rgba(212, 176, 131, 0.4);
+}
+.status-tag.visitor {
+  background: #1a1a1a;
+  color: #666;
+  border: 1rpx solid #333;
+}
+
+.status-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: currentColor;
+  margin-right: 12rpx;
+  box-shadow: 0 0 10rpx currentColor;
+  margin-top: 2rpx;
+}
+
+/* 2. 搜索框 */
+.search-wrapper { padding: 20rpx 40rpx; }
+.search-box { background: #0a0a0a; padding: 24rpx 30rpx; border-radius: 16rpx; display: flex; align-items: center; border: 1rpx solid #1a1a1a; }
+.search-input { margin-left: 20rpx; font-size: 26rpx; flex: 1; color: #fff; }
+.ph { color: #333; }
+
+/* 3. Tabs */
+.tabs { display: flex; justify-content: space-around; height: 100rpx; align-items: center; border-bottom: 1rpx solid #111; margin-bottom: 10rpx; overflow-x: auto; white-space: nowrap; padding: 0 20rpx; }
+.tab { font-size: 26rpx; color: #444; position: relative; letter-spacing: 2rpx; margin: 0 20rpx; padding: 10rpx 0; }
+.tab.active { color: #D4B083; font-weight: bold; }
+.tab-line { position: absolute; bottom: 0; left: 15%; width: 70%; height: 4rpx; background: #D4B083; border-radius: 4rpx; }
+
+/* 4. 课程卡片 */
+.course-list { padding: 0; }
+
+.course-card {
+  background: #000;
+  padding: 45rpx 40rpx;
+  border-bottom: 12rpx solid #080808;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* 封面样式 */
+.c-cover {
+  width: 260rpx;
+  height: 160rpx;
+  background: #1a1a1a;
+  border-radius: 12rpx;
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 30rpx;
+  overflow: hidden;
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 12rpx;
+}
+
+.cover-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1a1a1a;
+  z-index: 1;
+}
+
+.cover-title {
+  font-size: 36rpx;
+  font-weight: 900;
+  color: #D4B083;
+  margin-bottom: 16rpx;
+  text-align: center;
+  padding: 0 24rpx;
+  letter-spacing: 3rpx;
+  line-height: 1.2;
+}
+
+.cover-subtitle {
+  font-size: 24rpx;
+  color: #fff;
+  text-align: center;
+  padding: 6rpx 20rpx;
+  background: rgba(212, 176, 131, 0.2);
+  border-radius: 24rpx;
+  border: 2rpx solid rgba(212, 176, 131, 0.4);
+  letter-spacing: 1rpx;
+}
+
+.c-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #D4B083;
+  color: #000;
+  font-size: 18rpx;
+  padding: 4rpx 12rpx;
+  border-bottom-right-radius: 12rpx;
+  border-top-left-radius: 12rpx;
+  font-weight: 900;
+  z-index: 2;
+}
+
+.c-duration {
+  position: absolute;
+  bottom: 10rpx;
+  right: 10rpx;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  font-size: 18rpx;
+  padding: 4rpx 10rpx;
+  border-radius: 4rpx;
+  z-index: 2;
+}
+
+/* 播放键覆盖层 */
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12rpx;
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+.course-card:active .play-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.play-icon {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(212, 176, 131, 0.9);
+  backdrop-filter: blur(10rpx);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.course-card:active .play-icon {
+  transform: scale(1.1);
+  background: rgba(212, 176, 131, 1);
+}
+
+/* 信息区域 */
+.c-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.c-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  line-height: 1.4;
+  color: #ddd;
+}
+
+.c-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22rpx;
+  color: #444;
+}
+
+.c-view {
+  color: #D4B083;
+  font-weight: bold;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.card-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 30rpx;
+  display: block;
+  line-height: 1.4;
+}
+
+.card-body {
+  margin-bottom: 30rpx;
+}
+
+.data-bar { display: flex; gap: 40rpx; font-size: 24rpx; }
+.data-group { color: #666; }
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 20;
+}
+
+.more-link { font-size: 24rpx; color: #666; font-weight: bold; }
+
+.security-tag { font-size: 18rpx; color: #ff4d4f; border: 1rpx solid rgba(255, 77, 79, 0.3); padding: 2rpx 10rpx; border-radius: 4rpx; background: rgba(255, 77, 79, 0.05); }
+
+/* 5. 空状态样式 */
+.empty-state {
+  padding: 200rpx 40rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  display: block;
+  margin-bottom: 40rpx;
+  opacity: 0.3;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #444;
+  display: block;
+}
+
+/* 6. 底部间隙 */
+.footer-gap {
+  height: 100rpx;
+}
+
+/* 视频封面样式 */
+.card-cover {
+  width: 100%;
+  height: 320rpx;
+  border-radius: 16rpx;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 32rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-cover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(212, 176, 131, 0.1) 0%, rgba(10, 10, 10, 0.3) 100%);
+  z-index: 1;
+}
+
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(212, 176, 131, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-size: 32rpx;
+  font-weight: bold;
+  z-index: 2;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 20rpx rgba(212, 176, 131, 0.3);
+}
+
+.course-card:active .play-icon {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(212, 176, 131, 1);
+}
+
+/* 封面样式变体 */
+.cover-1 { background-color: rgba(212, 176, 131, 0.1); }
+.cover-2 { background-color: rgba(212, 176, 131, 0.15); }
+.cover-3 { background-color: rgba(212, 176, 131, 0.2); }
+.cover-4 { background-color: rgba(212, 176, 131, 0.25); }
+.cover-5 { background-color: rgba(212, 176, 131, 0.3); }
+.cover-6 { background-color: rgba(212, 176, 131, 0.35); }
+.cover-7 { background-color: rgba(212, 176, 131, 0.4); }
+.cover-8 { background-color: rgba(212, 176, 131, 0.45); }
+.cover-9 { background-color: rgba(212, 176, 131, 0.5); }
+.cover-10 { background-color: rgba(212, 176, 131, 0.55); }
+.cover-11 { background-color: rgba(212, 176, 131, 0.6); }
+.cover-12 { background-color: rgba(212, 176, 131, 0.65); }
+.cover-13 { background-color: rgba(212, 176, 131, 0.7); }
+.cover-14 { background-color: rgba(212, 176, 131, 0.75); }
+.cover-15 { background-color: rgba(212, 176, 131, 0.8); }
+.cover-16 { background-color: rgba(212, 176, 131, 0.85); }
+.cover-17 { background-color: rgba(212, 176, 131, 0.9); }
+.cover-18 { background-color: rgba(212, 176, 131, 0.95); }
+.cover-19 { background-color: rgba(212, 176, 131, 1); }
+.cover-20 { background-color: rgba(212, 176, 131, 0.95); }
+.cover-21 { background-color: rgba(212, 176, 131, 0.9); }
+.cover-22 { background-color: rgba(212, 176, 131, 0.85); }
+.cover-23 { background-color: rgba(212, 176, 131, 0.8); }
+.cover-24 { background-color: rgba(212, 176, 131, 0.75); }
+
+/* 图标组件 */
+.icon-search::before {
+  content: '🔍';
+}
+
+.icon-play-circle::before {
+  content: '▶';
+}

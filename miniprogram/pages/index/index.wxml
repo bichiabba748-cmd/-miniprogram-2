@@ -1,0 +1,229 @@
+<view class="container {{isCustomer || isPreviewMode ? 'c-side-padding' : ''}}">
+  
+  <view class="status-bar">
+    <view class="region">
+      <text class="dot"></text>
+      <text>{{storeName}}</text>
+    </view>
+    <view class="identity-tag {{userRole}}">
+      <block wx:if="{{isPreviewMode}}">客户视角预览</block>
+      <block wx:else>
+        {{userRole === 'customer' ? '尊贵客户' : (userRole === 'student' ? '星火学员' : (userRole === 'admin' ? '管理员' : (userRole === 'anchor' ? '实战主播' : (userRole === 'broker' ? '内部经纪人' : '访客'))))}}
+      </block>
+    </view>
+  </view>
+
+  <view class="header-zone">
+    
+    <block wx:if="{{isCustomer || isPreviewMode}}">
+      
+      <view class="agent-card">
+        <image class="agent-face" src="../../images/avatar.png"></image>
+        <view class="agent-info">
+          <text class="a-name">您的专属顾问 · {{isPreviewMode ? '我(预览)' : (referrerName || '王金牌')}}</text>
+          <text class="a-desc">天津本地人 · 房产从业8年 · 帮助百余家庭安家</text>
+        </view>
+        <view class="call-btn" bindtap="onCallAgent">
+          <view class="call-icon icon-phone"></view>
+        </view>
+      </view>
+
+      <view class="resource-grid">
+        <view class="grid-header">
+          <text class="gh-title">购房资料包</text>
+          <text class="gh-more">已更新 12 项 ></text>
+        </view>
+        <view class="grid-body">
+          <view class="grid-item" wx:for="{{customerGrid}}" wx:key="name" bindtap="onGridTap" data-item="{{item}}">
+            <view class="gi-icon-box {{item.type === 'lock' && !isUnlocked ? 'locked' : ''}}">
+              <text>{{item.icon}}</text>
+              <view class="lock-badge" wx:if="{{item.type === 'lock' && !isUnlocked}}">
+                <view class="lock-icon icon-lock"></view>
+              </view>
+            </view>
+            <text class="gi-name">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="c-service-banner">
+        <view class="cs-item"><view class="cs-icon icon-shield"></view><text class="cs-txt">真实房源</text></view>
+        <view class="cs-line"></view>
+        <view class="cs-item"><view class="cs-icon icon-lock"></view><text class="cs-txt">隐私保护</text></view>
+        <view class="cs-line"></view>
+        <view class="cs-item"><view class="cs-icon icon-graduation"></view><text class="cs-txt">专业咨询</text></view>
+      </view>
+
+      <view class="recommend-box">
+        <view class="rb-header">
+          <text class="rb-title">精选房产干货</text>
+        </view>
+        <view class="rb-list">
+          <block wx:for="{{recommendList}}" wx:key="id">
+            <view class="rb-item" bindtap="onArticleTap">
+              <view class="rb-content">
+                <text class="rb-item-title">{{item.title}}</text>
+                <view class="rb-meta">
+                  <text class="rb-tag">{{item.tag}}</text>
+                  <text class="rb-views">{{item.views}} 阅读</text>
+                </view>
+              </view>
+              <view class="rb-arrow">></view>
+            </view>
+          </block>
+        </view>
+        <view class="rb-footer" bindtap="onArticleTap">查看更多文案 ></view>
+      </view>
+
+      <view class="auth-modal" wx:if="{{showAuthModal && !isPreviewMode}}">
+        <view class="auth-box">
+          <view class="a-title">获取完整资料</view>
+          <view class="a-desc">授权后，顾问将为您发送《天津购房避坑指南》及学区划片表。</view>
+          <button class="a-btn confirm" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">一键授权解锁</button>
+          <view class="a-btn cancel" bindtap="closeAuth">暂不解锁</view>
+        </view>
+      </view>
+
+      <view class="exit-preview-btn" wx:if="{{isPreviewMode}}" bindtap="exitPreview">
+        返回工作台
+      </view>
+
+    </block>
+
+
+    <block wx:else>
+      
+      <block wx:if="{{isVisitor || isStudent}}">
+        <view class="hero-card">
+          <text class="hero-label">TOTAL LEADS</text>
+          <text class="hero-value">128,405</text>
+          <text class="hero-desc">大区实战获客总数</text>
+        </view>
+        <view class="join-banner" wx:if="{{isVisitor}}" bindtap="goToJoin">
+          <view class="j-left">
+            <text class="j-title">加入星火计划</text>
+            <text class="j-desc">解锁 100+ 实战脚本与获客课程</text>
+          </view>
+          <view class="j-arrow">立即申请 ></view>
+        </view>
+        <view class="student-banner" wx:if="{{isStudent}}">
+           <view class="s-left">
+             <text class="s-title">您是星火计划第 9527 位学员</text>
+             <text class="s-desc">坚持实战，早日晋升为主播/经纪人</text>
+           </view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="board-card-broker" wx:if="{{isBroker && isRentalBroker}}" bindtap="openSubmit">
+          <view class="b-title">今日租赁业务</view>
+          <view class="b-num-row">
+            <view class="n-item"><text class="v">{{rentalContracts || 0}}</text><text class="l">签约</text></view>
+            <view class="n-item"><text class="v">{{houseCollection || 0}}</text><text class="l">收房</text></view>
+            <view class="n-item"><text class="v">{{houseRental || 0}}</text><text class="l">出房</text></view>
+            <view class="n-item"><text class="v">{{rentalShowings || 0}}</text><text class="l">带看</text></view>
+          </view>
+          <view class="submit-pill-broker">提报今日业务</view>
+        </view>
+        
+        <view class="board-card-broker" wx:if="{{isBroker && isTradingBroker}}" bindtap="openSubmit">
+          <view class="b-title">今日经纪业务</view>
+          <view class="b-num-row">
+            <view class="n-item"><text class="v">{{leads}}</text><text class="l">获客</text></view>
+            <view class="n-item"><text class="v">{{showings}}</text><text class="l">带看</text></view>
+            <view class="n-item"><text class="v">{{callbacks}}</text><text class="l">回访</text></view>
+          </view>
+          <view class="submit-pill-broker">提报今日量化</view>
+        </view>
+        
+        <view class="board-card-broker" wx:if="{{isBroker && isNewHouseBroker}}" bindtap="openSubmit">
+          <view class="b-title">今日新房业务</view>
+          <view class="b-num-row">
+            <view class="n-item"><text class="v">{{leads}}</text><text class="l">获客</text></view>
+            <view class="n-item"><text class="v">{{showings}}</text><text class="l">带看</text></view>
+            <view class="n-item"><text class="v">{{callbacks}}</text><text class="l">回访</text></view>
+          </view>
+          <view class="submit-pill-broker">提报今日量化</view>
+        </view>
+
+        <view class="board-card-anchor-full" wx:if="{{isAnchor}}" bindtap="openSubmit">
+          <view class="b-title">今日作战看板</view>
+          <view class="b-num-row">
+            <view class="n-item"><text class="v">{{leads}}</text><text class="l">获客</text></view>
+            <view class="n-item"><text class="v">{{videoCount}}</text><text class="l">视频</text></view>
+            <view class="n-item"><text class="v">{{liveCount}}</text><text class="l">直播</text></view>
+          </view>
+          <view class="submit-pill-full">提报今日量化</view>
+        </view>
+      </block>
+
+      <view class="news-ticker">
+        <view class="nt-label">LIVE</view>
+        <swiper class="nt-swiper" vertical autoplay circular interval="3000">
+          <block wx:for="{{reports}}" wx:key="*this">
+            <swiper-item><view class="nt-text">{{item}}</view></swiper-item>
+          </block>
+        </swiper>
+      </view>
+
+      <view class="rank-podium-section" bindtap="goToRank">
+        <view class="rank-header">
+          <text>{{rankTitle}}</text>
+          <text class="more" wx:if="{{!isVisitor && !isStudent}}">查看全量 ></text>
+        </view>
+        <view class="podium-content">
+          <view class="p-item p2">
+            <view class="p-avatar-wrap"><image src="/images/icons/avatars/top2.png"></image><view class="p-rank-num">2</view></view>
+            <text class="p-name">陈店长</text><text class="p-data">120</text>
+          </view>
+          <view class="p-item p1">
+            <view class="p-avatar-wrap"><image src="/images/icons/avatars/top1.png"></image><view class="p-rank-num gold">1</view></view>
+            <text class="p-name">王金牌</text><text class="p-data">158</text>
+          </view>
+          <view class="p-item p3">
+            <view class="p-avatar-wrap"><image src="/images/icons/avatars/top3.png"></image><view class="p-rank-num">3</view></view>
+            <text class="p-name">李销冠</text><text class="p-data">98</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="tool-section">
+        <view class="tool-grid">
+          <view class="tool-item" wx:for="{{bSideTools}}" wx:key="name" bindtap="onToolTap" data-action="{{item.action}}">
+            <view class="t-icon-box"><text>{{item.icon}}</text></view>
+            <text class="t-name">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+      
+    </block>
+  </view>
+
+  <view class="submit-overlay" wx:if="{{showSubmitModal}}">
+    <view class="submit-card">
+      <view class="modal-header">
+        <text class="card-h">{{isBroker ? '业务数据填报' : '实战数据填报'}}</text>
+        <view class="card-close" bindtap="closeSubmit">×</view>
+      </view>
+      <form bindsubmit="onFinalSubmit">
+        <block wx:if="{{isBroker && !isRentalBroker}}">
+          <view class="f-item"><text>今日获客组数</text><input name="leads" type="number" placeholder="0" class="input-box"/></view>
+          <view class="f-item"><text>今日有效带看</text><input name="showings" type="number" placeholder="0" class="input-box"/></view>
+          <view class="f-item"><text>今日电话回访</text><input name="callbacks" type="number" placeholder="0" class="input-box"/></view>
+        </block>
+        <block wx:if="{{isBroker && isRentalBroker}}">
+          <view class="f-item"><text>今日签约普租单量</text><input name="rentalContracts" type="number" placeholder="0" class="input-box"/></view>
+          <view class="f-item"><text>今日收房</text><input name="houseCollection" type="number" placeholder="0" class="input-box"/></view>
+          <view class="f-item"><text>今日出房</text><input name="houseRental" type="number" placeholder="0" class="input-box"/></view>
+          <view class="f-item"><text>今日带看量</text><input name="rentalShowings" type="number" placeholder="0" class="input-box"/></view>
+        </block>
+        <block wx:else>
+          <view class="f-item"><text>今日获客组数</text><input name="leads" type="number" placeholder="0" class="input-box"/></view>
+          <view class="f-item"><text>今日视频发布</text><input name="videoCount" type="number" placeholder="0" class="input-box"/></view>
+          <view class="f-item"><text>今日直播场次</text><input name="liveCount" type="number" placeholder="0" class="input-box"/></view>
+        </block>
+        <button class="confirm-btn" form-type="submit">确认提交</button>
+      </form>
+    </view>
+  </view>
+</view>

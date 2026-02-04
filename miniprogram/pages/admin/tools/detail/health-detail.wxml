@@ -1,0 +1,116 @@
+<!-- 项目健康状态详情页面 -->
+<view class="detail-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-left" bindtap="navigateBack">
+      <text class="nav-back">← 返回</text>
+    </view>
+    <view class="nav-title">项目健康状态</view>
+    <view class="nav-right">
+      <button class="check-btn" bindtap="runHealthCheck">
+        <text class="btn-text">检查</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 健康评分 -->
+  <view class="score-section">
+    <view class="score-card">
+      <view class="score-circle">
+        <view class="score-value">{{healthScore}}</view>
+        <view class="score-label">健康评分</view>
+      </view>
+      <view class="score-desc {{healthLevel}}">{{healthDescription}}</view>
+      <view class="score-time">上次检查: {{lastCheckTime}}</view>
+    </view>
+  </view>
+
+  <!-- 健康指标 -->
+  <view class="indicators-section">
+    <view class="section-title">健康指标</view>
+    <view class="indicator-list">
+      <view class="indicator-item" wx:for="{{indicators}}" wx:key="index">
+        <view class="indicator-header">
+          <view class="indicator-name">{{item.name}}</view>
+          <view class="indicator-actions">
+            <view class="indicator-status {{item.status}}">{{item.statusText}}</view>
+            <view wx:if="item.name === '组件规范'" class="indicator-action" bindtap="viewComponentDetails">
+              <text class="action-text">详情</text>
+            </view>
+          </view>
+        </view>
+        <view class="indicator-content">
+          <view class="indicator-score">{{item.score}}/100</view>
+          <view class="indicator-desc">{{item.description}}</view>
+          <view class="indicator-details" wx:if="item.details.length > 0">
+            <view class="detail-item" wx:for="{{item.details}}" wx:key="detailIndex">
+              <view class="detail-label">{{item.label}}</view>
+              <view class="detail-value">{{item.value}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 问题列表 -->
+  <view class="issues-section" wx:if="issues.length > 0">
+    <view class="section-title">问题列表</view>
+    <view class="issue-list">
+      <view class="issue-item {{item.severity}}" wx:for="{{issues}}" wx:key="index">
+        <view class="issue-header">
+          <view class="issue-info">
+            <view class="issue-name">{{item.name}}</view>
+            <view class="issue-severity {{item.severity}}">{{item.severityText}}</view>
+          </view>
+          <view class="issue-actions">
+            <view class="issue-action copy" bindtap="copyIssueDetail" data-index="{{index}}">
+              <text class="action-text">复制</text>
+            </view>
+          </view>
+        </view>
+        <view class="issue-content">
+          <view class="issue-desc">{{item.description}}</view>
+          <view class="issue-location">位置: {{item.location}}</view>
+          <view class="issue-suggestion">建议: {{item.suggestion}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 检查历史 -->
+  <view class="history-section">
+    <view class="section-title">检查历史</view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{checkHistory}}" wx:key="index">
+        <view class="history-header">
+          <view class="history-time">{{item.time}}</view>
+          <view class="history-score {{item.level}}">{{item.score}}/100</view>
+        </view>
+        <view class="history-content">
+          <view class="history-desc">{{item.description}}</view>
+          <view class="history-issues" wx:if="item.issues > 0">
+            <text class="issues-count">发现 {{item.issues}} 个问题</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作建议 -->
+  <view class="suggestions-section">
+    <view class="section-title">操作建议</view>
+    <view class="suggestion-list">
+      <view class="suggestion-item" wx:for="{{suggestions}}" wx:key="index">
+        <view class="suggestion-icon">{{item.icon}}</view>
+        <view class="suggestion-content">
+          <view class="suggestion-title">{{item.title}}</view>
+          <view class="suggestion-desc">{{item.description}}</view>
+        </view>
+        <view class="suggestion-action" bindtap="executeSuggestion" data-index="{{index}}">
+          <text class="action-text">执行</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

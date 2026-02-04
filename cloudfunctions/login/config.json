@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "openapi": [
+      "cloudbase.getOpenData",
+      "auth.getPaidUnionId"
+    ],
+    "db": [
+      {
+        "collection": "users",
+        "desc": "读取和写入用户数据"
+      }
+    ]
+  },
+  "timeout": 5000,
+  "memory": 128
+}

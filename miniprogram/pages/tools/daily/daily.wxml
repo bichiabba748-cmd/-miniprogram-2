@@ -1,0 +1,50 @@
+<view class="container">
+  <view class="header">
+    <text class="date">{{currentDate}}</text>
+    <text class="subtitle">今日推荐</text>
+  </view>
+
+  <view class="tabs">
+    <view 
+      wx:for="{{tabs}}" 
+      wx:key="key"
+      class="tab-item {{currentTab === item.key ? 'active' : ''}}"
+      bindtap="onTabChange"
+      data-category="{{item.key}}">
+      <text>{{item.label}}</text>
+    </view>
+  </view>
+
+  <view class="content-area">
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+
+    <view wx:else class="content-card">
+      <view wx:if="{{imageUrl}}" class="image-container">
+        <image src="{{imageUrl}}" mode="aspectFill" class="cover-image" />
+      </view>
+
+      <view class="text-container">
+        <text class="text-content">{{textContent}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="action-bar">
+    <button class="btn btn-primary" bindtap="onCopyText">
+      复制文案
+    </button>
+    <button class="btn btn-secondary" bindtap="onSaveImage" wx:if="{{imageUrl}}">
+      保存配图
+    </button>
+  </view>
+
+  <view class="refresh-btn" bindtap="onRefresh">
+    <text>换一批</text>
+  </view>
+
+  <view class="tip">
+    <text>复制后可直接去朋友圈粘贴发布</text>
+  </view>
+</view>

@@ -1,0 +1,151 @@
+<view class="life-container"> 
+   <view class="page-title">周边生活</view> 
+   
+   <!-- 加入生活圈 --> 
+   <view class="join-card"> 
+     <view class="join-header"> 
+       <view class="join-title icon-houses"></view>
+       <text>华苑生活圈</text> 
+     </view> 
+     <view class="join-desc"> 
+       <text class="desc-item"><view class="desc-icon icon-shopping"></view> 拼团买菜 / 二手闲置</text> 
+       <text class="desc-item"><view class="desc-icon icon-car"></view> 拼车出行 / 停车位交换</text> 
+       <text class="desc-item"><view class="desc-icon icon-house"></view> 装修推荐 / 维修避坑</text> 
+     </view> 
+     <view class="join-btn" bindtap="onJoinGroup"> 
+       <text class="btn-text">一键加入群聊</text> 
+     </view> 
+   </view> 
+   
+   <!-- 超市购物 --> 
+   <view class="life-card"> 
+     <view class="card-header"> 
+       <view class="card-icon icon-store"></view>
+       <text class="card-title">超市购物</text> 
+     </view> 
+     <view class="place-list"> 
+       <view class="place-item"> 
+         <text class="place-name">永辉超市</text> 
+         <text class="place-info">小区东门 300 米</text> 
+         <text class="place-time"><view class="place-icon icon-clock"></view> 营业时间：7:00-22:00</text> 
+         <text class="place-distance"><view class="place-icon icon-walk"></view> 步行距离：5 分钟</text> 
+       </view> 
+       <view class="place-item"> 
+         <text class="place-name">天猫小店</text> 
+         <text class="place-info">小区南门 100 米</text> 
+         <text class="place-time"><view class="place-icon icon-clock"></view> 营业时间：24 小时</text> 
+         <text class="place-distance"><view class="place-icon icon-walk"></view> 步行距离：2 分钟</text> 
+       </view> 
+     </view> 
+   </view> 
+   
+   <!-- 医疗服务 --> 
+   <view class="life-card"> 
+     <view class="card-header"> 
+       <view class="card-icon icon-hospital"></view>
+       <text class="card-title">医疗服务</text> 
+     </view> 
+     <view class="place-list"> 
+       <view class="place-item"> 
+         <text class="place-name">天津市第一中心医院</text> 
+         <text class="place-info">2.5 公里</text> 
+         <text class="place-time"><view class="place-icon icon-ambulance"></view> 急救电话：120</text> 
+         <text class="place-distance"><view class="place-icon icon-taxi"></view> 出租车：约 15 分钟</text> 
+       </view> 
+       <view class="place-item"> 
+         <text class="place-name">老百姓大药房</text> 
+         <text class="place-info">小区北门对面</text> 
+         <text class="place-time"><view class="place-icon icon-clock"></view> 营业时间：8:00-21:00</text> 
+         <text class="place-distance"><view class="place-icon icon-walk"></view> 步行距离：3 分钟</text> 
+       </view> 
+     </view> 
+   </view> 
+   
+   <!-- 快递代收 --> 
+   <view class="life-card"> 
+     <view class="card-header"> 
+       <view class="card-icon icon-package"></view>
+       <text class="card-title">快递代收</text> 
+     </view> 
+     <view class="place-list"> 
+       <view class="place-item"> 
+         <text class="place-name">菜鸟驿站</text> 
+         <text class="place-info">小区 2 号楼下</text> 
+         <text class="place-time"><view class="place-icon icon-clock"></view> 营业时间：8:00-20:00</text> 
+         <text class="place-distance"><view class="place-icon icon-walk"></view> 步行距离：小区内部</text> 
+       </view> 
+     </view> 
+   </view> 
+   
+   <!-- 餐饮推荐 --> 
+   <view class="life-card"> 
+     <view class="card-header"> 
+       <view class="card-icon icon-noodle"></view>
+       <text class="card-title">餐饮推荐</text> 
+     </view> 
+     <view class="place-list"> 
+       <view class="place-item"> 
+         <text class="place-name">张记牛肉面</text> 
+         <text class="place-info">小区西门</text> 
+         <text class="place-review"><view class="place-icon icon-speech"></view> 租户推荐："牛肉面 18 元，量大实惠"</text> 
+         <text class="place-distance"><view class="place-icon icon-walk"></view> 步行距离：2 分钟</text> 
+       </view> 
+       <view class="place-item"> 
+         <text class="place-name">必胜客</text> 
+         <text class="place-info">地铁口商场内</text> 
+         <text class="place-price"><view class="place-icon icon-money"></view> 人均：60-80 元</text> 
+         <text class="place-distance"><view class="place-icon icon-subway"></view> 距离：步行 10 分钟</text> 
+       </view> 
+       <view class="place-item"> 
+         <text class="place-name">星巴克</text> 
+         <text class="place-info">华苑新天地 1 楼</text> 
+         <text class="place-price"><view class="place-icon icon-money"></view> 人均：35-45 元</text> 
+         <text class="place-distance"><view class="place-icon icon-walk"></view> 步行距离：8 分钟</text> 
+       </view> 
+     </view> 
+   </view> 
+   
+   <!-- 地铁/公交 --> 
+   <view class="life-card"> 
+     <view class="card-header"> 
+       <view class="card-icon icon-subway"></view>
+       <text class="card-title">地铁/公交</text> 
+     </view> 
+     <view class="place-list"> 
+       <view class="place-item"> 
+         <text class="place-name">华苑站（3 号线）</text> 
+         <text class="place-info">步行距离：600 米（约 8 分钟）</text> 
+         <text class="place-time">首班车：5:50 / 末班车：22:30</text> 
+       </view> 
+       <view class="place-item"> 
+         <text class="place-name">观景路公交站</text> 
+         <text class="place-info">638 路、643 路、849 路</text> 
+         <text class="place-route">→ 到南开大学：15 分钟</text> 
+         <text class="place-route">→ 到天津站：35 分钟</text> 
+       </view> 
+     </view> 
+   </view> 
+   
+   <!-- 便民设施 --> 
+   <view class="life-card"> 
+     <view class="card-header"> 
+       <view class="card-icon icon-bank"></view>
+       <text class="card-title">便民设施</text> 
+     </view> 
+     <view class="place-list"> 
+       <view class="place-item"> 
+         <text class="place-name">银行</text> 
+         <text class="place-info">• 工商银行（小区东门）</text> 
+         <text class="place-info">• 农业银行（地铁口）</text> 
+       </view> 
+       <view class="place-item"> 
+         <text class="place-name">ATM</text> 
+         <text class="place-info">小区 3 号楼下</text> 
+       </view> 
+       <view class="place-item"> 
+         <text class="place-name">快递柜</text> 
+         <text class="place-info">丰巢快递柜（1、3、5 号楼下）</text> 
+       </view> 
+     </view> 
+   </view> 
+ </view>

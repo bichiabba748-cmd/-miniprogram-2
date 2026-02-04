@@ -1,0 +1,74 @@
+page { 
+  background: #000; 
+  color: #fff; 
+  min-height: 100vh; 
+}
+
+.container { 
+  padding: 40rpx; 
+  padding-bottom: 140rpx; /* 避让底部按钮 */
+}
+
+.header { margin-bottom: 60rpx; }
+.title { font-size: 40rpx; font-weight: 900; color: #D4B083; display: block; margin-bottom: 12rpx; }
+.sub { font-size: 24rpx; color: #666; }
+
+.form-group { margin-bottom: 50rpx; }
+.label { font-size: 28rpx; color: #ddd; margin-bottom: 20rpx; font-weight: bold; }
+
+.input { 
+  background: #1a1a1a; border: 1rpx solid #333; 
+  height: 88rpx; border-radius: 12rpx; 
+  padding: 0 30rpx; color: #fff; font-size: 28rpx; 
+}
+.ph { color: #555; }
+
+/* 标签选择 */
+.tags { display: flex; gap: 20rpx; }
+.tag { 
+  padding: 12rpx 30rpx; background: #1a1a1a; 
+  border: 1rpx solid #333; border-radius: 30rpx; 
+  font-size: 24rpx; color: #888; transition: all 0.2s;
+}
+.tag.active { 
+  background: #D4B083; color: #000; border-color: #D4B083; font-weight: bold; 
+}
+
+/* 战绩凭证 (一行两个) */
+.row-inputs { display: flex; gap: 30rpx; }
+.input-wrap { 
+  flex: 1; position: relative; 
+  display: flex; align-items: center; 
+}
+.input.small { width: 100%; padding-right: 100rpx; font-family: 'DIN'; font-weight: bold; }
+.unit { 
+  position: absolute; right: 24rpx; 
+  font-size: 24rpx; color: #666; 
+}
+.tip { 
+  font-size: 20rpx; color: #444; margin-top: 12rpx; display: block; 
+}
+
+/* 文本域 */
+.textarea { 
+  background: #1a1a1a; border: 1rpx solid #333; 
+  width: 100%; height: 300rpx; border-radius: 12rpx; 
+  padding: 30rpx; color: #fff; font-size: 28rpx; box-sizing: border-box; 
+}
+.word-count { text-align: right; font-size: 22rpx; color: #444; margin-top: 10rpx; }
+
+/* 底部按钮 */
+.footer-btn { 
+  position: fixed; bottom: 0; left: 0; width: 100%; 
+  padding: 20rpx 40rpx 60rpx; background: #000; 
+  border-top: 1rpx solid #1a1a1a; z-index: 100;
+  box-sizing: border-box;
+}
+.submit-btn { 
+  background: #D4B083; color: #000; font-weight: 900; 
+  height: 90rpx; border-radius: 45rpx; font-size: 32rpx; 
+  display: flex; align-items: center; justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+.submit-btn:active { opacity: 0.9; }

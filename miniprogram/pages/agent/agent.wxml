@@ -1,0 +1,18 @@
+<view class="agent-card" bindtap="goToDetail" data-id="{{item.id}}">
+  <view class="card-cover" style="background-image: url({{item.cover}})">
+    <view class="case-tag">绝密 · {{item.tag}}</view>
+    <view class="top-secret-bar">INTERNAL USE ONLY</view>
+  </view>
+  <view class="card-info">
+    <text class="case-title">{{item.title}}</text>
+    <view class="case-grid">
+      <view class="g-item"><text class="g-v">{{item.conversion}}</text><text class="g-l">转化率</text></view>
+      <view class="g-item"><text class="g-v">{{item.leads}}组</text><text class="g-l">实战获客</text></view>
+      <view class="g-item"><text class="g-v">{{item.learnCount}}</text><text class="g-l">学习人数</text></view>
+    </view>
+    <view class="case-footer">
+      <view class="author-tag">研究员: {{item.author}}</view>
+      <view class="logic-link">底层逻辑拆解 ></view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,48 @@
+/* 新增快讯样式 */
+.news-ticker {
+  background: #111; margin: 0 40rpx; padding: 20rpx 30rpx;
+  border-radius: 8rpx; display: flex; align-items: center;
+  border: 1rpx solid #222; transform: translateY(-30rpx);
+}
+.ticker-icon { color: #ff9a00; margin-right: 20rpx; font-weight: bold; }
+.ticker-swiper { height: 40rpx; flex: 1; }
+.ticker-text { font-size: 22rpx; color: #888; }
+
+/* 案例卡片指标化 */
+.case-metrics {
+  display: flex; justify-content: space-between; 
+  background: #0a0a0a; padding: 20rpx; border-radius: 8rpx; margin-bottom: 30rpx;
+}
+.m-item { display: flex; flex-direction: column; align-items: center; }
+.m-val { font-family: 'DIN'; color: #ff9a00; font-size: 32rpx; font-weight: bold; }
+.m-lab { font-size: 18rpx; color: #444; margin-top: 4rpx; }
+
+/* 图标组件 */
+.icon-lightning::before {
+  content: '⚡';
+}
+
+.icon-fire::before {
+  content: '🔥';
+}
+
+.icon-rocket::before {
+  content: '🚀';
+}
+
+.ticker-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.section-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8rpx;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8rpx;
+}

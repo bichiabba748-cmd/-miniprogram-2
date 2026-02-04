@@ -1,0 +1,100 @@
+<view class="container">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <text class="header-title">我的收藏</text>
+    <view class="header-right"></view>
+  </view>
+
+  <!-- 状态切换 -->
+  <view class="status-tabs">
+    <view 
+      class="tab-item {{activeTab === 'collected' ? 'active' : ''}}" 
+      bindtap="switchTab"
+      data-tab="collected"
+    >
+      <text class="tab-text">已收藏</text>
+    </view>
+    <view 
+      class="tab-item {{activeTab === 'shooting' ? 'active' : ''}}" 
+      bindtap="switchTab"
+      data-tab="shooting"
+    >
+      <text class="tab-text">待拍摄</text>
+    </view>
+  </view>
+
+  <!-- 收藏列表 -->
+  <view class="collection-list" wx:if="{{!loading && collections.length > 0}}">
+    <view class="collection-item" wx:for="{{collections}}" wx:key="_id">
+      <!-- 文案信息 -->
+      <view class="item-content" bindtap="goToDetail" data-id="{{item.articleId}}">
+        <view class="item-header">
+          <text class="item-title">{{item.articleTitle}}</text>
+          <text class="item-category">{{item.articleCategory}}</text>
+        </view>
+        <view class="item-meta">
+          <text class="item-time">收藏于 {{formatTime(item.createdAt)}}</text>
+          <text class="item-status">{{item.status === 'collected' ? '已收藏' : '待拍摄'}}</text>
+        </view>
+        <!-- 文章内容预览 -->
+        <view class="item-preview" wx:if="{{item.article && item.article.content}}">
+          <text class="preview-text">{{getPreviewContent(item.article.content)}}</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="item-actions" wx:if="{{activeTab === 'collected'}}">
+        <button 
+          class="action-btn primary-btn" 
+          bindtap="addToShooting"
+          data-id="{{item.articleId}}"
+        >
+          加入待拍摄
+        </button>
+        <button 
+          class="action-btn secondary-btn" 
+          bindtap="removeCollection"
+          data-id="{{item.articleId}}"
+          data-article-id="{{item.articleId}}"
+        >
+          取消收藏
+        </button>
+      </view>
+      <view class="item-actions" wx:else>
+        <button 
+          class="action-btn secondary-btn" 
+          bindtap="removeFromShooting"
+          data-id="{{item.articleId}}"
+        >
+          移除
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && collections.length === 0}}">
+    <view class="empty-icon icon-list"></view>
+    <text class="empty-text">
+      {{activeTab === 'collected' ? '暂无收藏的文案' : '暂无待拍摄的文案'}}
+    </text>
+    <text class="empty-hint">
+      {{activeTab === 'collected' ? '去文案库收藏喜欢的文案吧' : '去已收藏列表选择文案加入待拍摄'}}
+    </text>
+    <button 
+      class="empty-btn" 
+      bindtap="{{activeTab === 'collected' ? 'goToArt' : 'switchToCollected'}}"
+    >
+      {{activeTab === 'collected' ? '去收藏文案' : '去已收藏'}}
+    </button>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-icon icon-loading"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

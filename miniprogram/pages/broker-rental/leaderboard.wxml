@@ -1,0 +1,78 @@
+<view class="container">
+  <!-- 头部导航 -->
+  <view class="header">
+    <text class="title">租赁经纪人龙虎榜</text>
+  </view>
+
+  <!-- 榜单类型切换 -->
+  <view class="tab-container">
+    <view 
+      class="tab-item {{leaderboardType === 'total' ? 'active' : ''}}"
+      data-type="total"
+      bindtap="switchLeaderboardType"
+    >
+      <text>累计榜单</text>
+    </view>
+    <view 
+      class="tab-item {{leaderboardType === 'month' ? 'active' : ''}}"
+      data-type="month"
+      bindtap="switchLeaderboardType"
+    >
+      <text>月度榜单</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 榜单列表 -->
+  <view wx:else class="leaderboard-list">
+    <view wx:for="{{leaderboardData}}" wx:key="id" class="leaderboard-item">
+      <!-- 排名 -->
+      <view class="rank-container">
+        <view class="rank {{index < 3 ? 'top' : ''}}">
+          <text class="rank-number">{{index + 1}}</text>
+        </view>
+      </view>
+
+      <!-- 经纪人信息 -->
+      <view class="broker-info">
+        <image class="avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view class="broker-details">
+          <text class="broker-name">{{item.name}}</text>
+          <text class="broker-store">{{item.store}}</text>
+        </view>
+      </view>
+
+      <!-- 业绩数据 -->
+      <view class="performance">
+        <view class="performance-item">
+          <text class="performance-label">获客</text>
+          <text class="performance-value">{{item.leads}}</text>
+        </view>
+        <view class="performance-item">
+          <text class="performance-label">带看</text>
+          <text class="performance-value">{{item.showings}}</text>
+        </view>
+        <view class="performance-item">
+          <text class="performance-label">成交</text>
+          <text class="performance-value">{{item.deals}}</text>
+        </view>
+      </view>
+
+      <!-- 排名变化 -->
+      <view class="ranking-change">
+        <text wx:if="{{item.rankingChange > 0}}" class="up">↑{{item.rankingChange}}</text>
+        <text wx:elif="{{item.rankingChange < 0}}" class="down">↓{{Math.abs(item.rankingChange)}}</text>
+        <text wx:else class="stable">-</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无数据提示 -->
+  <view wx:if="{{!loading && leaderboardData.length === 0}}" class="empty-container">
+    <text class="empty-text">暂无数据</text>
+  </view>
+</view>

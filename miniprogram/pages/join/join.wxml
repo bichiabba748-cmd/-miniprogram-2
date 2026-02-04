@@ -1,0 +1,49 @@
+<view class="container">
+  <view class="header">
+    <text class="title">加入星火计划</text>
+    <text class="subtitle">SPARK PROGRAM · 2026</text>
+  </view>
+
+  <view class="form-card">
+    <!-- 姓名 -->
+    <view class="form-item">
+      <text class="label">姓名 *</text>
+      <input class="input" placeholder="请输入真实姓名" value="{{name}}" bindinput="onNameInput"/>
+    </view>
+
+    <!-- 手机号 -->
+    <view class="form-item">
+      <view class="label-row">
+        <text class="label">手机号 *</text>
+        <view class="quick-btn" bindtap="mockGetPhone"><view class="quick-icon icon-mobile"></view> 一键填入</view>
+      </view>
+      <input class="input" type="number" placeholder="请输入手机号" value="{{phone}}" bindinput="onPhoneInput"/>
+    </view>
+
+    <!-- 痛点 -->
+    <view class="form-item">
+      <text class="label">核心痛点 * (可多选)</text>
+      <view class="tags">
+        <view class="tag {{pain1}}" bindtap="tap1">缺客流</view>
+        <view class="tag {{pain2}}" bindtap="tap2">没素材</view>
+        <view class="tag {{pain3}}" bindtap="tap3">不会播</view>
+        <view class="tag {{pain4}}" bindtap="tap4">难成交</view>
+      </view>
+    </view>
+
+    <!-- 身份 -->
+    <view class="form-item">
+      <text class="label">身份段位 *</text>
+      <view class="radios">
+        <view class="radio {{id1}}" bindtap="sel1">经纪人(有经验)</view>
+        <view class="radio {{id2}}" bindtap="sel2">经纪人(无经验)</view>
+        <view class="radio {{id3}}" bindtap="sel3">店东</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom">
+    <button class="btn" bindtap="submit">提交申请</button>
+    <text class="tip">提交后需等待管理员审核，预计1个工作日</text>
+  </view>
+</view>

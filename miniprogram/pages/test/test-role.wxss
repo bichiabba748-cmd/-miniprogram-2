@@ -1,0 +1,135 @@
+.container {
+  padding: 30rpx;
+  background-color: #0a0a0a;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #D4B083;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.subtitle {
+  font-size: 32rpx;
+  color: #999;
+}
+
+.role-buttons {
+  margin-bottom: 40rpx;
+}
+
+.button-section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #D4B083;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.role-btn {
+  background-color: #1a1a1a;
+  border: 2rpx solid #333;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #D4B083;
+  transition: all 0.3s ease;
+}
+
+.role-btn:active {
+  background-color: #D4B083;
+  color: #0a0a0a;
+  transform: scale(0.95);
+}
+
+.test-section {
+  margin-bottom: 40rpx;
+}
+
+.test-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.test-btn {
+  background-color: #1a1a1a;
+  border: 2rpx solid #333;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #D4B083;
+  transition: all 0.3s ease;
+}
+
+.test-btn:active {
+  background-color: #D4B083;
+  color: #0a0a0a;
+  transform: scale(0.95);
+}
+
+.test-btn.clear {
+  border-color: #666;
+  color: #999;
+}
+
+.test-btn.clear:active {
+  background-color: #666;
+  color: #0a0a0a;
+}
+
+.results-section {
+  margin-top: 40rpx;
+}
+
+.results-list {
+  background-color: #1a1a1a;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  min-height: 300rpx;
+}
+
+.result-item {
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #333;
+}
+
+.result-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.result-text {
+  font-size: 28rpx;
+  color: #ccc;
+  line-height: 40rpx;
+}
+
+.empty-result {
+  text-align: center;
+  color: #666;
+  padding: 60rpx 0;
+  font-size: 28rpx;
+}

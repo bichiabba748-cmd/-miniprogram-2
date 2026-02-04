@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "openapi": [
+      "security.msgSecCheck"
+    ],
+    "db": {
+      "cloudbase_auth": true,
+      "collections": {
+        "consults": {
+          "read": true,
+          "write": true
+        }
+      }
+    }
+  }
+}

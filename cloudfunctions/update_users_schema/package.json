@@ -1,0 +1,9 @@
+{
+  "name": "update_users_schema",
+  "version": "1.0.0",
+  "description": "更新 users 集合 Schema，增加 businessType 字段",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

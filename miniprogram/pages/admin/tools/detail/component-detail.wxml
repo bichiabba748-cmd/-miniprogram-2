@@ -1,0 +1,164 @@
+<!-- 组件库状态分析详情页面 -->
+<view class="detail-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-left" bindtap="navigateBack">
+      <text class="nav-back">← 返回</text>
+    </view>
+    <view class="nav-title">组件库状态</view>
+    <view class="nav-right">
+      <button class="refresh-btn" bindtap="refreshComponents">
+        <text class="btn-text">刷新</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 组件库概览 -->
+  <view class="overview-section">
+    <view class="overview-card">
+      <view class="overview-title">组件库概览</view>
+      <view class="overview-stats">
+        <view class="stat-item">
+          <view class="stat-value">{{componentStats.total}}</view>
+          <view class="stat-label">组件总数</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{componentStats.used}}</view>
+          <view class="stat-label">已使用组件</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{componentStats.usageRate}}%</view>
+          <view class="stat-label">使用率</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value {{componentStats.healthScore >= 80 ? 'good' : 'warning'}}">{{componentStats.healthScore}}/100</view>
+          <view class="stat-label">健康评分</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 组件使用情况 -->
+  <view class="usage-section">
+    <view class="section-title">组件使用情况</view>
+    <view class="usage-card">
+      <view class="usage-chart">
+        <view class="chart-container">
+          <view class="chart-legend">
+            <view class="legend-item">
+              <view class="legend-color used"></view>
+              <view class="legend-text">已使用 ({{componentStats.used}})</view>
+            </view>
+            <view class="legend-item">
+              <view class="legend-color unused"></view>
+              <view class="legend-text">未使用 ({{componentStats.total - componentStats.used}})</view>
+            </view>
+          </view>
+          <view class="chart-pie">
+            <view class="pie-container">
+              <view class="pie-slice used" style="clip-path: polygon(50% 50%, 50% 0%, {{getPieClipPath(componentStats.usageRate)}});"></view>
+              <view class="pie-slice unused" style="clip-path: polygon(50% 50%, {{getPieClipPath(componentStats.usageRate)}}, 50% 0%);"></view>
+              <view class="pie-center">
+                <view class="center-text">{{componentStats.usageRate}}%</view>
+                <view class="center-label">使用率</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 组件列表 -->
+  <view class="components-section">
+    <view class="section-title">组件列表</view>
+    <view class="component-list">
+      <view class="component-item" wx:for="{{components}}" wx:key="index">
+        <view class="component-header">
+          <view class="component-name">{{item.name}}</view>
+          <view class="component-status {{item.status}}">{{item.statusText}}</view>
+        </view>
+        <view class="component-details">
+          <view class="detail-row">
+            <view class="detail-item">
+              <view class="detail-label">使用次数</view>
+              <view class="detail-value">{{item.usage}}</view>
+            </view>
+            <view class="detail-item">
+              <view class="detail-label">创建时间</view>
+              <view class="detail-value">{{item.createdAt}}</view>
+            </view>
+          </view>
+          <view class="detail-row">
+            <view class="detail-item">
+              <view class="detail-label">最后使用</view>
+              <view class="detail-value">{{item.lastUsed}}</view>
+            </view>
+            <view class="detail-item">
+              <view class="detail-label">版本</view>
+              <view class="detail-value">{{item.version}}</view>
+            </view>
+          </view>
+        </view>
+        <view class="component-actions">
+          <button class="action-btn view" bindtap="viewComponentDetail" data-index="{{index}}">
+            <text class="btn-text">详情</text>
+          </button>
+          <button class="action-btn optimize" bindtap="optimizeComponent" data-index="{{index}}">
+            <text class="btn-text">优化</text>
+          </button>
+          <button class="action-btn {{item.status === 'unused' ? 'delete' : 'disable'}}" bindtap="{{item.status === 'unused' ? 'deleteComponent' : 'disableComponent'}}" data-index="{{index}}">
+            <text class="btn-text">{{item.status === 'unused' ? '删除' : '禁用'}}</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 组件分类 -->
+  <view class="categories-section">
+    <view class="section-title">组件分类</view>
+    <view class="category-list">
+      <view class="category-item" wx:for="{{categories}}" wx:key="index">
+        <view class="category-info">
+          <view class="category-name">{{item.name}}</view>
+          <view class="category-count">{{item.count}} 个组件</view>
+        </view>
+        <view class="category-percentage">{{item.percentage}}%</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 未使用组件 -->
+  <view class="unused-section" wx:if="unusedComponents.length > 0">
+    <view class="section-title">未使用组件</view>
+    <view class="unused-list">
+      <view class="unused-item" wx:for="{{unusedComponents}}" wx:key="index">
+        <view class="unused-name">{{item.name}}</view>
+        <view class="unused-actions">
+          <button class="action-btn delete" bindtap="deleteComponent" data-index="{{item.index}}">
+            <text class="btn-text">删除</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 优化建议 -->
+  <view class="suggestions-section">
+    <view class="section-title">优化建议</view>
+    <view class="suggestion-list">
+      <view class="suggestion-item" wx:for="{{optimizationSuggestions}}" wx:key="index">
+        <view class="suggestion-icon">{{item.icon}}</view>
+        <view class="suggestion-content">
+          <view class="suggestion-title">{{item.title}}</view>
+          <view class="suggestion-desc">{{item.description}}</view>
+          <view class="suggestion-impact">预期影响: {{item.impact}}</view>
+        </view>
+        <view class="suggestion-action" bindtap="applySuggestion" data-index="{{index}}">
+          <text class="action-text">应用</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

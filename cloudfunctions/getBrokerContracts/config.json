@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "db": {
+      "cloudbase_auth": true,
+      "collections": {
+        "contracts": {
+          "read": true
+        }
+      }
+    }
+  }
+}

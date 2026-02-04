@@ -1,0 +1,77 @@
+<view class="container">
+  <view class="header">
+    <text class="title">贡献实战脚本</text>
+    <text class="sub">分享你的爆款，点亮【内容专家】勋章</text>
+  </view>
+
+  <view class="form-group">
+    <view class="label">脚本标题</view>
+    <input 
+      class="input" 
+      placeholder="例如：学区房精准获客300字" 
+      placeholder-class="ph"
+      bindinput="onInput" 
+      data-field="title"
+    />
+  </view>
+
+  <view class="form-group">
+    <view class="label">脚本类型</view>
+    <view class="tags">
+      <block wx:for="{{['获客', '信任', '转化', '避坑']}}" wx:key="*this">
+        <view 
+          class="tag {{formData.category === item ? 'active' : ''}}" 
+          bindtap="onSelectType" 
+          data-type="{{item}}">
+          {{item}}
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="form-group">
+    <view class="label">战绩凭证 (审核依据)</view>
+    <view class="row-inputs">
+      <view class="input-wrap">
+        <input 
+          class="input small" 
+          type="number" 
+          placeholder="0" 
+          placeholder-class="ph"
+          bindinput="onInput" 
+          data-field="leads"
+        />
+        <text class="unit">组获客</text>
+      </view>
+      <view class="input-wrap">
+        <input 
+          class="input small" 
+          type="number" 
+          placeholder="0" 
+          placeholder-class="ph"
+          bindinput="onInput" 
+          data-field="views"
+        />
+        <text class="unit">播放量</text>
+      </view>
+    </view>
+    <text class="tip">* 请如实填写，夸大数据将被驳回</text>
+  </view>
+
+  <view class="form-group">
+    <view class="label">脚本正文 / SOP拆解</view>
+    <textarea 
+      class="textarea" 
+      placeholder="请粘贴你的实战脚本，或描述具体案例细节..." 
+      placeholder-class="ph"
+      maxlength="2000"
+      bindinput="onInput" 
+      data-field="content"
+    ></textarea>
+    <view class="word-count">{{contentLen}}/2000</view>
+  </view>
+
+  <view class="footer-btn">
+    <button class="submit-btn" bindtap="onSubmit">提交审核</button>
+  </view>
+</view>

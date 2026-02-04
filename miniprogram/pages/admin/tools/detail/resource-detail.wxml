@@ -1,0 +1,149 @@
+<!-- 资源使用情况详情页面 -->
+<view class="detail-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-left" bindtap="navigateBack">
+      <text class="nav-back">← 返回</text>
+    </view>
+    <view class="nav-title">资源使用情况</view>
+    <view class="nav-right">
+      <button class="refresh-btn" bindtap="refreshResource">
+        <text class="btn-text">刷新</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 资源概览 -->
+  <view class="overview-section">
+    <view class="overview-card">
+      <view class="overview-title">资源概览</view>
+      <view class="overview-stats">
+        <view class="stat-item">
+          <view class="stat-value">{{resourceStats.files}}</view>
+          <view class="stat-label">项目文件</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{resourceStats.lines}}</view>
+          <view class="stat-label">代码行数</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{resourceStats.size}}</view>
+          <view class="stat-label">小程序体积</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{resourceStats.functions}}</view>
+          <view class="stat-label">云函数</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 文件类型分布 -->
+  <view class="file-types-section">
+    <view class="section-title">文件类型分布</view>
+    <view class="file-types-card">
+      <view class="file-type-list">
+        <view class="file-type-item" wx:for="{{fileTypes}}" wx:key="index">
+          <view class="file-type-info">
+            <view class="file-type-icon">{{item.icon}}</view>
+            <view class="file-type-details">
+              <view class="file-type-name">{{item.name}}</view>
+              <view class="file-type-count">{{item.count}} 个文件</view>
+            </view>
+          </view>
+          <view class="file-type-size">{{item.size}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 目录结构 -->
+  <view class="directory-section">
+    <view class="section-title">目录结构</view>
+    <view class="directory-card">
+      <view class="directory-tree">
+        <view class="directory-item" wx:for="{{directoryStructure}}" wx:key="index">
+          <view class="directory-level" style="padding-left: {{item.level * 20}}rpx;">
+            <view class="directory-icon {{item.type === 'dir' ? 'icon-folder' : 'icon-file'}}"></view>
+            <view class="directory-name">{{item.name}}</view>
+            <view class="directory-count" wx:if="item.type === 'dir' && item.count > 0">({{item.count}})</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 资源趋势 -->
+  <view class="trend-section">
+    <view class="section-title">资源趋势</view>
+    <view class="trend-card">
+      <view class="trend-chart">
+        <view class="chart-container">
+          <view class="chart-header">
+            <view class="chart-label">日期</view>
+            <view class="chart-label">文件数</view>
+            <view class="chart-label">代码行数</view>
+            <view class="chart-label">体积</view>
+          </view>
+          <view class="chart-body">
+            <view class="chart-row" wx:for="{{resourceTrend}}" wx:key="index">
+              <view class="chart-cell">{{item.date}}</view>
+              <view class="chart-cell">{{item.files}}</view>
+              <view class="chart-cell">{{item.lines}}</view>
+              <view class="chart-cell">{{item.size}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 云函数资源 -->
+  <view class="functions-section">
+    <view class="section-title">云函数资源</view>
+    <view class="functions-card">
+      <view class="function-list">
+        <view class="function-item" wx:for="{{cloudFunctions}}" wx:key="index">
+          <view class="function-header">
+            <view class="function-name">{{item.name}}</view>
+            <view class="function-status {{item.status}}">{{item.statusText}}</view>
+          </view>
+          <view class="function-details">
+            <view class="detail-item">
+              <view class="detail-label">执行时间</view>
+              <view class="detail-value">{{item.executionTime}}ms</view>
+            </view>
+            <view class="detail-item">
+              <view class="detail-label">内存使用</view>
+              <view class="detail-value">{{item.memoryUsage}}</view>
+            </view>
+            <view class="detail-item">
+              <view class="detail-label">依赖数</view>
+              <view class="detail-value">{{item.dependencies}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 优化建议 -->
+  <view class="optimization-section">
+    <view class="section-title">优化建议</view>
+    <view class="optimization-card">
+      <view class="optimization-list">
+        <view class="optimization-item" wx:for="{{optimizationSuggestions}}" wx:key="index">
+          <view class="optimization-icon">{{item.icon}}</view>
+          <view class="optimization-content">
+            <view class="optimization-title">{{item.title}}</view>
+            <view class="optimization-desc">{{item.description}}</view>
+            <view class="optimization-impact">预期影响: {{item.impact}}</view>
+          </view>
+          <view class="optimization-action" bindtap="applyOptimization" data-index="{{index}}">
+            <text class="action-text">应用</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

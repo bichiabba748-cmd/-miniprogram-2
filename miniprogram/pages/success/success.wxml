@@ -1,0 +1,12 @@
+<view class="container">
+  <view class="status-box">
+    <icon type="success" size="90" color="#00ae66" class="icon"/>
+    <text class="title">今日战绩已存档</text>
+    <text class="desc">数据已送达大区指挥部，管理员审核后将自动更新您的榜单排名。</text>
+  </view>
+
+  <view class="btn-group">
+    <button class="btn-primary" bindtap="goHome">返回作战中心</button>
+    <button class="btn-sub" bindtap="goRank">查看实时榜单</button>
+  </view>
+</view>

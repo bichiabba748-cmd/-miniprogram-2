@@ -1,0 +1,274 @@
+<!-- 管理工具页面 -->
+<view class="tools-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-title">管理工具</view>
+    <view class="nav-right">
+      <button class="help-btn" bindtap="viewHelp">
+        <text class="btn-text">帮助</text>
+      </button>
+      <button class="refresh-btn" bindtap="refreshStatus">
+        <text class="btn-text">刷新</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 状态概览 -->
+  <view class="status-overview">
+    <view class="status-card">
+      <view class="status-title">项目健康度</view>
+      <view class="status-value {{healthStatus.level}}">{{healthStatus.score}}/100</view>
+      <view class="status-desc">{{healthStatus.description}}</view>
+    </view>
+    <view class="status-card">
+      <view class="status-title">开发进度</view>
+      <view class="status-value">{{progressStatus.percentage}}%</view>
+      <view class="status-desc">{{progressStatus.stage}}</view>
+    </view>
+  </view>
+
+  <!-- 核心功能区 -->
+  <view class="function-section">
+    <view class="section-title">核心功能</view>
+    
+    <!-- 开发进度概览 -->
+    <view class="function-card">
+      <view class="card-header">
+        <view class="card-title">开发进度</view>
+        <view class="card-action" bindtap="viewProgressDetail">
+          <text class="action-text">详情</text>
+        </view>
+      </view>
+      <view class="card-content">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{progressStatus.percentage}}%"></view>
+        </view>
+        <view class="progress-info">
+          <text class="info-text">总完成率: {{progressStatus.percentage}}%</text>
+          <text class="info-text">最近更新: {{progressStatus.lastUpdated}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 项目健康状态 -->
+    <view class="function-card">
+      <view class="card-header">
+        <view class="card-title">项目健康状态</view>
+        <view class="card-action" bindtap="runHealthCheck">
+          <text class="action-text">检查</text>
+        </view>
+      </view>
+      <view class="card-content">
+        <view class="health-indicators">
+          <view class="indicator-item">
+            <view class="indicator-label">代码一致性</view>
+            <view class="indicator-status {{healthStatus.consistency}}"></view>
+          </view>
+          <view class="indicator-item">
+            <view class="indicator-label">权限矩阵</view>
+            <view class="indicator-status {{healthStatus.permissions}}"></view>
+          </view>
+          <view class="indicator-item">
+            <view class="indicator-label">组件规范</view>
+            <view class="indicator-status {{healthStatus.components}}"></view>
+          </view>
+        </view>
+        <view class="health-issues" wx:if="{{healthStatus.issues.length > 0}}">
+          <view class="issues-title">问题列表</view>
+          <view class="issues-list">
+            <view class="issue-item" wx:for="{{healthStatus.issues}}" wx:key="index">
+              <text class="issue-text">{{item.name}}</text>
+              <view class="issue-actions">
+                <view class="issue-action" bindtap="viewIssueDetail" data-index="{{index}}">
+                  <text class="action-text">详情</text>
+                </view>
+                <view class="issue-action copy" bindtap="copyIssueDetail" data-index="{{index}}">
+                  <text class="action-text">复制</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 备份管理 -->
+    <view class="function-card">
+      <view class="card-header">
+        <view class="card-title">备份管理</view>
+      </view>
+      <view class="card-content">
+        <view class="backup-info">
+          <view class="info-item">
+            <view class="info-label">最近备份</view>
+            <view class="info-value">{{backupStatus.lastBackup}}</view>
+          </view>
+          <view class="info-item">
+            <view class="info-label">备份数量</view>
+            <view class="info-value">{{backupStatus.count}}</view>
+          </view>
+          <view class="info-item">
+            <view class="info-label">自动备份</view>
+            <view class="info-value">{{backupStatus.autoEnabled ? '开启' : '关闭'}}</view>
+          </view>
+        </view>
+        <!-- 大按钮入口 -->
+        <view class="large-action-btn" bindtap="manualBackup">
+          <text style="font-size: 32rpx; font-weight: bold;">立即手动备份</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 资源使用情况 -->
+    <view class="function-card">
+      <view class="card-header">
+        <view class="card-title">资源使用情况</view>
+      </view>
+      <view class="card-content">
+        <view class="resource-stats">
+          <view class="stat-item">
+            <view class="stat-label">项目文件数</view>
+            <view class="stat-value">{{resourceStatus.files}}</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-label">代码行数</view>
+            <view class="stat-value">{{resourceStatus.lines}}</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-label">小程序体积</view>
+            <view class="stat-value">{{resourceStatus.size}}</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-label">云函数数</view>
+            <view class="stat-value">{{resourceStatus.functions}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 辅助功能区 -->
+  <view class="function-section">
+    <view class="section-title">辅助功能</view>
+    
+    <!-- 云函数状态 -->
+    <view class="function-card">
+      <view class="card-header">
+        <view class="card-title">云函数状态</view>
+        <view class="card-action" bindtap="viewFunctionDetail">
+          <text class="action-text">详情</text>
+        </view>
+      </view>
+      <view class="card-content">
+        <view class="function-stats">
+          <view class="stat-item">
+            <view class="stat-label">总云函数</view>
+            <view class="stat-value">{{functionStatus.total}}</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-label">高风险</view>
+            <view class="stat-value warning">{{functionStatus.highRisk}}</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-label">平均响应</view>
+            <view class="stat-value">{{functionStatus.avgResponse}}ms</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 组件库状态 -->
+    <view class="function-card">
+      <view class="card-header">
+        <view class="card-title">组件库状态</view>
+        <view class="card-action" bindtap="viewComponentDetail">
+          <text class="action-text">详情</text>
+        </view>
+      </view>
+      <view class="card-content">
+        <view class="component-stats">
+          <view class="stat-item">
+            <view class="stat-label">组件总数</view>
+            <view class="stat-value">{{componentStatus.total}}</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-label">已使用</view>
+            <view class="stat-value">{{componentStatus.used}}</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-label">使用率</view>
+            <view class="stat-value">{{componentStatus.usageRate}}%</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 测试中心 -->
+    <view class="function-card">
+      <view class="card-header">
+        <view class="card-title">测试中心</view>
+      </view>
+      <view class="card-content">
+        <!-- 测试按钮 -->
+        <view class="test-buttons">
+          <view class="test-btn" bindtap="testUpdateProgress">
+            <text class="btn-text">同步真实进度</text>
+          </view>
+          <view class="test-btn" bindtap="goToTestCenter">
+            <text class="btn-text">进入测试中心</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作引导 -->
+  <view class="guide-section">
+    <view class="section-title">操作引导</view>
+    <view class="guide-card">
+      <view class="guide-item">
+        <view class="guide-number">1</view>
+        <view class="guide-content">
+          <view class="guide-title">查看开发进度</view>
+          <view class="guide-desc">了解项目整体状态和各阶段完成情况</view>
+        </view>
+      </view>
+      <view class="guide-item">
+        <view class="guide-number">2</view>
+        <view class="guide-content">
+          <view class="guide-title">检查健康状态</view>
+          <view class="guide-desc">识别潜在问题，确保项目稳定性</view>
+        </view>
+      </view>
+      <view class="guide-item">
+        <view class="guide-number">3</view>
+        <view class="guide-content">
+          <view class="guide-title">手动备份</view>
+          <view class="guide-desc">重要时刻确保数据安全，防止意外丢失</view>
+        </view>
+      </view>
+      <view class="guide-item">
+        <view class="guide-number">4</view>
+        <view class="guide-content">
+          <view class="guide-title">监控资源使用</view>
+          <view class="guide-desc">了解项目规模变化，提前发现资源瓶颈</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载提示 -->
+  <view class="loading-overlay" wx:if="{{loading}}">
+    <view class="loading-content">
+      <view class="loading-spinner"></view>
+      <view class="loading-text">{{loadingText}}</view>
+    </view>
+  </view>
+
+  <!-- 操作结果提示 -->
+  <view class="toast" wx:if="toast.show">
+    <view class="toast-content {{toast.type}}">
+      <text class="toast-text">{{toast.message}}</text>
+    </view>
+  </view>
+</view>

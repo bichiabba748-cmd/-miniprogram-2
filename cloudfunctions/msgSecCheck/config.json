@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "openapi": [
+      "security.msgSecCheck",
+      "security.imgSecCheck"
+    ]
+  },
+  "runtime": "Node.js 18.17",
+  "memory": 128,
+  "timeout": 10,
+  "triggers": []
+}

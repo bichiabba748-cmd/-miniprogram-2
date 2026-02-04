@@ -1,0 +1,65 @@
+<view class="container">
+  <view class="rank-tabs" wx:if="{{isNewAnchor}}">
+    <view class="tab {{activeTab === 'new' ? 'active' : ''}}" bindtap="switchTab" data-tab="new"><view class="tab-icon icon-sprout"></view> 新锐赛道</view>
+    <view class="tab {{activeTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all"><view class="tab-icon icon-lion"></view> 全量战神</view>
+  </view>
+  <view class="rank-title-bar" wx:else>
+    <view class="title-icon icon-lion"></view>
+    <text>大区全量战神榜</text>
+  </view>
+
+  <view class="podium">
+    <view class="p-item rank-2" bindtap="goToUserScripts" data-name="{{top3[1].name}}">
+      <view class="p-avatar-wrap">
+        <image class="p-avatar" src="{{top3[1].avatar}}"></image>
+        <view class="p-badge">2</view>
+      </view>
+      <text class="p-name">{{top3[1].name}}</text>
+      <text class="p-val">{{top3[1].leads}} 获客</text>
+    </view>
+    <view class="p-item rank-1" bindtap="goToUserScripts" data-name="{{top3[0].name}}">
+      <view class="p-avatar-wrap">
+        <view class="crown icon-crown"></view>
+        <image class="p-avatar" src="{{top3[0].avatar}}"></image>
+        <view class="p-badge">1</view>
+      </view>
+      <text class="p-name">{{top3[0].name}}</text>
+      <text class="p-val">{{top3[0].leads}} 获客</text>
+    </view>
+    <view class="p-item rank-3" bindtap="goToUserScripts" data-name="{{top3[2].name}}">
+      <view class="p-avatar-wrap">
+        <image class="p-avatar" src="{{top3[2].avatar}}"></image>
+        <view class="p-badge">3</view>
+      </view>
+      <text class="p-name">{{top3[2].name}}</text>
+      <text class="p-val">{{top3[2].leads}} 获客</text>
+    </view>
+  </view>
+
+  <view class="rank-list" wx:if="{{canViewFull}}">
+    <block wx:for="{{others}}" wx:key="id">
+      <view class="list-item {{item.isMe ? 'is-me' : ''}}">
+        <view class="r-num">
+          <text wx:if="{{!item.isBottom}}">{{item.rank}}</text>
+          <view wx:else class="refuel icon-gas"></view>
+        </view>
+        <image class="r-avatar" src="{{item.avatar}}"></image>
+        <view class="r-info">
+          <text class="r-name">{{item.name}}</text>
+          <text class="r-store">{{item.store}}</text>
+        </view>
+        <view class="r-data">
+          <text class="r-val">{{item.leads}} 获客</text>
+          <view class="r-link" catchtap="goToUserScripts" data-name="{{item.name}}">
+            {{item.scripts}} 篇 >
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+  
+  <view class="limited-tip" wx:if="{{!canViewFull}}">
+    <text class="tip-text">加入星火计划后，解锁全量战神榜</text>
+    <view class="tip-btn" bindtap="goToJoin">立即加入</view>
+  </view>
+</view>

@@ -1,0 +1,19 @@
+{
+  "backupPaths": [
+    "miniprogram",
+    "cloudfunctions",
+    "docs",
+    "tools"
+  ],
+  "excludePaths": [
+    "node_modules",
+    ".git",
+    "backups",
+    "miniprogram/node_modules",
+    "cloudfunctions/node_modules"
+  ],
+  "backupInterval": 24,
+  "keepBackups": 7,
+  "databaseBackup": true,
+  "compressBackup": true
+}

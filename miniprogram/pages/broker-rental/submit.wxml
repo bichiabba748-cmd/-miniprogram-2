@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="form-section">
+    <view class="section-title">租客信息</view>
+    <input class="input-field" placeholder="租客姓名" value="{{tenantName}}" bindinput="onInputChange" data-field="tenantName"/>
+    <input class="input-field" placeholder="租客手机号" type="number" value="{{tenantPhone}}" bindinput="onInputChange" data-field="tenantPhone"/>
+  </view>
+
+  <view class="form-section">
+    <view class="section-title">房源信息</view>
+    <input class="input-field" placeholder="房源地址（如：华苑小区3号楼501）" value="{{propertyAddress}}" bindinput="onInputChange" data-field="propertyAddress"/>
+    <input class="input-field" placeholder="月租金（元）" type="digit" value="{{rent}}" bindinput="onInputChange" data-field="rent"/>
+    <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+      <view class="picker-field">租期开始：{{startDate || '请选择'}}</view>
+    </picker>
+    <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+      <view class="picker-field">租期结束：{{endDate || '请选择'}}</view>
+    </picker>
+  </view>
+
+  <view class="form-section">
+    <view class="section-title">业主信息</view>
+    <input class="input-field" placeholder="业主姓名" value="{{ownerName}}" bindinput="onInputChange" data-field="ownerName"/>
+    <input class="input-field" placeholder="业主电话" type="number" value="{{ownerPhone}}" bindinput="onInputChange" data-field="ownerPhone"/>
+  </view>
+
+  <view class="submit-btn" bindtap="handleSubmit">提交报单</view>
+</view>

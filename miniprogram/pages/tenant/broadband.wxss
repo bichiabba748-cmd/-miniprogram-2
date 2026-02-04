@@ -1,0 +1,189 @@
+.broadband-container { 
+   min-height: 100vh; 
+   background: #0a0a0a; 
+   padding: 32rpx; 
+   box-sizing: border-box; 
+ } 
+ 
+ .page-title { 
+   font-size: 48rpx; 
+   font-weight: bold; 
+   color: #D4B083; 
+   text-align: center; 
+   margin-bottom: 40rpx; 
+   font-family: 'DIN Alternate', sans-serif; 
+ } 
+ 
+ /* 运营商卡片 */ 
+ .operator-card { 
+   background: rgba(212, 176, 131, 0.05); 
+   backdrop-filter: blur(10px); 
+   border: 1px solid rgba(212, 176, 131, 0.2); 
+   border-radius: 24rpx; 
+   padding: 32rpx; 
+   margin-bottom: 32rpx; 
+ } 
+ 
+ .op-header { 
+   display: flex; 
+   justify-content: space-between; 
+   align-items: center; 
+   margin-bottom: 32rpx; 
+   padding-bottom: 24rpx; 
+   border-bottom: 1px solid rgba(212, 176, 131, 0.15); 
+ } 
+ 
+ .op-name { 
+   font-size: 40rpx; 
+   font-weight: bold; 
+   color: #D4B083; 
+ } 
+ 
+ .op-hotline { 
+   display: flex; 
+   flex-direction: column; 
+   align-items: flex-end; 
+ } 
+ 
+ .hotline-label { 
+   font-size: 24rpx; 
+   color: rgba(255, 255, 255, 0.5); 
+   margin-bottom: 8rpx; 
+ } 
+ 
+ .hotline-number { 
+   font-size: 36rpx; 
+   font-weight: bold; 
+   color: #D4B083; 
+   font-family: 'DIN Alternate', sans-serif; 
+ } 
+ 
+ /* 板块 */ 
+ .op-section { 
+   margin-bottom: 32rpx; 
+ } 
+ 
+ .op-section:last-child { 
+   margin-bottom: 0; 
+ } 
+ 
+ .section-title { 
+   display: block; 
+   font-size: 32rpx; 
+   font-weight: bold; 
+   color: #ffffff; 
+   margin-bottom: 20rpx; 
+ } 
+ 
+ /* 办理流程 */ 
+ .flow-steps { 
+   display: flex; 
+   flex-direction: column; 
+   gap: 16rpx; 
+ } 
+ 
+ .step-item { 
+   font-size: 28rpx; 
+   color: rgba(255, 255, 255, 0.8); 
+   line-height: 1.6; 
+   padding-left: 8rpx; 
+ } 
+ 
+ .flow-simple { 
+   font-size: 28rpx; 
+   color: rgba(255, 255, 255, 0.8); 
+   line-height: 1.6; 
+ } 
+ 
+ /* 套餐列表 */ 
+ .package-list { 
+   display: flex; 
+   flex-direction: column; 
+   gap: 20rpx; 
+ } 
+ 
+ .package-item { 
+   display: flex; 
+   justify-content: space-between; 
+   align-items: center; 
+   background: rgba(10, 10, 10, 0.4); 
+   padding: 24rpx; 
+   border-radius: 16rpx; 
+   border: 1px solid rgba(212, 176, 131, 0.1); 
+ } 
+ 
+ .pkg-speed { 
+   font-size: 32rpx; 
+   font-weight: bold; 
+   color: #ffffff; 
+   flex: 0 0 160rpx; 
+   font-family: 'DIN Alternate', sans-serif; 
+ } 
+ 
+ .pkg-price {
+   font-size: 32rpx;
+   font-weight: bold;
+   color: #D4B083;
+   flex: 0 0 160rpx;
+   text-align: center;
+   font-family: 'DIN Alternate', sans-serif;
+   white-space: nowrap;
+ } 
+ 
+ .pkg-desc { 
+   font-size: 24rpx; 
+   color: rgba(255, 255, 255, 0.6); 
+   flex: 1; 
+   text-align: right; 
+ } 
+ 
+ /* 优惠信息 */ 
+ .promo-text { 
+   font-size: 28rpx; 
+   color: #D4B083; 
+   line-height: 1.6; 
+ } 
+ 
+ /* 温馨提示 */ 
+ .tips-card { 
+   background: rgba(212, 176, 131, 0.08); 
+   backdrop-filter: blur(10px); 
+   border: 1px solid rgba(212, 176, 131, 0.25); 
+   border-radius: 24rpx; 
+   padding: 32rpx; 
+   margin-top: 40rpx; 
+ } 
+ 
+ .tips-header { 
+   display: flex; 
+   align-items: center; 
+   gap: 12rpx; 
+   margin-bottom: 24rpx; 
+ } 
+ 
+ .tips-icon { 
+   font-size: 40rpx; 
+ } 
+ 
+ .tips-title { 
+   font-size: 32rpx; 
+   font-weight: bold; 
+   color: #D4B083; 
+ } 
+ 
+ .tips-list { 
+   display: flex; 
+   flex-direction: column; 
+   gap: 16rpx; 
+ } 
+ 
+ .tip-item { 
+  font-size: 28rpx; 
+  color: rgba(255, 255, 255, 0.8); 
+  line-height: 1.6; 
+}
+
+/* 图标组件 */
+.icon-warning::before {
+  content: '⚠️';
+}

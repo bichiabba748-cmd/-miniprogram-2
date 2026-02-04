@@ -1,0 +1,51 @@
+.gold-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.gold-button.primary {
+  background-color: #D4B083;
+  color: #0a0a0a;
+}
+
+.gold-button.secondary {
+  background-color: transparent;
+  color: #D4B083;
+  border: 1rpx solid #D4B083;
+}
+
+.gold-button.disabled {
+  background-color: #333;
+  color: #666;
+  border-color: #666;
+  cursor: not-allowed;
+}
+
+.gold-button.small {
+  padding: 8rpx 24rpx;
+  font-size: 24rpx;
+}
+
+.gold-button.medium {
+  padding: 12rpx 32rpx;
+  font-size: 28rpx;
+}
+
+.gold-button.large {
+  padding: 16rpx 40rpx;
+  font-size: 32rpx;
+}
+
+.button-text {
+  line-height: 1.2;
+}
+
+.gold-button:not(.disabled):active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}

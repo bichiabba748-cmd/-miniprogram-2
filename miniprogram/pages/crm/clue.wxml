@@ -1,0 +1,70 @@
+<view class="container">
+  <view class="form-area">
+    
+    <view class="input-group">
+      <view class="label">客户称呼 <text class="required">*</text></view>
+      <input class="big-input" 
+             placeholder="请输入客户姓名/昵称" 
+             placeholder-class="ph" 
+             value="{{name}}" 
+             bindinput="onInputName"
+      />
+    </view>
+
+    <view class="input-group">
+      <view class="label">联系电话 <text class="required">*</text></view>
+      <input class="big-input" 
+             type="number" 
+             maxlength="11" 
+             placeholder="请输入手机号码" 
+             placeholder-class="ph" 
+             value="{{phone}}" 
+             bindinput="onInputPhone"
+      />
+    </view>
+
+    <view class="input-group">
+      <view class="label">线索来源</view>
+      <view class="tag-matrix">
+        <block wx:for="{{sourceOptions}}" wx:key="*this">
+          <view class="tag {{currentSource === item ? 'active' : ''}}" 
+                bindtap="onSelectSource" 
+                data-val="{{item}}">
+            {{item}}
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="input-group">
+      <view class="label">意向等级 ({{intentLevel}}星)</view>
+      <view class="star-row">
+        <block wx:for="{{[1, 2, 3, 4, 5]}}" wx:key="*this">
+          <view class="star-item" bindtap="onRateIntent" data-score="{{item}}">
+            <view class="star-icon {{item <= intentLevel ? 'active' : ''}} icon-star"></view>
+          </view>
+        </block>
+      </view>
+      <view class="star-desc">{{intentDesc[intentLevel] || '请评估客户意向'}}</view>
+    </view>
+
+    <view class="input-group">
+      <view class="label">跟进备注</view>
+      <textarea class="remark-area" 
+                placeholder="记录客户核心需求、预算或下次跟进计划..." 
+                placeholder-class="ph" 
+                auto-height 
+                value="{{remark}}"
+                bindinput="onInputRemark"
+      ></textarea>
+    </view>
+
+  </view>
+
+  <view class="footer-bar">
+    <view class="submit-btn" bindtap="onSubmit">
+      <view class="btn-icon icon-sparkle"></view>
+      确认归档
+    </view>
+  </view>
+</view>

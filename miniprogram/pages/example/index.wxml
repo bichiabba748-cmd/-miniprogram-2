@@ -1,0 +1,123 @@
+<view class="container">
+  <view class="status-bar">
+    <view class="region">
+      <text class="dot"></text>
+      <text>{{storeName || '星火计划 · 天津战区'}}</text>
+    </view>
+    <view class="identity-tag {{userRole}}">
+      {{userRole === 'admin' ? '管理员' : (userRole === 'anchor' ? '实战主播' : (userRole === 'broker' ? '内部经纪人' : '外部学员'))}}
+    </view>
+  </view>
+
+  <view class="header-zone">
+    <block wx:if="{{isVisitor || isStudent}}">
+      <view class="hero-card">
+        <text class="hero-label">TOTAL LEADS</text>
+        <text class="hero-value">128,405</text>
+        <text class="hero-desc">大区实战获客总数</text>
+      </view>
+    </block>
+
+    <block wx:elif="{{isBroker}}">
+      <view class="board-card-broker" bindtap="openSubmit">
+        <view class="b-title">今日经纪业务</view>
+        <view class="b-num-row">
+          <view class="n-item"><text class="v">{{leads}}</text><text class="l">获客</text></view>
+          <view class="n-item"><text class="v">{{showings}}</text><text class="l">带看</text></view>
+          <view class="n-item"><text class="v">{{callbacks}}</text><text class="l">回访</text></view>
+        </view>
+        <view class="submit-pill-broker">
+          <view class="pill-icon icon-note"></view>
+          提报业务数据
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="board-card-anchor-full" bindtap="openSubmit">
+        <view class="b-title">今日作战看板</view>
+        <view class="b-num-row">
+          <view class="n-item"><text class="v">{{leads}}</text><text class="l">获客</text></view>
+          <view class="n-item"><text class="v">{{videoCount}}</text><text class="l">视频</text></view>
+          <view class="n-item"><text class="v">{{liveCount}}</text><text class="l">直播</text></view>
+        </view>
+        <view class="submit-pill-full">
+          <view class="pill-icon icon-rocket"></view>
+          提报流量战绩
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="rank-podium-section" bindtap="goToRank">
+    <view class="rank-header">
+      <view class="rank-icon icon-trophy"></view>
+      <text>今日大区量能榜</text>
+      <text class="more">查看全量 ></text>
+    </view>
+    <view class="podium-content">
+      <view class="p-item p2">
+        <view class="p-avatar-wrap">
+          <image src="/images/icons/avatars/top2.png"></image> <view class="p-rank-num">2</view>
+        </view>
+        <text class="p-name">陈店长</text>
+        <text class="p-data">120获客</text>
+      </view>
+      <view class="p-item p1">
+        <view class="p-avatar-wrap">
+          <image src="/images/icons/avatars/top1.png"></image>
+          <view class="p-rank-num gold">1</view>
+        </view>
+        <text class="p-name">王金牌</text>
+        <text class="p-data">158获客</text>
+      </view>
+      <view class="p-item p3">
+        <view class="p-avatar-wrap">
+          <image src="/images/icons/avatars/top3.png"></image>
+          <view class="p-rank-num">3</view>
+        </view>
+        <text class="p-name">李销冠</text>
+        <text class="p-data">98获客</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-zone">
+    <view class="nav-grid">
+      <view class="nav-item" bindtap="goToArt"><view class="nav-icon icon-scroll"></view><text>文案</text></view>
+      <view class="nav-item" bindtap="goToRank"><view class="nav-icon icon-trophy"></view><text>排行</text></view>
+      <view class="nav-item" bindtap="goToCourse"><view class="nav-icon icon-video"></view><text>课程</text></view>
+      <view class="nav-item" bindtap="goToAgent"><view class="nav-icon icon-lion"></view><text>我的</text></view>
+    </view>
+    <view class="live-report-bar">
+      <view class="report-head"><text class="r-title">战区实战快讯</text><text class="r-live">LIVE</text></view>
+      <swiper vertical="true" autoplay="true" circular="true" interval="3000" class="report-swiper">
+        <swiper-item wx:for="{{reports}}" wx:key="*this">
+          <view class="report-item"><text class="r-tag">刚刚</text><text class="r-msg">{{item}}</text></view>
+        </swiper-item>
+      </swiper>
+    </view>
+  </view>
+
+  <view class="submit-overlay" wx:if="{{showSubmitModal}}">
+    <view class="submit-card">
+      <view class="card-close" bindtap="closeSubmit">×</view>
+      <view class="card-h">{{isBroker ? '业务数据填报' : '实战数据填报'}}</view>
+      <form bindsubmit="onFinalSubmit">
+        <view class="f-item"><text>今日获客组数</text><input name="leads" type="number" placeholder="0"/></view>
+        
+        <block wx:if="{{isBroker}}">
+          <view class="f-item"><text>今日有效带看</text><input name="showings" type="number" placeholder="0"/></view>
+          <view class="f-item"><text>今日电话回访</text><input name="callbacks" type="number" placeholder="0"/></view>
+        </block>
+
+        <block wx:else>
+          <view class="f-item"><text>今日视频发布量</text><input name="videoCount" type="number" placeholder="0"/></view>
+          <view class="f-item"><text>今日直播场次</text><input name="liveCount" type="number" placeholder="0"/></view>
+        </block>
+
+        <button class="confirm-btn" form-type="submit">提交审核</button>
+      </form>
+    </view>
+  </view>
+</view>

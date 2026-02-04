@@ -1,0 +1,18 @@
+<view class="container">
+  <view class="header-tip">作战通知 ({{msgList.length}})</view>
+  
+  <view class="msg-list">
+    <block wx:for="{{msgList}}" wx:key="id">
+      <view class="msg-item">
+        <view class="dot {{item.read ? 'read' : ''}}"></view>
+        <view class="content">
+          <view class="msg-top">
+            <text class="title">{{item.title}}</text>
+            <text class="time">{{item.time}}</text>
+          </view>
+          <text class="txt">{{item.desc}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

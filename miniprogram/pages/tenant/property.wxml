@@ -1,0 +1,59 @@
+<view class="property-page">
+  <view class="custom-navbar">
+    <view class="nav-back" bindtap="onNavigateBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="nav-title">物业服务</text>
+  </view>
+
+  <view class="page-content">
+    <view class="section section-brand">
+      <view class="brand-icon icon-location"></view>
+      <text class="brand-name">华苑小区物业管理处</text>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="section section-phone">
+      <view class="section-label icon-phone"></view>
+      <text>物业电话</text>
+      <view class="phone-row">
+        <text class="phone-number">022-83726688</text>
+        <button class="btn-dial" bindtap="onCallProperty">一键拨打</button>
+      </view>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="section section-hours">
+      <view class="section-label icon-clock"></view>
+      <text>服务时间</text>
+      <text class="hours-text">周一至周日 8:00-18:00</text>
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="section section-payment">
+      <view class="section-label icon-money"></view>
+      <text>物业费缴纳</text>
+      <view class="payment-list">
+        <view class="payment-item">
+          <text class="payment-num">1</text>
+          <text class="payment-desc">支付宝生活缴费</text>
+        </view>
+        <view class="payment-item">
+          <text class="payment-num">2</text>
+          <text class="payment-desc">物业大厅现金/刷卡</text>
+        </view>
+        <view class="payment-item">
+          <text class="payment-num">3</text>
+          <text class="payment-desc">银行代扣</text>
+        </view>
+      </view>
+      <view class="fee-tip">
+        <view class="tip-icon icon-lightbulb"></view>
+        <text class="tip-text">提示: 每季度1次，按建筑面积2.5元/㎡</text>
+      </view>
+    </view>
+  </view>
+</view>

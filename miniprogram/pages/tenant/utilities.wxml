@@ -1,0 +1,180 @@
+<view class="utilities-container"> 
+  <view class="page-title">水电缴费指南</view> 
+  
+  <!-- 电费缴纳 --> 
+  <view class="utility-card"> 
+    <view class="util-header"> 
+      <view class="util-icon icon-lightning"></view>
+      <text class="util-name">电费缴纳</text>
+    </view> 
+    
+    <view class="account-section"> 
+      <text class="account-label">您的户号</text> 
+      <view class="account-box"> 
+        <text class="account-number">{{electricAccount}}</text> 
+        <view class="copy-btn" bindtap="onCopy" data-type="electric" data-value="{{electricAccount}}"> 
+          <text class="copy-text">一键复制</text> 
+        </view> 
+      </view> 
+    </view> 
+    
+    <view class="method-section"> 
+      <text class="method-title">缴费方式（3选1）</text> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式1：支付宝 APP</text> 
+        <view class="method-steps"> 
+          <text class="method-step">1. 打开支付宝 APP</text> 
+          <text class="method-step">2. 搜索"生活缴费"</text> 
+          <text class="method-step">3. 选择"电费" → 选择"国家电网天津"</text> 
+          <text class="method-step">4. 输入户号 → 查询账单 → 支付</text> 
+        </view> 
+      </view> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式2：微信"天津政务"小程序</text> 
+        <view class="method-steps"> 
+          <text class="method-step">1. 微信搜索"天津政务"小程序</text> 
+          <text class="method-step">2. 点击"公共缴费" → "电费"</text> 
+          <text class="method-step">3. 输入户号 → 缴费</text> 
+        </view> 
+      </view> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式3：国家电网 APP</text> 
+        <text class="method-note">下载"网上国网"APP后登录缴费</text> 
+      </view> 
+      
+      <view class="util-tip"> 
+        <view class="tip-icon icon-warning"></view>
+        <text class="tip-text">提示：每月15日前缴费无滞纳金</text>
+      </view> 
+    </view> 
+  </view> 
+  
+  <!-- 水费缴纳 --> 
+  <view class="utility-card"> 
+    <view class="util-header"> 
+      <view class="util-icon icon-water"></view>
+      <text class="util-name">水费缴纳</text>
+    </view> 
+    
+    <view class="account-section"> 
+      <text class="account-label">您的户号</text> 
+      <view class="account-box"> 
+        <text class="account-number">{{waterAccount}}</text> 
+        <view class="copy-btn" bindtap="onCopy" data-type="water" data-value="{{waterAccount}}"> 
+          <text class="copy-text">一键复制</text> 
+        </view> 
+      </view> 
+    </view> 
+    
+    <view class="method-section"> 
+      <text class="method-title">缴费方式（2选1）</text> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式1：天津水务集团公众号</text> 
+        <view class="method-steps"> 
+          <text class="method-step">1. 微信关注"天津市自来水集团"</text> 
+          <text class="method-step">2. 点击"网上营业厅" → "水费查缴"</text> 
+          <text class="method-step">3. 输入户号 → 查询账单 → 支付</text> 
+        </view> 
+      </view> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式2：支付宝/微信"生活缴费"</text> 
+        <text class="method-note">流程同电费，选择"水费"</text> 
+      </view> 
+    </view> 
+  </view> 
+  
+  <!-- 燃气费缴纳 --> 
+  <view class="utility-card"> 
+    <view class="util-header"> 
+      <view class="util-icon icon-fire"></view>
+      <text class="util-name">燃气费缴纳</text>
+    </view> 
+    
+    <view class="account-section"> 
+      <text class="account-label">您的户号</text> 
+      <view class="account-box"> 
+        <text class="account-number">{{gasAccount}}</text> 
+        <view class="copy-btn" bindtap="onCopy" data-type="gas" data-value="{{gasAccount}}"> 
+          <text class="copy-text">一键复制</text> 
+        </view> 
+      </view> 
+    </view> 
+    
+    <view class="method-section"> 
+      <text class="method-title">缴费方式</text> 
+      
+      <view class="method-item"> 
+        <text class="method-name">微信关注"天津燃气"公众号</text> 
+        <view class="method-steps"> 
+          <text class="method-step">1. 进入"燃气服务" → "缴费充值"</text> 
+          <text class="method-step">2. 输入户号 → 查询账单 → 支付</text> 
+        </view> 
+      </view> 
+    </view> 
+  </view> 
+  
+  <!-- 暖气费缴纳 --> 
+  <view class="utility-card"> 
+    <view class="util-header"> 
+      <view class="util-icon icon-thermometer"></view>
+      <text class="util-name">暖气费缴纳</text>
+      <view class="season-tag">10-11月开放</view>
+    </view> 
+    
+    <view class="account-section"> 
+      <text class="account-label">您的供热户号</text> 
+      <view class="account-box"> 
+        <text class="account-number">{{heatingAccount}}</text> 
+        <view class="copy-btn" bindtap="onCopy" data-type="heating" data-value="{{heatingAccount}}"> 
+          <text class="copy-text">一键复制</text> 
+        </view> 
+      </view> 
+    </view> 
+    
+    <view class="method-section"> 
+      <text class="method-title">缴费方式（3选1）</text> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式1：微信"热付通"公众号</text> 
+        <view class="method-steps"> 
+          <text class="method-step">1. 关注"热付通"公众号</text> 
+          <text class="method-step">2. 点击"我要缴费" → "供热缴费"</text> 
+          <text class="method-step">3. 选择供热公司（如"天津海润天通"）</text> 
+          <text class="method-step">4. 输入户号 → 缴费</text> 
+        </view> 
+      </view> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式2：支付宝"生活缴费" → "供暖费"</text> 
+      </view> 
+      
+      <view class="method-item"> 
+        <text class="method-name">方式3：物业代收（现金/刷卡）</text> 
+        <view class="heating-info"> 
+          <view class="info-item icon-money"></view>
+          <text class="info-item">参考标准：26 元/㎡（按建筑面积）</text>
+          <view class="info-item icon-warning"></view>
+          <text class="info-item">逾期加收 5% 滞纳金</text>
+        </view>
+      </view> 
+    </view> 
+  </view> 
+  
+  <!-- 小贴士 --> 
+  <view class="tips-card"> 
+    <view class="tips-header"> 
+      <view class="tips-icon icon-lightbulb"></view>
+      <text class="tips-title">小贴士</text>
+    </view> 
+    <view class="tips-list"> 
+      <text class="tip-item">• 首次缴费建议先查询历史账单，了解月均用量</text> 
+      <text class="tip-item">• 水电气户号可在入住时向房东/经纪人索取</text> 
+      <text class="tip-item">• 建议绑定自动扣费，避免忘缴逾期</text> 
+    </view> 
+  </view> 
+</view>

@@ -1,0 +1,24 @@
+/**app.wxss**/
+page {
+  background: #000000; /* 强制纯黑 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  /* 定义全局流光金变量 */
+  --gold-linear: linear-gradient(135deg, #D4B083 0%, #B38E5D 100%);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0; /* 全局清除内边距，实现通栏 */
+}
+
+button {
+  background: initial;
+}
+button:focus { outline: 0; }
+button::after { border: none; }

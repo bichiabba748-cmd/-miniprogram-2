@@ -1,0 +1,152 @@
+<view class="container">
+  <view class="header">
+    <view class="header-content">
+      <view class="header-line"></view>
+      <text class="title">文案管理</text>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view class="tab {{currentTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tab {{currentTab === '口播' ? 'active' : ''}}" bindtap="switchTab" data-tab="口播">口播</view>
+    <view class="tab {{currentTab === '探盘' ? 'active' : ''}}" bindtap="switchTab" data-tab="探盘">探盘</view>
+    <view class="tab {{currentTab === '避坑' ? 'active' : ''}}" bindtap="switchTab" data-tab="避坑">避坑</view>
+    <view class="tab {{currentTab === 'IP人设' ? 'active' : ''}}" bindtap="switchTab" data-tab="IP人设">IP人设</view>
+    <view class="tab {{currentTab === '政策解读' ? 'active' : ''}}" bindtap="switchTab" data-tab="政策解读">政策解读</view>
+    <view class="tab {{currentTab === '成交技巧' ? 'active' : ''}}" bindtap="switchTab" data-tab="成交技巧">成交技巧</view>
+    <view class="tab {{currentTab === '房源介绍' ? 'active' : ''}}" bindtap="switchTab" data-tab="房源介绍">房源介绍</view>
+    <view class="tab {{currentTab === '学区分析' ? 'active' : ''}}" bindtap="switchTab" data-tab="学区分析">学区分析</view>
+    <view class="tab {{currentTab === '税费计算' ? 'active' : ''}}" bindtap="switchTab" data-tab="税费计算">税费计算</view>
+  </view>
+
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索文案标题" value="{{searchQuery}}" bindinput="onSearchInput" />
+  </view>
+
+  <view class="article-list">
+    <view class="list-header">
+      <text class="total-count">共 {{total}} 条</text>
+      <text class="page-info">第 {{currentPage}} 页</text>
+    </view>
+    
+    <block wx:if="{{filteredList.length > 0}}">
+      <view class="article-item" wx:for="{{filteredList}}" wx:key="_id">
+        <view class="article-info">
+          <view class="article-header">
+            <text class="article-title">{{item.title}}</text>
+            <view class="article-tags">
+              <text class="tag category">{{item.category}}</text>
+              <text class="tag security {{item.securityLevel}}">{{item.securityLevel}}</text>
+              <text class="tag status">{{item.status === 'published' ? '已发布' : (item.status === 'pending' ? '待审核' : '草稿')}}</text>
+            </view>
+          </view>
+          <view class="article-stats">
+            <text>浏览: {{item.stats.views}}</text>
+            <text>获客: {{item.stats.leads}}</text>
+            <text>复制: {{item.stats.copies}}</text>
+          </view>
+          <view class="article-preview" wx:if="{{item.content.script}}">
+            <text class="preview-text">{{item.content.script.substring(0, 100)}}...</text>
+          </view>
+        </view>
+        <view class="article-actions">
+          <button class="action-btn view" size="mini" bindtap="onViewFull" data-article="{{item}}">查看全文</button>
+          <button class="action-btn edit" size="mini" bindtap="onEdit" data-article="{{item}}">编辑</button>
+          <button class="action-btn analyze" size="mini" bindtap="onAnalyze" data-article="{{item}}">AI拆解</button>
+          <button class="action-btn delete" size="mini" bindtap="onDelete" data-id="{{item._id}}">删除</button>
+        </view>
+      </view>
+      
+      <view class="pagination">
+        <button class="page-btn" bindtap="onPageChange" data-current="{{currentPage - 1}}" wx:if="{{currentPage > 1}}">上一页</button>
+        <button class="page-btn" bindtap="onPageChange" data-current="{{currentPage + 1}}" wx:if="{{currentPage * pageSize < total}}">下一页</button>
+      </view>
+    </block>
+    
+    <view class="empty" wx:else>
+      <text>暂无文案数据</text>
+    </view>
+  </view>
+
+  <view class="edit-modal" wx:if="{{showEditModal}}">
+    <view class="modal-overlay" bindtap="onCloseModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">{{editingArticle._id ? '编辑文案' : '新增文案'}}</text>
+        <view class="close-btn" bindtap="onCloseModal">×</view>
+      </view>
+      
+      <scroll-view class="modal-body" scroll-y style="background-color: #1a1a1a;">
+        <view class="form-group">
+          <text class="form-label">标题</text>
+          <input class="form-input" value="{{editingArticle.title}}" bindinput="onFormInput" data-field="title" placeholder="请输入文案标题" />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">分类</text>
+          <picker class="form-picker" mode="selector" range="{{categories}}" value="{{editingArticle.category}}" bindchange="onFormInput" data-field="category">
+            <view>{{editingArticle.category}}</view>
+          </picker>
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">安全级别</text>
+          <picker class="form-picker" mode="selector" range="{{securityLevels}}" value="{{editingArticle.securityLevel}}" bindchange="onFormInput" data-field="securityLevel">
+            <view>{{editingArticle.securityLevel}}</view>
+          </picker>
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">状态</text>
+          <picker class="form-picker" mode="selector" range="{{statuses}}" value="{{editingArticle.status}}" bindchange="onFormInput" data-field="status">
+            <view>{{editingArticle.status}}</view>
+          </picker>
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">完整脚本</text>
+          <textarea class="form-textarea" value="{{editingArticle.content.script}}" bindinput="onFormInput" data-field="content.script" placeholder="请输入完整文案内容" />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">时长</text>
+          <input class="form-input" value="{{editingArticle.content.duration}}" bindinput="onFormInput" data-field="content.duration" placeholder="如：60s" />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">开场钩子</text>
+          <textarea class="form-textarea" value="{{editingArticle.analysis.hook}}" bindinput="onFormInput" data-field="analysis.hook" placeholder="AI拆解：开场钩子" />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">信任构建</text>
+          <textarea class="form-textarea" value="{{editingArticle.analysis.trust}}" bindinput="onFormInput" data-field="analysis.trust" placeholder="AI拆解：信任构建" />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">行动号召</text>
+          <textarea class="form-textarea" value="{{editingArticle.analysis.action}}" bindinput="onFormInput" data-field="analysis.action" placeholder="AI拆解：行动号召" />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">封面图URL</text>
+          <input class="form-input" value="{{editingArticle.media.cover}}" bindinput="onFormInput" data-field="media.cover" placeholder="请输入封面图URL" />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">示范视频URL</text>
+          <input class="form-input" value="{{editingArticle.media.video}}" bindinput="onFormInput" data-field="media.video" placeholder="请输入示范视频URL" />
+        </view>
+      </scroll-view>
+      
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="onCloseModal">取消</button>
+        <button class="save-btn" bindtap="onSaveArticle">保存</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="fab-btn" bindtap="onAddNew">
+    <text class="fab-icon">+</text>
+  </view>
+</view>

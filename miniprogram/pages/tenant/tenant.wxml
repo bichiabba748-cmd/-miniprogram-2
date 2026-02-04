@@ -1,0 +1,101 @@
+<view class="tenant-container"> 
+  
+  <!-- 顾问卡片 --> 
+  <view class="agent-card"> 
+    <image class="agent-avatar" src="/images/avatar.png" mode="aspectFill" /> 
+    <view class="agent-info"> 
+      <text class="agent-name">{{agentName}} - 您的租房顾问</text> 
+      <text class="agent-phone">{{agentPhone}}</text> 
+    </view> 
+    <view class="contact-btns"> 
+      <button class="btn-call" bindtap="onCallAgent">拨打电话</button> 
+      <button class="btn-wechat" bindtap="onContactWechat">微信联系</button> 
+    </view> 
+  </view> 
+  
+  <!-- 未登录状态 - 登录引导 --> 
+  <view wx:if="{{!isLoggedIn}}" class="login-guide"> 
+    <view class="guide-icon icon-lock"></view> 
+    <text class="guide-text">登录后查看您的租房合同</text> 
+    <button class="btn-login" bindtap="onLogin">微信一键登录</button> 
+  </view> 
+  
+  <!-- 已登录状态 - 合同大卡片 --> 
+  <view wx:if="{{isLoggedIn && contractInfo}}" class="contract-card"> 
+    <view class="contract-header"> 
+      <text class="contract-title">我的合同</text> 
+    </view> 
+    <view class="contract-body"> 
+      <view class="contract-row"> 
+        <view class="label icon-house"></view>
+        <text class="value">{{contractInfo.propertyAddress}}</text> 
+      </view> 
+      <view class="contract-row"> 
+        <view class="label icon-calendar"></view>
+        <text class="value-highlight">还有 {{contractInfo.daysLeft}} 天到期</text> 
+      </view> 
+      <view class="contract-row"> 
+        <view class="label icon-money"></view>
+        <text class="value">{{contractInfo.rent}} 元</text> 
+      </view> 
+      <view class="contract-row"> 
+        <view class="label icon-user"></view>
+        <text class="value">{{contractInfo.landlordPhoneMasked}}</text> 
+      </view> 
+    </view> 
+    <button class="btn-renew" bindtap="onRenew">
+      <view class="btn-icon icon-refresh"></view>
+      <text>立即续租</text>
+    </button> 
+  </view> 
+  
+  <!-- 已登录状态 - 租房数据看板 --> 
+  <view wx:if="{{isLoggedIn && contractInfo}}" class="stats-board"> 
+    <view class="stat-item"> 
+      <text class="stat-value">{{contractInfo.daysLived}}</text> 
+      <text class="stat-label">已居住天数</text> 
+    </view> 
+    <view class="stat-divider"></view> 
+    <view class="stat-item"> 
+      <text class="stat-value">{{contractInfo.totalRent}}</text> 
+      <text class="stat-label">累计租金</text> 
+    </view> 
+  </view> 
+  
+  <!-- 6宫格导航 - 卡片式预览 --> 
+  <view class="tenant-grid"> 
+    <view class="grid-item" wx:for="{{tenantGrid}}" wx:key="name" bindtap="onGridTap" data-page="{{item.page}}"> 
+      <view class="gi-icon-box">
+        <view class="gi-icon {{item.iconClass}}"></view>
+      </view> 
+      <text class="gi-name">{{item.name}}</text> 
+      <text class="gi-preview">{{item.preview}}</text> 
+    </view> 
+  </view> 
+  
+  <!-- 底部广告Banner - 精美大图 --> 
+  <view class="ad-banner" bindtap="onAdClick"> 
+    <view class="ad-content"> 
+      <view class="ad-icon icon-building"></view> 
+      <view class="ad-text"> 
+        <text class="ad-title">华苑周边新楼盘热销中</text> 
+        <text class="ad-desc">南开核心地段 · 地铁口现房</text> 
+      </view> 
+      <view class="ad-arrow">→</view> 
+    </view> 
+  </view> 
+  
+  <!-- 应急联系区 --> 
+  <view class="emergency-contact"> 
+    <text class="emergency-title">遇到问题？</text> 
+    <view class="emergency-row" bindtap="onCallAgent"> 
+      <view class="emergency-label icon-phone"></view> 
+      <text class="emergency-phone">{{agentPhone || '138-xxxx-xxxx'}}</text> 
+    </view> 
+    <view class="emergency-row" bindtap="onCallManager"> 
+      <view class="emergency-label icon-phone"></view> 
+      <text class="emergency-phone">139-xxxx-xxxx</text> 
+    </view> 
+  </view> 
+  
+</view>

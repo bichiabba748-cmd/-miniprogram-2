@@ -1,0 +1,124 @@
+<view class="container">
+  <!-- A. 核心档案卡 -->
+  <view class="profile-card">
+    <view class="card-header">
+      <image class="avatar" src="{{user.avatar || '/images/icons/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="user-info">
+        <text class="name">{{user.name}}</text>
+        <view class="meta">
+          <text class="uid">UID: {{user.uid}}</text>
+          <text class="join-days">入伍: {{user.joinDays}}天</text>
+        </view>
+      </view>
+      <view class="badge" wx:if="{{user.badge}}">{{user.badge}}</view>
+    </view>
+    
+    <view class="divider"></view>
+    
+    <!-- 学员显示学习数据，其他角色显示获客/文案数据 -->
+    <view class="stats-row" wx:if="{{user.role === 'student'}}">
+      <view class="stat-item">
+        <text class="stat-value">{{user.studyProgress || 0}}</text>
+        <text class="stat-label">学习进度</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{user.coursesCompleted || 0}}</text>
+        <text class="stat-label">完成课程</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{user.studyHours || 0}}</text>
+        <text class="stat-label">学习时长</text>
+      </view>
+    </view>
+    
+    <view class="stats-row" wx:else>
+      <view class="stat-item">
+        <text class="stat-value">{{user.totalLeads || 0}}</text>
+        <text class="stat-label">累计获客</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{user.monthLeads || 0}}</text>
+        <text class="stat-label">本月新增</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{user.contributions || 0}}</text>
+        <text class="stat-label">文案贡献</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- B. 基础信息区 -->
+  <view class="info-section">
+    <view class="info-row">
+      <text class="info-label">真实姓名</text>
+      <text class="info-value">{{user.realName}}</text>
+    </view>
+    <view class="divider"></view>
+    <view class="info-row">
+      <text class="info-label">手机号码</text>
+      <view class="info-value-with-action">
+        <text class="info-value">{{user.phone}}</text>
+        <view class="action-btn" bindtap="copyPhone">
+          <text class="action-text">复制</text>
+        </view>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="info-row">
+      <text class="info-label">归属门店</text>
+      <view class="info-value-with-action">
+        <text class="info-value">{{user.storeName || '未设置'}}</text>
+        <view class="action-btn" bindtap="changeStore">
+          <text class="action-text">划转</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- C. 入伍档案区 -->
+  <view class="enlist-section" wx:if="{{user.application}}">
+    <view class="section-title">入伍档案区 (来源追溯)</view>
+    <view class="divider"></view>
+    <view class="info-row">
+      <text class="info-label">入伍身份</text>
+      <text class="info-value">{{user.application.identity}}</text>
+    </view>
+    <view class="divider"></view>
+    <view class="info-row">
+      <text class="info-label">核心痛点</text>
+      <view class="pain-points">
+        <view class="pain-tag" wx:for="{{user.application.painPoints}}" wx:key="*this">#{{item}}</view>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="info-row">
+      <text class="info-label">注册渠道</text>
+      <text class="info-value">{{user.application.channel || '扫码'}}{{user.application.inviter ? ' (邀请人: ' + user.application.inviter + ')' : ''}}</text>
+    </view>
+  </view>
+
+  <!-- D. 状态控制 -->
+  <view class="status-section">
+    <view class="info-row">
+      <text class="info-label">账号状态</text>
+      <view class="status-buttons">
+        <view class="status-btn {{user.status === 'normal' ? 'active' : ''}}" bindtap="setStatus" data-status="normal">
+          <text class="status-text">正常</text>
+        </view>
+        <view class="status-btn {{user.status === 'banned' ? 'active' : ''}}" bindtap="setStatus" data-status="banned">
+          <text class="status-text">禁言</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- E. 底部指挥栏 -->
+  <view class="bottom-bar">
+    <button class="bottom-btn call-btn" bindtap="callUser">
+      <text class="btn-text">拨打电话</text>
+    </button>
+    <button class="bottom-btn permission-btn" bindtap="changePermission">
+      <text class="btn-text">变更权限</text>
+    </button>
+  </view>
+</view>

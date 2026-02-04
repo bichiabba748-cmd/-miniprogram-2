@@ -1,0 +1,217 @@
+<view class="service-container"> 
+   <view class="page-title">便民服务</view> 
+   
+   <!-- 开锁服务 --> 
+   <view class="service-card"> 
+     <view class="service-header"> 
+       <view class="service-icon icon-key"></view>
+       <text class="service-name">开锁服务</text> 
+     </view> 
+     
+     <view class="service-info"> 
+       <view class="info-row"> 
+         <text class="info-label">推荐师傅</text> 
+         <text class="info-value">李师傅开锁（本小区居民推荐）</text> 
+       </view> 
+       
+       <view class="info-row phone-row"> 
+         <text class="info-label">联系电话</text> 
+         <view class="phone-box" bindtap="onCall" data-phone="13822223333"> 
+           <text class="phone-number">138-2222-3333</text> 
+           <text class="phone-btn">拨打</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">收费参考</text> 
+         <view class="price-list"> 
+           <text class="price-item">• 普通门锁：80-120 元</text> 
+           <text class="price-item">• 防盗门锁：150-200 元</text> 
+           <text class="price-item">• 智能锁：200-300 元</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">服务时间</text> 
+         <text class="info-value">24 小时</text> 
+       </view> 
+     </view> 
+    
+    <view class="service-tip"> 
+      <view class="tip-icon icon-warning"></view>
+      <text class="tip-text">请务必核实师傅资质，要求出示身份证和营业执照</text> 
+    </view> 
+  </view> 
+  
+  <!-- 家政保洁 --> 
+  <view class="service-card"> 
+    <view class="service-header"> 
+      <view class="service-icon icon-broom"></view>
+      <text class="service-name">家政保洁</text> 
+    </view> 
+     
+     <view class="service-info"> 
+       <view class="info-row"> 
+         <text class="info-label">推荐公司</text> 
+         <text class="info-value">天津洁美家政</text> 
+       </view> 
+       
+       <view class="info-row phone-row"> 
+         <text class="info-label">联系电话</text> 
+         <view class="phone-box" bindtap="onCall" data-phone="02288889999"> 
+           <text class="phone-number">022-8888-9999</text> 
+           <text class="phone-btn">拨打</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">收费参考</text> 
+         <view class="price-list"> 
+           <text class="price-item">• 日常保洁：30 元/小时（最低 2 小时）</text> 
+           <text class="price-item">• 深度清洁：50 元/小时</text> 
+           <text class="price-item">• 开荒保洁：8-10 元/㎡</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">服务时间</text> 
+         <text class="info-value">周一至周日 8:00-18:00</text> 
+       </view> 
+     </view> 
+   </view> 
+   
+   <!-- 家电维修 --> 
+   <view class="service-card"> 
+     <view class="service-header"> 
+       <text class="service-icon">�</text> 
+       <text class="service-name">家电维修</text> 
+     </view> 
+     
+     <view class="service-info"> 
+       <view class="info-row"> 
+         <text class="info-label">推荐师傅</text> 
+         <text class="info-value">张师傅家电维修</text> 
+       </view> 
+       
+       <view class="info-row phone-row"> 
+         <text class="info-label">联系电话</text> 
+         <view class="phone-box" bindtap="onCall" data-phone="15933334444"> 
+           <text class="phone-number">159-3333-4444</text> 
+           <text class="phone-btn">拨打</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">收费参考</text> 
+         <view class="price-list"> 
+           <text class="price-item">• 上门检测：免费</text> 
+           <text class="price-item">• 小修（更换零件）：50-200 元</text> 
+           <text class="price-item">• 大修（主板/压缩机）：300-800 元</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">服务时间</text> 
+         <text class="info-value">周一至周日 9:00-19:00</text> 
+       </view> 
+     </view> 
+    
+    <view class="service-tip"> 
+      <view class="tip-icon icon-warning"></view>
+      <text class="tip-text">维修前请先拍照记录家电状态</text> 
+    </view> 
+  </view> 
+  
+  <!-- 搬家服务 --> 
+  <view class="service-card"> 
+    <view class="service-header"> 
+      <view class="service-icon icon-truck"></view>
+      <text class="service-name">搬家服务</text> 
+    </view> 
+     
+     <view class="service-info"> 
+       <view class="info-row"> 
+         <text class="info-label">推荐公司</text> 
+         <text class="info-value">天津顺达搬家</text> 
+       </view> 
+       
+       <view class="info-row phone-row"> 
+         <text class="info-label">联系电话</text> 
+         <view class="phone-box" bindtap="onCall" data-phone="02266667777"> 
+           <text class="phone-number">022-6666-7777</text> 
+           <text class="phone-btn">拨打</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">收费参考</text> 
+         <view class="price-list"> 
+           <text class="price-item">• 面包车（3㎥）：200 元起</text> 
+           <text class="price-item">• 小货车（10㎡）：350 元起</text> 
+           <text class="price-item">• 大货车（20㎡）：600 元起</text> 
+           <text class="price-item">• 楼层费：每层 20 元</text> 
+           <text class="price-item">• 搬运工：80 元/人</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">服务时间</text> 
+         <text class="info-value">7:00-21:00</text> 
+       </view> 
+     </view> 
+    
+    <view class="service-tip"> 
+      <view class="tip-icon icon-warning"></view>
+      <text class="tip-text">贵重物品请提前声明并购买保险</text> 
+    </view> 
+  </view> 
+  
+  <!-- 家具安装 --> 
+  <view class="service-card"> 
+    <view class="service-header"> 
+      <view class="service-icon icon-furniture"></view>
+      <text class="service-name">家具安装</text> 
+    </view> 
+     
+     <view class="service-info"> 
+       <view class="info-row"> 
+         <text class="info-label">推荐师傅</text> 
+         <text class="info-value">王师傅家具安装</text> 
+       </view> 
+       
+       <view class="info-row phone-row"> 
+         <text class="info-label">联系电话</text> 
+         <view class="phone-box" bindtap="onCall" data-phone="13644445555"> 
+           <text class="phone-number">136-4444-5555</text> 
+           <text class="phone-btn">拨打</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">收费参考</text> 
+         <view class="price-list"> 
+           <text class="price-item">• 简易家具（书架/鞋柜）：50-80 元</text> 
+           <text class="price-item">• 衣柜/床：150-300 元</text> 
+           <text class="price-item">• 橱柜：按米计费，80 元/米</text> 
+         </view> 
+       </view> 
+       
+       <view class="info-row"> 
+         <text class="info-label">服务时间</text> 
+         <text class="info-value">9:00-18:00</text> 
+       </view> 
+     </view> 
+   </view> 
+   
+   <!-- 免责声明 --> 
+  <view class="disclaimer-card"> 
+    <view class="disclaimer-header"> 
+      <view class="disclaimer-icon icon-warning"></view>
+      <text class="disclaimer-title">免责声明</text> 
+    </view> 
+     <view class="disclaimer-content"> 
+       <text class="disclaimer-text">以上第三方服务信息仅供参考，具体价格以实际服务商报价为准。</text> 
+       <text class="disclaimer-text">如遇服务纠纷，请优先与服务商协商解决。</text> 
+     </view> 
+   </view> 
+ </view>

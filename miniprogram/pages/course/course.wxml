@@ -1,0 +1,120 @@
+<view class="container">
+  <!-- 访客模式 -->
+  <block wx:if="{{userRole === 'visitor'}}">
+    <view class="status-bar" bindtap="switchRole">
+      <view class="status-tag visitor">
+        <view class="status-dot"></view>
+        <view class="status-text">访客模式 · 受限</view>
+      </view>
+    </view>
+
+    <view class="search-wrapper">
+      <view class="search-box">
+        <icon type="search" size="14" color="#D4B083"></icon>
+        <input class="search-input" placeholder="搜索课程..." placeholder-class="ph" bindinput="onSearchInput"/>
+      </view>
+    </view>
+
+    <view class="tabs">
+      <block wx:for="{{categories}}" wx:key="*this">
+        <view class="tab {{currentTab === item ? 'active' : ''}}" bindtap="onTabChange" data-tab="{{item}}">
+          {{item}}
+          <view class="tab-line" wx:if="{{currentTab === item}}"></view>
+        </view>
+      </block>
+    </view>
+
+    <view class="course-list">
+      <block wx:if="{{filteredCourses.length > 0}}">
+        <view class="course-card" wx:for="{{filteredCourses}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+          <view class="c-cover">
+            <image class="cover-image" src="{{item.coverUrl}}" mode="aspectFill"></image>
+            <view class="play-overlay">
+              <view class="play-icon icon-play-circle"></view>
+            </view>
+            <text class="c-badge">{{item.badge}}</text>
+            <text class="c-duration">{{item.duration}}</text>
+          </view>
+          <view class="c-info">
+            <text class="c-title">{{item.title}}</text>
+            <view class="c-meta">
+              <text class="c-author">{{item.author}}</text>
+              <text class="c-view">{{item.view}}次学习</text>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <!-- 访客：显示空状态提示 -->
+        <view class="empty-state">
+          <view class="empty-icon icon-search"></view>
+          <text class="empty-text">暂无相关课程</text>
+          <text class="empty-hint">试试其他关键词</text>
+        </view>
+      </block>
+    </view>
+  </block>
+  
+  <!-- 内部人员模式 -->
+  <block wx:else>
+    <view class="status-bar" bindtap="switchRole">
+      <view class="status-tag insider">
+        <view class="status-dot"></view>
+        <view class="status-text">
+          {{userRole === 'admin' ? '上帝视角 · 指挥官' : 
+           (userRole === 'anchor' ? '主播模式 · 全功能' : 
+           (userRole === 'broker' ? '经纪人模式 · 全功能' : 
+           (userRole === 'student' ? '星火学员 · 成长版' : '访客模式 · 受限')))}}
+        </view>
+      </view>
+    </view>
+
+    <view class="search-wrapper">
+      <view class="search-box">
+        <icon type="search" size="14" color="#D4B083"></icon>
+        <input class="search-input" placeholder="搜索课程..." placeholder-class="ph" bindinput="onSearchInput"/>
+      </view>
+    </view>
+
+    <view class="tabs">
+      <block wx:for="{{categories}}" wx:key="*this">
+        <view class="tab {{currentTab === item ? 'active' : ''}}" bindtap="onTabChange" data-tab="{{item}}">
+          {{item}}
+          <view class="tab-line" wx:if="{{currentTab === item}}"></view>
+        </view>
+      </block>
+    </view>
+
+    <view class="course-list">
+      <block wx:if="{{filteredCourses.length > 0}}">
+        <view class="course-card" wx:for="{{filteredCourses}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+          <view class="c-cover">
+            <image class="cover-image" src="{{item.coverUrl}}" mode="aspectFill"></image>
+            <view class="play-overlay">
+              <view class="play-icon icon-play-circle"></view>
+            </view>
+            <text class="c-badge">{{item.badge}}</text>
+            <text class="c-duration">{{item.duration}}</text>
+          </view>
+          <view class="c-info">
+            <text class="c-title">{{item.title}}</text>
+            <view class="c-meta">
+              <text class="c-author">{{item.author}}</text>
+              <text class="c-view">{{item.view}}次学习</text>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <block wx:else>
+        <!-- 内部人员：显示空状态提示 -->
+        <view class="empty-state">
+          <view class="empty-icon icon-search"></view>
+          <text class="empty-text">暂无相关课程</text>
+          <text class="empty-hint">试试其他关键词</text>
+        </view>
+      </block>
+    </view>
+  </block>
+</view>

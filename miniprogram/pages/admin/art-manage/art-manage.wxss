@@ -1,0 +1,388 @@
+page {
+  background: #000;
+  color: #fff;
+  font-family: 'DIN', sans-serif;
+}
+
+.container {
+  padding: 40rpx 30rpx;
+  padding-bottom: 160rpx;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.header-line {
+  width: 6rpx;
+  height: 48rpx;
+  background: linear-gradient(135deg, #D4B083 0%, #E8D4B8 100%);
+  border-radius: 3rpx;
+  box-shadow: 0 0 20rpx rgba(212, 176, 131, 0.5);
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: 900;
+  color: #D4B083;
+  letter-spacing: 4rpx;
+  text-shadow: 0 0 30rpx rgba(212, 176, 131, 0.3);
+}
+
+.tabs {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 30rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0 10rpx;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  background: #1a1a1a;
+  color: #999999;
+  padding: 12rpx 20rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  border: 1rpx solid #333333;
+  flex-shrink: 0;
+}
+
+.tab.active {
+  background: rgba(212, 176, 131, 0.15);
+  color: #D4B083;
+  border-color: rgba(212, 176, 131, 0.3);
+}
+
+.search-bar {
+  margin-bottom: 30rpx;
+}
+
+.search-input {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1rpx solid #333333;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+}
+
+.article-list {
+  background: #1a1a1a;
+  border-radius: 16rpx;
+  padding: 30rpx;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #333333;
+}
+
+.total-count {
+  color: #D4B083;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.page-info {
+  color: #666666;
+  font-size: 24rpx;
+}
+
+.article-item {
+  background: #0a0a0a;
+  border: 1rpx solid #333333;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.article-header {
+  margin-bottom: 16rpx;
+}
+
+.article-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 12rpx;
+  display: block;
+}
+
+.article-tags {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+  font-size: 22rpx;
+}
+
+.tag.category {
+  background: rgba(212, 176, 131, 0.15);
+  color: #D4B083;
+}
+
+.tag.security {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.tag.security.public {
+  background: rgba(7, 193, 96, 0.15);
+  color: #07c160;
+}
+
+.tag.security.internal {
+  background: rgba(255, 149, 0, 0.15);
+  color: #ff9500;
+}
+
+.tag.security.secret {
+  background: rgba(255, 0, 0, 0.15);
+  color: #ff0000;
+}
+
+.tag.status {
+  background: rgba(102, 102, 102, 0.15);
+  color: #666666;
+}
+
+.article-stats {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 16rpx;
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.article-preview {
+  background: #111111;
+  padding: 16rpx;
+  border-radius: 8rpx;
+  margin-bottom: 16rpx;
+}
+
+.preview-text {
+  color: #888888;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.article-actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 60rpx;
+  border: none;
+  border-radius: 6rpx;
+  font-size: 22rpx;
+  color: #ffffff;
+}
+
+.action-btn.edit {
+  background: #1a1a1a;
+  border: 1rpx solid #333333;
+}
+
+.action-btn.analyze {
+  background: rgba(212, 176, 131, 0.2);
+  border: 1rpx solid #D4B083;
+}
+
+.action-btn.delete {
+  background: rgba(255, 0, 0, 0.15);
+  border: 1rpx solid #ff0000;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 20rpx;
+  margin-top: 30rpx;
+}
+
+.page-btn {
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1rpx solid #333333;
+  border-radius: 8rpx;
+  padding: 16rpx 32rpx;
+  font-size: 28rpx;
+}
+
+.empty {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #666666;
+  font-size: 28rpx;
+}
+
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 600rpx;
+  max-height: 80vh;
+  background: #1a1a1a;
+  border: 1rpx solid #333333;
+  border-radius: 16rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #333333;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #D4B083;
+}
+
+.close-btn {
+  font-size: 48rpx;
+  color: #666666;
+  line-height: 1;
+}
+
+.modal-body {
+  flex: 1;
+  padding: 30rpx;
+  padding-bottom: 40rpx;
+  overflow-y: auto;
+  background-color: #1a1a1a;
+}
+
+.form-group {
+  margin-bottom: 24rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #ffffff;
+  margin-bottom: 12rpx;
+}
+
+.form-input,
+.form-picker,
+.form-textarea {
+  width: 100%;
+  background: #0a0a0a;
+  border: 1rpx solid #333333;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  color: #ffffff;
+  font-size: 28rpx;
+}
+
+.form-textarea {
+  min-height: 150rpx;
+  max-height: 300rpx;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 16rpx;
+  padding: 30rpx;
+  border-top: 1rpx solid #333333;
+}
+
+.cancel-btn {
+  flex: 1;
+  height: 80rpx;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: 1rpx solid #333333;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.save-btn {
+  flex: 1;
+  height: 80rpx;
+  background: #D4B083;
+  color: #000000;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.fab-btn {
+  position: fixed;
+  bottom: 60rpx;
+  right: 40rpx;
+  background: linear-gradient(135deg, #D4B083 0%, #E8D4B8 100%);
+  color: #000;
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  font-weight: 900;
+  box-shadow: 0 10rpx 30rpx rgba(212, 176, 131, 0.4);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.fab-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 6rpx 20rpx rgba(212, 176, 131, 0.3);
+}
+
+.fab-icon {
+  line-height: 1;
+  margin-top: -6rpx;
+}

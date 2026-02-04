@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="tab-bar">
+    <view class="tab {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">待核验</view>
+    <view class="tab {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">已核验</view>
+  </view>
+
+  <view class="tenant-list">
+    <view class="tenant-card" wx:for="{{tenants}}" wx:key="index">
+      <view class="card-header">
+        <view class="tenant-name">{{item.tenantName}}</view>
+        <view class="phone" bindtap="callTenant" data-phone="{{item.tenantPhone}}">{{item.tenantPhone}}</view>
+      </view>
+      <view class="address">{{item.propertyAddress}}</view>
+      <view class="time">成交时间：{{item.signDate}}</view>
+      
+      <view class="verify-btn" wx:if="{{currentTab === 0}}" bindtap="markVerified" data-id="{{item._id}}">
+        标记已核验
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{tenants.length === 0}}">暂无数据</view>
+  </view>
+</view>

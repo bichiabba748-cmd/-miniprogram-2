@@ -1,0 +1,346 @@
+<view class="container">
+  <!-- 海报样式切换 -->
+  <view class="style-switcher">
+    <text class="switcher-title">选择海报样式</text>
+    <view class="style-list">
+      <view 
+        class="style-item {{posterStyle === item.id ? 'active' : ''}}" 
+        wx:for="{{posterStyles}}" 
+        wx:key="id"
+        bindtap="switchPosterStyle"
+        data-style="{{item.id}}"
+      >
+        <text class="style-icon">{{item.icon}}</text>
+        <text class="style-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 综合样式 -->
+  <block wx:if="{{posterStyle === 0}}">
+    <!-- 顶部英雄区 - 招聘宣传 -->
+    <view class="hero-section">
+      <text class="hero-title">加入星火计划</text>
+      <text class="hero-subtitle">房产经纪×新媒体赋能，开启获客新时代</text>
+      
+      <!-- 核心优势 -->
+      <view class="advantage-list">
+        <view class="advantage-item">
+          <view class="advantage-icon icon-book"></view>
+          <text class="advantage-title">100+实战脚本</text>
+          <text class="advantage-desc">文案军火库，直接可用</text>
+        </view>
+        <view class="advantage-item">
+          <view class="advantage-icon icon-video"></view>
+          <text class="advantage-title">系统化培训</text>
+          <text class="advantage-desc">从0到1，快速成长</text>
+        </view>
+        <view class="advantage-item">
+          <view class="advantage-icon icon-trophy"></view>
+          <text class="advantage-title">龙虎榜单</text>
+          <text class="advantage-desc">实时排名，激发斗志</text>
+        </view>
+        <view class="advantage-item">
+          <view class="advantage-icon icon-users"></view>
+          <text class="advantage-title">CRM系统</text>
+          <text class="advantage-desc">客户管理，高效转化</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 福利待遇 -->
+    <view class="benefits-section">
+      <text class="section-title">加入即享福利</text>
+      <view class="benefits-grid">
+        <view class="benefit-item">
+          <view class="benefit-icon icon-money"></view>
+          <text class="benefit-text">高额佣金</text>
+        </view>
+        <view class="benefit-item">
+          <view class="benefit-icon icon-house"></view>
+          <text class="benefit-text">免费培训</text>
+        </view>
+        <view class="benefit-item">
+          <view class="benefit-icon icon-chart"></view>
+          <text class="benefit-text">晋升通道</text>
+        </view>
+        <view class="benefit-item">
+          <view class="benefit-icon icon-handshake"></view>
+          <text class="benefit-text">团队支持</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邀请人信息 -->
+    <view class="inviter-section">
+      <text class="section-title">邀请人信息</text>
+      <view class="inviter-card">
+        <view class="inviter-avatar">
+          <text class="avatar-text">{{userInfo.name ? userInfo.name.charAt(0) : '星'}}</text>
+        </view>
+        <view class="inviter-info">
+          <text class="inviter-name">{{userInfo.name || '星火伙伴'}}</text>
+          <text class="inviter-role">{{userInfo.role === 'anchor' ? '实战主播' : (userInfo.role === 'broker' ? '内部经纪人' : '星火伙伴')}}</text>
+        </view>
+        <view class="inviter-badge">
+          <text class="badge-text">认证成员</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邀请码区域 -->
+    <view class="invite-code-section">
+      <text class="section-title">专属邀请码</text>
+      <view class="code-card">
+        <text class="code-text">{{inviteCode}}</text>
+        <view class="copy-btn" bindtap="copyCode">
+          <view class="copy-icon icon-copy"></view>
+          <text class="copy-text">复制</text>
+        </view>
+      </view>
+      <text class="code-hint">使用邀请码注册，即可享受专属福利</text>
+    </view>
+
+    <!-- 分享按钮区域 -->
+    <view class="share-section">
+      <text class="section-title">快速分享</text>
+      <view class="share-buttons">
+        <view class="share-btn" bindtap="shareToFriend">
+          <view class="share-icon icon-users"></view>
+          <text class="share-text">分享给好友</text>
+        </view>
+        <view class="share-btn" bindtap="shareToMoments">
+          <view class="share-icon icon-phone"></view>
+          <text class="share-text">分享到朋友圈</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邀请统计区域 -->
+    <view class="stats-section">
+      <text class="section-title">邀请战绩</text>
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-value">{{totalInvites}}</text>
+          <text class="stat-label">总邀请数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{successfulInvites}}</text>
+          <text class="stat-label">成功加入</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value gold">{{rewards}}</text>
+          <text class="stat-label">获得奖励</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邀请奖励机制 -->
+    <view class="reward-section">
+      <text class="section-title">邀请奖励机制</text>
+      <view class="reward-list">
+        <view class="reward-item">
+          <view class="reward-level">青铜</view>
+          <view class="reward-content">
+            <text class="reward-title">邀请新用户注册</text>
+            <text class="reward-value">+200 积分</text>
+          </view>
+        </view>
+        <view class="reward-item">
+          <view class="reward-level">白银</view>
+          <view class="reward-content">
+            <text class="reward-title">邀请用户产生获客</text>
+            <text class="reward-value">+50 积分/人</text>
+          </view>
+        </view>
+        <view class="reward-item">
+          <view class="reward-level">黄金</view>
+          <view class="reward-content">
+            <text class="reward-title">累计邀请满10人</text>
+            <text class="reward-value">+2000 积分 + 徽章</text>
+          </view>
+        </view>
+        <view class="reward-item">
+          <view class="reward-level">钻石</view>
+          <view class="reward-content">
+            <text class="reward-title">累计邀请满50人</text>
+            <text class="reward-value">+10000 积分 + VIP</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加入流程 -->
+    <view class="process-section">
+      <text class="section-title">加入流程</text>
+      <view class="process-list">
+        <view class="process-item">
+          <view class="process-step">1</view>
+          <text class="process-text">点击分享按钮，发送邀请</text>
+        </view>
+        <view class="process-item">
+          <view class="process-step">2</view>
+          <text class="process-text">同事使用邀请码注册</text>
+        </view>
+        <view class="process-item">
+          <view class="process-step">3</view>
+          <text class="process-text">完成身份认证</text>
+        </view>
+        <view class="process-item">
+          <view class="process-step">4</view>
+          <text class="process-text">双方获得奖励</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部提示 -->
+    <view class="footer-section">
+      <view class="footer-badge">火热</view>
+      <text class="footer-title">立即邀请，共享获客红利</text>
+      <text class="footer-desc">加入星火计划，与优秀团队一起成长</text>
+    </view>
+  </block>
+
+  <!-- 简洁样式 -->
+  <block wx:if="{{posterStyle === 1}}">
+    <view class="simple-hero">
+      <text class="simple-title">星火计划</text>
+      <text class="simple-subtitle">{{userInfo.name || '星火伙伴'}} 邀请您加入</text>
+    </view>
+
+    <view class="simple-code-section">
+      <text class="simple-code-label">邀请码</text>
+      <view class="simple-code-card">
+        <text class="simple-code">{{inviteCode}}</text>
+        <view class="simple-copy-btn" bindtap="copyCode">复制</view>
+      </view>
+    </view>
+
+    <view class="simple-share-section">
+      <view class="simple-share-btn" bindtap="shareToFriend">
+        <text>分享给好友</text>
+      </view>
+      <view class="simple-share-btn" bindtap="shareToMoments">
+        <text>分享到朋友圈</text>
+      </view>
+    </view>
+
+    <view class="simple-footer">
+      <text>使用邀请码注册，享受专属福利</text>
+    </view>
+  </block>
+
+  <!-- 福利样式 -->
+  <block wx:if="{{posterStyle === 2}}">
+    <view class="welfare-hero">
+      <view class="welfare-badge">专属福利</view>
+      <text class="welfare-title">加入星火计划，享受超值福利</text>
+    </view>
+
+    <view class="welfare-list">
+      <view class="welfare-item">
+        <view class="welfare-icon icon-book"></view>
+        <view class="welfare-content">
+          <text class="welfare-title">100+实战脚本</text>
+          <text class="welfare-desc">文案军火库，直接可用</text>
+        </view>
+      </view>
+      <view class="welfare-item">
+        <view class="welfare-icon icon-video"></view>
+        <view class="welfare-content">
+          <text class="welfare-title">系统化培训</text>
+          <text class="welfare-desc">从0到1，快速成长</text>
+        </view>
+      </view>
+      <view class="welfare-item">
+        <view class="welfare-icon icon-money"></view>
+        <view class="welfare-content">
+          <text class="welfare-title">高额佣金</text>
+          <text class="welfare-desc">多劳多得，上不封顶</text>
+        </view>
+      </view>
+      <view class="welfare-item">
+        <view class="welfare-icon icon-house"></view>
+        <view class="welfare-content">
+          <text class="welfare-title">免费培训</text>
+          <text class="welfare-desc">专业导师，全程指导</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="welfare-inviter">
+      <text class="welfare-inviter-text">邀请人：{{userInfo.name || '星火伙伴'}}</text>
+    </view>
+
+    <view class="welfare-code-section">
+      <text class="welfare-code-label">专属邀请码</text>
+      <view class="welfare-code-card">
+        <text class="welfare-code">{{inviteCode}}</text>
+        <view class="welfare-copy-btn" bindtap="copyCode">复制</view>
+      </view>
+    </view>
+
+    <view class="welfare-share-section">
+      <view class="welfare-share-btn" bindtap="shareToFriend">
+        <view class="welfare-share-icon icon-users"></view>
+        <text>分享给好友</text>
+      </view>
+      <view class="welfare-share-btn" bindtap="shareToMoments">
+        <view class="welfare-share-icon icon-phone"></view>
+        <text>分享到朋友圈</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 数据样式 -->
+  <block wx:if="{{posterStyle === 3}}">
+    <view class="data-hero">
+      <view class="data-avatar">
+        <text class="data-avatar-text">{{userInfo.name ? userInfo.name.charAt(0) : '星'}}</text>
+      </view>
+      <text class="data-name">{{userInfo.name || '星火伙伴'}}</text>
+      <text class="data-role">{{userInfo.role === 'anchor' ? '实战主播' : (userInfo.role === 'broker' ? '内部经纪人' : '星火伙伴')}}</text>
+    </view>
+
+    <view class="data-stats-section">
+      <text class="data-stats-title">邀请战绩</text>
+      <view class="data-stats-grid">
+        <view class="data-stat-item">
+          <text class="data-stat-value">{{totalInvites}}</text>
+          <text class="data-stat-label">总邀请数</text>
+        </view>
+        <view class="data-stat-item">
+          <text class="data-stat-value">{{successfulInvites}}</text>
+          <text class="data-stat-label">成功加入</text>
+        </view>
+        <view class="data-stat-item">
+          <text class="data-stat-value gold">{{rewards}}</text>
+          <text class="data-stat-label">获得奖励</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="data-code-section">
+      <text class="data-code-label">专属邀请码</text>
+      <view class="data-code-card">
+        <text class="data-code">{{inviteCode}}</text>
+        <view class="data-copy-btn" bindtap="copyCode">复制</view>
+      </view>
+    </view>
+
+    <view class="data-share-section">
+      <view class="data-share-btn" bindtap="shareToFriend">
+        <view class="data-share-icon icon-users"></view>
+        <text>分享给好友</text>
+      </view>
+      <view class="data-share-btn" bindtap="shareToMoments">
+        <view class="data-share-icon icon-phone"></view>
+        <text>分享到朋友圈</text>
+      </view>
+    </view>
+
+    <view class="data-footer">
+      <text>邀请更多好友，获得更多奖励</text>
+    </view>
+  </block>
+</view>

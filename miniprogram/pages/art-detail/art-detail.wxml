@@ -1,0 +1,96 @@
+<!-- 文章详情页 -->
+<view class="container">
+
+  <!-- 研报头部 -->
+  <view class="report-header">
+    <view class="tag-row">
+      <view class="lab-badge icon-star"></view>
+      <text>星火计划</text>
+      <text class="status-badge status-{{article.securityLevel}}">{{article.securityLevel}}</text>
+      <text class="category-badge">{{article.category}}</text>
+    </view>
+    <text class="report-title">{{article.title}}</text>
+  </view>
+
+  <!-- 01 战绩数据 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-num">01</text>
+      <text class="sec-name">战绩数据</text>
+    </view>
+    <view class="stats-card">
+      <view class="stat-item">
+        <view class="stat-icon icon-trophy"></view>
+        <text class="stat-label">获客</text>
+        <text class="stat-val gold">{{article.stats.leads}}</text>
+      </view>
+      <view class="stat-item">
+        <view class="stat-icon icon-eye"></view>
+        <text class="stat-label">浏览</text>
+        <text class="stat-val">{{article.stats.views}}</text>
+      </view>
+      <view class="stat-item">
+        <view class="stat-icon icon-list"></view>
+        <text class="stat-label">复制</text>
+        <text class="stat-val">{{article.stats.copies}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 02 深度逻辑拆解 -->
+  <view class="section logic-section" wx:if="{{article.analysis}}">
+    <view class="sec-head">
+      <text class="sec-num">02</text>
+      <text class="sec-name">深度逻辑拆解</text>
+    </view>
+    
+    <view class="logic-block">
+      <view class="l-item">
+        <view class="l-tag">HOOK / 黄金3秒</view>
+        <view class="l-box">
+          <text class="l-content">{{article.analysis.hook}}</text>
+        </view>
+      </view>
+      <view class="l-item">
+        <view class="l-tag">TRUST / 信任锚点</view>
+        <view class="l-box">
+          <text class="l-content">{{article.analysis.trust}}</text>
+        </view>
+      </view>
+      <view class="l-item">
+        <view class="l-tag">ACTION / 转化钩子</view>
+        <view class="l-box">
+          <text class="l-content">{{article.analysis.action}}</text>
+        </view>
+      </view>
+      <view class="l-item" wx:if="{{article.analysis.time}}">
+        <view class="l-tag">TIME / 时长控制</view>
+        <view class="l-box">
+          <text class="l-content">{{article.analysis.time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 03 实战脚本原文 -->
+  <view class="section">
+    <view class="sec-head">
+      <text class="sec-num">03</text>
+      <text class="sec-name">实战脚本原文</text>
+    </view>
+    <view class="script-box">
+      <text user-select="true" class="script-text">{{article.content}}</text>
+    </view>
+    <button class="copy-btn-large" bindtap="onCopyShare">
+      一键复制脚本
+    </button>
+  </view>
+
+  <!-- 底部免责声明 -->
+  <view class="disclaimer-area">
+    <view class="disclaimer-content">
+      <view class="d-icon icon-balance"></view>
+      <text class="d-text">本案例仅供内部拆解研究，旨在提炼底层逻辑，严禁用于商业售卖或直接原样搬运。</text>
+    </view>
+  </view>
+</view>

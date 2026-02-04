@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "courses/*": {
+      "read": true,
+      "write": "auth.openid != null && db.command.or(db.command.eq(auth.role, 'admin'))"
+    },
+    "articles/*": {
+      "read": true,
+      "write": "auth.openid != null && db.command.or(db.command.eq(auth.role, 'admin'), db.command.eq(auth.role, 'anchor'), db.command.eq(auth.role, 'broker'))"
+    },
+    "avatars/*": {
+      "read": true,
+      "write": "auth.openid != null && resource.match(/avatars\\/\\d+\\.\\w+$/)"
+    },
+    "materials/*": {
+      "read": true,
+      "write": "auth.openid != null && db.command.or(db.command.eq(auth.role, 'admin'), db.command.eq(auth.role, 'anchor'), db.command.eq(auth.role, 'broker'))"
+    },
+    "daily_materials/*": {
+      "read": true,
+      "write": "auth.openid != null && db.command.eq(auth.role, 'admin')"
+    },
+    "temp/*": {
+      "read": true,
+      "write": "auth.openid != null"
+    }
+  }
+}

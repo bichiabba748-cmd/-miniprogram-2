@@ -1,0 +1,207 @@
+.container {
+  background-color: #0a0a0a;
+  min-height: 100vh;
+  padding: 20rpx;
+}
+
+.header {
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #D4B083;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: #D4B083;
+  display: block;
+}
+
+.test-section {
+  margin-bottom: 40rpx;
+}
+
+.result-section {
+  margin-top: 40rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #D4B083;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.test-card {
+  background-color: #1a1a1a;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid #333;
+}
+
+.card-title {
+  font-size: 28rpx;
+  color: #fff;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+/* 图标组件 */
+.icon-wrench::before {
+  content: '🔧';
+}
+
+.test-btn {
+  background-color: #D4B083;
+  color: #0a0a0a;
+  font-size: 28rpx;
+  font-weight: bold;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  width: 100%;
+  margin-top: 10rpx;
+}
+
+.result-list {
+  background-color: #1a1a1a;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  max-height: 500rpx;
+  border: 1rpx solid #333;
+}
+
+.result-item {
+  background-color: #222;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+  border: 1rpx solid #444;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.result-function {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #D4B083;
+}
+
+.result-time {
+  font-size: 20rpx;
+  color: #D4B083;
+}
+
+.result-content {
+  margin-top: 10rpx;
+}
+
+.result-text {
+  font-size: 22rpx;
+  color: #fff;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.empty-result {
+  text-align: center;
+  padding: 40rpx 0;
+  color: #D4B083;
+  font-size: 24rpx;
+}
+
+/* 一键全部测试样式 */
+.all-test-card {
+  background-color: #1a1a1a;
+  border: 2rpx solid #D4B083;
+}
+
+.card-desc {
+  font-size: 22rpx;
+  color: #D4B083;
+  margin-bottom: 20rpx;
+  display: block;
+  line-height: 1.4;
+}
+
+.test-btn.primary {
+  background-color: #D4B083;
+  color: #0a0a0a;
+  font-weight: bold;
+}
+
+.test-btn.secondary {
+  background-color: #333;
+  color: #D4B083;
+  margin-top: 10rpx;
+}
+
+/* 测试进度条样式 */
+.test-progress {
+  background-color: #1a1a1a;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  border: 1rpx solid #333;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: #D4B083;
+  margin-bottom: 16rpx;
+  display: block;
+  font-weight: bold;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12rpx;
+  background-color: #333;
+  border-radius: 6rpx;
+  overflow: hidden;
+  margin-bottom: 16rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #D4B083;
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.current-function {
+  font-size: 20rpx;
+  color: #D4B083;
+  display: block;
+}
+
+/* 响应式调整 */
+@media (max-width: 375px) {
+  .test-btn {
+    font-size: 24rpx;
+    padding: 16rpx;
+  }
+  
+  .card-title {
+    font-size: 24rpx;
+  }
+  
+  .card-desc {
+    font-size: 20rpx;
+  }
+}

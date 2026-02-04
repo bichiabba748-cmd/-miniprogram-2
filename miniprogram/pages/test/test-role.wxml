@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="header">
+    <text class="title">角色权限测试</text>
+    <text class="subtitle">当前角色：{{currentRole}}</text>
+  </view>
+
+  <view class="role-buttons">
+    <view class="button-section">
+      <text class="section-title">核心角色</text>
+      <view class="button-grid">
+        <view class="role-btn" bindtap="switchToRole" data-role="visitor">访客</view>
+        <view class="role-btn" bindtap="switchToRole" data-role="student">学员</view>
+        <view class="role-btn" bindtap="switchToRole" data-role="anchor">主播</view>
+        <view class="role-btn" bindtap="switchToRole" data-role="broker">经纪人</view>
+        <view class="role-btn" bindtap="switchToRole" data-role="admin">管理员</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="test-section">
+    <text class="section-title">测试功能</text>
+    <view class="test-buttons">
+      <view class="test-btn" bindtap="testRankAccess">测试榜单权限</view>
+      <view class="test-btn" bindtap="goToRank">跳转到排行榜</view>
+      <view class="test-btn" bindtap="goToProfile">跳转到我的页面</view>
+      <view class="test-btn clear" bindtap="clearResults">清空测试结果</view>
+    </view>
+  </view>
+
+  <view class="results-section">
+    <text class="section-title">测试结果</text>
+    <view class="results-list">
+      <view wx:for="{{testResults}}" wx:key="index" class="result-item">
+        <text class="result-text">{{item}}</text>
+      </view>
+      <view wx:if="{{testResults.length === 0}}" class="empty-result">
+        <text>暂无测试结果</text>
+      </view>
+    </view>
+  </view>
+</view>

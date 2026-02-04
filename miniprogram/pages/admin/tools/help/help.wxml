@@ -1,0 +1,213 @@
+<!-- 帮助页面 -->
+<view class="help-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-left" bindtap="navigateBack">
+      <text class="nav-back">← 返回</text>
+    </view>
+    <view class="nav-title">使用帮助</view>
+    <view class="nav-right"></view>
+  </view>
+
+  <!-- 帮助内容 -->
+  <view class="help-content">
+    <!-- 快速入门 -->
+    <view class="help-section">
+      <view class="section-title">快速入门</view>
+      <view class="help-card">
+        <view class="step-list">
+          <view class="step-item">
+            <view class="step-number">1</view>
+            <view class="step-content">
+              <view class="step-title">访问管理工具</view>
+              <view class="step-desc">在小程序中点击5次头像，输入密码进入admin界面，然后点击"管理工具"模块。</view>
+            </view>
+          </view>
+          <view class="step-item">
+            <view class="step-number">2</view>
+            <view class="step-content">
+              <view class="step-title">查看项目状态</view>
+              <view class="step-desc">在管理工具首页查看项目健康度、开发进度等核心指标。</view>
+            </view>
+          </view>
+          <view class="step-item">
+            <view class="step-number">3</view>
+            <view class="step-content">
+              <view class="step-title">执行操作</view>
+              <view class="step-desc">点击相应的功能按钮执行操作，如手动备份、健康检查等。</view>
+            </view>
+          </view>
+          <view class="step-item">
+            <view class="step-number">4</view>
+            <view class="step-content">
+              <view class="step-title">查看详情</view>
+              <view class="step-desc">点击"详情"按钮查看更详细的信息和分析报告。</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 核心功能 -->
+    <view class="help-section">
+      <view class="section-title">核心功能</view>
+      <view class="help-card">
+        <view class="feature-list">
+          <view class="feature-item">
+            <view class="feature-icon icon-chart"></view>
+            <view class="feature-content">
+              <view class="feature-title">开发进度概览</view>
+              <view class="feature-desc">实时查看项目开发进度，包括总体完成率、各阶段进度和里程碑。</view>
+              <view class="feature-tips">
+                <view class="tip-item">• 点击"详情"查看完整的进度报告</view>
+                <view class="tip-item">• 进度数据会自动同步更新</view>
+              </view>
+            </view>
+          </view>
+          <view class="feature-item">
+            <view class="feature-icon icon-hospital"></view>
+            <view class="feature-content">
+              <view class="feature-title">项目健康状态</view>
+              <view class="feature-desc">检测项目健康状态，包括代码一致性、权限矩阵完整性等指标。</view>
+              <view class="feature-tips">
+                <view class="tip-item">• 点击"检查"按钮运行健康检查</view>
+                <view class="tip-item">• 健康度评分低于80分时需要关注</view>
+              </view>
+            </view>
+          </view>
+          <view class="feature-item">
+            <view class="feature-icon icon-save"></view>
+            <view class="feature-content">
+              <view class="feature-title">备份管理</view>
+              <view class="feature-desc">管理项目备份，包括手动备份、备份历史和自动备份设置。</view>
+              <view class="feature-tips">
+                <view class="tip-item">• 重要操作前建议手动备份</view>
+                <view class="tip-item">• 自动备份默认每天执行</view>
+              </view>
+            </view>
+          </view>
+          <view class="feature-item">
+            <view class="feature-icon icon-package"></view>
+            <view class="feature-content">
+              <view class="feature-title">资源使用情况</view>
+              <view class="feature-desc">查看项目资源使用情况，包括文件数、代码行数、小程序体积等。</view>
+              <view class="feature-tips">
+                <view class="tip-item">• 点击"详情"查看资源分布详情</view>
+                <view class="tip-item">• 定期检查资源使用情况</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 辅助功能 -->
+    <view class="help-section">
+      <view class="section-title">辅助功能</view>
+      <view class="help-card">
+        <view class="feature-list">
+          <view class="feature-item">
+            <view class="feature-icon icon-lightning"></view>
+            <view class="feature-content">
+              <view class="feature-title">云函数状态监控</view>
+              <view class="feature-desc">监控云函数运行状态，包括执行时间、内存使用和风险等级。</view>
+              <view class="feature-tips">
+                <view class="tip-item">• 高风险云函数需要及时优化</view>
+                <view class="tip-item">• 定期更新云函数依赖</view>
+              </view>
+            </view>
+          </view>
+          <view class="feature-item">
+            <view class="feature-icon icon-puzzle"></view>
+            <view class="feature-content">
+              <view class="feature-title">组件库状态分析</view>
+              <view class="feature-desc">分析组件库使用情况，包括组件使用率、完整性和优化建议。</view>
+              <view class="feature-tips">
+                <view class="tip-item">• 清理未使用的组件</view>
+                <view class="tip-item">• 合并功能相似的组件</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 常见问题 -->
+    <view class="help-section">
+      <view class="section-title">常见问题</view>
+      <view class="help-card">
+        <view class="faq-list">
+          <view class="faq-item" wx:for="{{faqList}}" wx:key="index">
+            <view class="faq-question" bindtap="toggleFaq" data-index="{{index}}">
+              <view class="question-text">{{item.question}}</view>
+              <view class="question-arrow {{expandedIndex === index ? 'expanded' : ''}}">▼</view>
+            </view>
+            <view class="faq-answer" wx:if="expandedIndex === index">
+              <view class="answer-text">{{item.answer}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作指南 -->
+    <view class="help-section">
+      <view class="section-title">操作指南</view>
+      <view class="help-card">
+        <view class="guide-list">
+          <view class="guide-item">
+            <view class="guide-title">手动备份操作</view>
+            <view class="guide-steps">
+              <view class="guide-step">1. 点击"备份管理"模块中的"手动备份"按钮</view>
+              <view class="guide-step">2. 在弹出的确认框中点击"确定"</view>
+              <view class="guide-step">3. 等待备份完成，查看备份状态</view>
+              <view class="guide-step">4. 备份完成后会显示成功提示</view>
+            </view>
+          </view>
+          <view class="guide-item">
+            <view class="guide-title">健康检查操作</view>
+            <view class="guide-steps">
+              <view class="guide-step">1. 点击"项目健康状态"模块中的"检查"按钮</view>
+              <view class="guide-step">2. 等待健康检查完成（约1-2秒）</view>
+              <view class="guide-step">3. 查看健康评分和详细报告</view>
+              <view class="guide-step">4. 根据建议进行相应的优化</view>
+            </view>
+          </view>
+          <view class="guide-item">
+            <view class="guide-title">导出报告操作</view>
+            <view class="guide-steps">
+              <view class="guide-step">1. 进入相应的详情页面（如进度详情、健康详情）</view>
+              <view class="guide-step">2. 点击页面底部的"导出报告"按钮</view>
+              <view class="guide-step">3. 等待报告生成完成</view>
+              <view class="guide-step">4. 下载或查看生成的报告</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联系支持 -->
+    <view class="help-section">
+      <view class="section-title">联系支持</view>
+      <view class="help-card">
+        <view class="support-info">
+          <view class="support-item">
+            <view class="support-label">技术支持</view>
+            <view class="support-value">support@example.com</view>
+          </view>
+          <view class="support-item">
+            <view class="support-label">联系电话</view>
+            <view class="support-value">400-123-4567</view>
+          </view>
+          <view class="support-item">
+            <view class="support-label">工作时间</view>
+            <view class="support-value">周一至周五 9:00-18:00</view>
+          </view>
+        </view>
+        <view class="support-note">
+          <view class="note-text">如果您在使用过程中遇到任何问题，请随时联系我们的技术支持团队。</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

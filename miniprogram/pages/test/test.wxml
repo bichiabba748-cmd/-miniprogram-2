@@ -1,0 +1,175 @@
+<view class="container">
+  <view class="header">
+    <text class="title">测试中心</text>
+    <text class="subtitle">仅开发环境可见</text>
+  </view>
+  
+  <view class="test-section">
+    <text class="section-title">云函数测试</text>
+    
+    <!-- 一键全部测试 -->
+    <view class="test-card all-test-card">
+      <view class="card-title icon-wrench"></view>
+      <text>一键全部测试</text>
+      <text class="card-desc">将按顺序测试所有云函数，生成完整测试报告</text>
+      <button class="test-btn primary" bindtap="testAllFunctions">开始全部测试</button>
+      <button class="test-btn secondary" bindtap="copyReport" wx:if="reportReady">复制测试报告</button>
+    </view>
+    
+    <view class="test-progress" wx:if="testing">
+      <text class="progress-text">测试中：{{currentTest}} / {{totalTests}}</text>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{progressPercentage}}%"></view>
+      </view>
+      <text class="current-function">{{currentFunction}}</text>
+    </view>
+    
+    <!-- 基础数据初始化 -->
+    <view class="test-card">
+      <text class="card-title">1. 初始化日签数据</text>
+      <button class="test-btn" bindtap="testInitDailyMaterials">测试初始化</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">2. 初始化租赁集合</text>
+      <button class="test-btn" bindtap="testInitRentalCollections">测试初始化</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">3. 初始化数据库</text>
+      <button class="test-btn" bindtap="testInitDB">测试初始化</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">4. 更新用户Schema</text>
+      <button class="test-btn" bindtap="testUpdateUserSchema">测试更新</button>
+    </view>
+    
+    <!-- 租赁相关测试 -->
+    <view class="test-card">
+      <text class="card-title">5. 添加测试合同</text>
+      <button class="test-btn" bindtap="testAddTestContract">测试添加</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">6. 获取合同信息</text>
+      <button class="test-btn" bindtap="testGetContractInfo">测试获取</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">7. 提交续租申请</text>
+      <button class="test-btn" bindtap="testSubmitRenewal">测试提交</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">8. 获取经纪人合同</text>
+      <button class="test-btn" bindtap="testGetBrokerContracts">测试获取</button>
+    </view>
+    
+    <!-- 业务操作测试 -->
+    <view class="test-card">
+      <text class="card-title">9. 报单测试</text>
+      <button class="test-btn" bindtap="testSubmitContract">测试报单</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">10. 咨询测试</text>
+      <button class="test-btn" bindtap="testSubmitConsult">测试咨询</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">11. 素材上传测试</text>
+      <button class="test-btn" bindtap="testUploadMaterial">测试上传</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">12. 获取素材列表</text>
+      <button class="test-btn" bindtap="testGetMaterials">测试获取</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">13. 登录测试</text>
+      <button class="test-btn" bindtap="testLogin">测试登录</button>
+    </view>
+    
+    <view class="test-card">
+      <text class="card-title">14. 管理工具测试</text>
+      <button class="test-btn" bindtap="testAdminTools">测试管理</button>
+    </view>
+
+    <!-- 快速开始函数测试 -->
+    <view class="test-card">
+      <text class="card-title">15. 快速开始 - 获取OpenID</text>
+      <button class="test-btn" bindtap="testQuickStartGetOpenId">测试获取</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">16. 快速开始 - 获取小程序码</text>
+      <button class="test-btn" bindtap="testQuickStartGetMiniProgramCode">测试获取</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">17. 快速开始 - 创建集合</text>
+      <button class="test-btn" bindtap="testQuickStartCreateCollection">测试创建</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">18. 快速开始 - 查询记录</text>
+      <button class="test-btn" bindtap="testQuickStartSelectRecord">测试查询</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">19. 快速开始 - 插入记录</text>
+      <button class="test-btn" bindtap="testQuickStartInsertRecord">测试插入</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">20. 快速开始 - 更新记录</text>
+      <button class="test-btn" bindtap="testQuickStartUpdateRecord">测试更新</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">21. 快速开始 - 删除记录</text>
+      <button class="test-btn" bindtap="testQuickStartDeleteRecord">测试删除</button>
+    </view>
+
+    <!-- 安全加固测试 -->
+    <view class="test-card">
+      <text class="card-title">22. 性能测试</text>
+      <button class="test-btn" bindtap="testPerformanceTest">测试性能</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">23. 错误处理测试</text>
+      <button class="test-btn" bindtap="testErrorHandler">测试错误处理</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">24. 敏感信息加密测试</text>
+      <button class="test-btn" bindtap="testSecurity">测试加密</button>
+    </view>
+
+    <view class="test-card">
+      <text class="card-title">25. 日志记录测试</text>
+      <button class="test-btn" bindtap="testLogger">测试日志</button>
+    </view>
+  </view>
+  
+  <view class="result-section">
+    <text class="section-title">测试结果</text>
+    <scroll-view class="result-list" scroll-y>
+      <view wx:for="{{testResults}}" wx:key="index" class="result-item">
+        <view class="result-header">
+          <text class="result-function">{{item.function}}</text>
+          <text class="result-time">{{item.time}}</text>
+        </view>
+        <view class="result-content">
+          <text class="result-text">{{item.result}}</text>
+        </view>
+      </view>
+      <view wx:if="{{testResults.length === 0}}" class="empty-result">
+        <text>暂无测试结果</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

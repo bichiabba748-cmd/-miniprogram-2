@@ -1,0 +1,214 @@
+.container {
+  background-color: #0a0a0a;
+  min-height: 100vh;
+  padding: 20rpx;
+}
+
+/* 头部导航 */
+.header {
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+/* 榜单类型切换 */
+.tab-container {
+  display: flex;
+  background-color: #1a1a1a;
+  border-radius: 16rpx;
+  padding: 8rpx;
+  margin-bottom: 30rpx;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx;
+  border-radius: 12rpx;
+  transition: all 0.3s;
+}
+
+.tab-item.active {
+  background-color: #d4af37;
+}
+
+.tab-item.active text {
+  color: #0a0a0a;
+  font-weight: bold;
+}
+
+.tab-item text {
+  font-size: 28rpx;
+  color: #ffffff;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100rpx 0;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #d4af37;
+}
+
+/* 榜单列表 */
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  background-color: #1a1a1a;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  transition: all 0.3s;
+}
+
+.leaderboard-item:hover {
+  background-color: #2a2a2a;
+}
+
+/* 排名 */
+.rank-container {
+  margin-right: 20rpx;
+}
+
+.rank {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  background-color: #333333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rank.top {
+  background-color: #d4af37;
+}
+
+.rank-number {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.rank.top .rank-number {
+  color: #0a0a0a;
+}
+
+/* 经纪人信息 */
+.broker-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  border: 2rpx solid #d4af37;
+}
+
+.broker-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.broker-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 4rpx;
+}
+
+.broker-store {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 业绩数据 */
+.performance {
+  display: flex;
+  gap: 30rpx;
+  margin-right: 20rpx;
+}
+
+.performance-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.performance-label {
+  font-size: 20rpx;
+  color: #999999;
+  margin-bottom: 4rpx;
+}
+
+.performance-value {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+/* 排名变化 */
+.ranking-change {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.up {
+  color: #4CAF50;
+}
+
+.down {
+  color: #F44336;
+}
+
+.stable {
+  color: #999999;
+}
+
+/* 无数据提示 */
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100rpx 0;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .performance {
+    gap: 20rpx;
+  }
+  
+  .performance-item {
+    min-width: 80rpx;
+  }
+  
+  .broker-info {
+    flex: 1;
+  }
+}

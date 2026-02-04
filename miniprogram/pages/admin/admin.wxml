@@ -1,0 +1,285 @@
+<view class="container">
+  <view class="header">
+    <text class="title">COMMANDER · 战区控制台</text>
+    <text class="sub">上帝视角：战绩 / 文案 / 人员 综合审批中心</text>
+  </view>
+
+  <!-- 核心战绩卡片 -->
+  <view class="dashboard-card">
+    <view class="dash-row">
+      <view class="dash-item">
+        <text class="dash-label">今日总获客</text>
+        <text class="dash-value">{{stats.leads}}<text class="unit">组</text></text>
+        <text class="dash-trend"><view class="trend-icon icon-trend-up"></view> +12</text>
+      </view>
+      <view class="dash-item">
+        <text class="dash-label">今日总带看</text>
+        <text class="dash-value">{{stats.showings}}<text class="unit">次</text></text>
+        <text class="dash-trend">- +5</text>
+      </view>
+      <view class="dash-item">
+        <text class="dash-label">全店总人数</text>
+        <text class="dash-value">{{stats.totalUsers}}<text class="unit">人</text></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 待办入口（横向三卡片） -->
+  <view class="audit-cards">
+    <view class="audit-card" bindtap="toggleAuditDetail" data-type="report">
+      <text class="ac-label">战绩审核</text>
+      <text class="ac-num">{{pendingReports}}</text>
+    </view>
+    <view class="audit-card" bindtap="toggleAuditDetail" data-type="article">
+      <text class="ac-label">文案审核</text>
+      <text class="ac-num">{{pendingArticles}}</text>
+    </view>
+    <view class="audit-card" bindtap="toggleAuditDetail" data-type="user">
+      <text class="ac-label">入伍申请</text>
+      <text class="ac-num">{{pendingUsers}}</text>
+    </view>
+  </view>
+
+  <!-- 审核详情展开区 -->
+  <view class="audit-detail-zone" wx:if="{{auditDetailType}}">
+    
+    <!-- 战绩审核详情 -->
+    <view class="card" wx:if="{{auditDetailType === 'report'}}">
+      <view class="card-head">
+        <text class="card-title">战绩审核详情 ({{pendingReports}})</text>
+        <view class="close-btn" bindtap="closeAuditDetail">×</view>
+      </view>
+      <view class="list" wx:if="{{pendingReports > 0}}">
+        <block wx:for="{{auditList}}" wx:key="_id">
+          <view class="item">
+            <view class="info">
+              <text class="name">提报人: {{item.name || item.reporterId}}</text>
+              <text class="data">类型: {{item.type === 'leads' ? '获客' : item.type === 'showings' ? '带看' : item.type}} | 数量: {{item.count}}</text>
+              <text class="data">状态: {{item.status === 'pending' ? '待审核' : item.status === 'approved' ? '已通过' : item.status === 'rejected' ? '已驳回' : item.status}}</text>
+              <text class="data">提报时间: {{item.createdAt ? item.createdAt.toLocaleString() : '未知'}}</text>
+              <text class="data" wx:if="{{item.store}}">门店: {{item.store}}</text>
+              <text class="data" wx:if="{{item.videos}}">视频: {{item.videos}}</text>
+              <text class="data" wx:if="{{item.lives}}">直播: {{item.lives}}</text>
+              <text class="data" wx:if="{{item.leads}}">获客: {{item.leads}}</text>
+            </view>
+            <view class="actions">
+              <button class="btn pass" size="mini" bindtap="auditPass" data-id="{{item._id}}">通过</button>
+              <button class="btn reject" size="mini" bindtap="auditReject" data-id="{{item._id}}">驳回</button>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="empty" wx:else>暂无待审核战绩</view>
+    </view>
+
+    <!-- 文案审核详情 -->
+    <view class="card" wx:if="{{auditDetailType === 'article'}}">
+      <view class="card-head">
+        <text class="card-title">文案审核详情 ({{pendingArticles}})</text>
+        <view class="close-btn" bindtap="closeAuditDetail">×</view>
+      </view>
+      <view class="list" wx:if="{{pendingArticles > 0}}">
+        <block wx:for="{{scriptList}}" wx:key="_id">
+          <view class="item script-item">
+            <view class="script-info">
+              <text class="name">{{item.title}}</text>
+              <text class="data">分类：{{item.category}}</text>
+              <view class="content-preview">
+                <text class="content-label">文案内容：</text>
+                <text class="content-text">{{item.content.script || item.content || '暂无内容'}}</text>
+              </view>
+            </view>
+            <view class="script-actions">
+              <button class="btn edit" size="mini" bindtap="scriptEdit" data-id="{{item._id}}" data-index="{{index}}">编辑</button>
+              <button class="btn pass" size="mini" bindtap="scriptPass" data-id="{{item._id}}">上架</button>
+              <button class="btn reject" size="mini" bindtap="scriptReject" data-id="{{item._id}}">丢弃</button>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="empty" wx:else>军火库库位充足，暂无新脚本</view>
+    </view>
+
+    <!-- 文案编辑弹窗 -->
+    <view class="modal" wx:if="{{showEditModal}}">
+      <view class="modal-content">
+        <view class="modal-header">
+          <text class="modal-title">编辑文案</text>
+          <view class="modal-close" bindtap="closeEditModal">×</view>
+        </view>
+        <view class="modal-body">
+          <view class="form-item">
+            <text class="form-label">标题</text>
+            <input class="form-input" value="{{editingArticle.title}}" bindinput="onEditTitleChange" />
+          </view>
+          <view class="form-item">
+            <text class="form-label">分类</text>
+            <picker mode="selector" range="{{articleCategories}}" value="{{editingCategoryIndex}}" bindchange="onEditCategoryChange">
+              <view class="form-picker">{{articleCategories[editingCategoryIndex] || '请选择'}}</view>
+            </picker>
+          </view>
+          <view class="form-item">
+            <text class="form-label">文案内容</text>
+            <textarea class="form-textarea" value="{{editingArticle.content.script || editingArticle.content}}" bindinput="onEditContentChange" maxlength="1000" />
+          </view>
+        </view>
+        <view class="modal-footer">
+          <button class="modal-btn cancel" bindtap="closeEditModal">取消</button>
+          <button class="modal-btn save" bindtap="saveAndPassArticle">保存并上架</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 入伍申请详情 -->
+    <view class="card" wx:if="{{auditDetailType === 'user'}}">
+      <view class="card-head">
+        <text class="card-title">入伍申请详情 ({{pendingUsers}})</text>
+        <view class="close-btn" bindtap="closeAuditDetail">×</view>
+      </view>
+      <view class="list" wx:if="{{pendingUsers > 0}}">
+        <block wx:for="{{pendingUserList}}" wx:key="_id">
+          <view class="item">
+            <view class="info">
+              <text class="name">姓名: {{item.name}}</text>
+              <text class="data">手机号: {{item.phone}}</text>
+              <text class="data">身份: {{item.identity}}</text>
+              <text class="data">痛点: {{item.painPoints ? (Array.isArray(item.painPoints) ? item.painPoints.join('、') : item.painPoints) : '无'}}</text>
+              <text class="data">状态: {{item.status === 'pending' ? '待审核' : item.status === 'approved' ? '已通过' : item.status === 'rejected' ? '已拒绝' : item.status}}</text>
+              <text class="data">申请时间: {{item.createdAt ? item.createdAt.toLocaleString() : '未知'}}</text>
+              <text class="data" wx:if="{{item.education}}">学历: {{item.education}}</text>
+              <text class="data" wx:if="{{item.experience}}">经验: {{item.experience}}</text>
+              <text class="data" wx:if="{{item.skills}}">技能: {{Array.isArray(item.skills) ? item.skills.join('、') : item.skills}}</text>
+            </view>
+            <view class="actions">
+              <button class="btn pass" size="mini" bindtap="userPass" data-id="{{item._id}}">通过</button>
+              <button class="btn reject" size="mini" bindtap="userReject" data-id="{{item._id}}">拒绝</button>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="empty" wx:else>暂无待审核申请</view>
+    </view>
+
+  </view>
+
+  <!-- 管理工具区（2行布局） -->
+  <view class="manage-grid">
+    <view class="mg-item" bindtap="manageArt">
+      <view class="mgi-icon icon-book"></view>
+      <text class="mgi-name">文案管理</text>
+    </view>
+    <view class="mg-item" bindtap="manageCourse">
+      <view class="mgi-icon icon-graduation"></view>
+      <text class="mgi-name">课程管理</text>
+    </view>
+    <view class="mg-item" bindtap="manageAssign">
+      <view class="mgi-icon icon-hand"></view>
+      <text class="mgi-name">线索指派</text>
+    </view>
+    <view class="mg-item" bindtap="manageStore">
+      <view class="mgi-icon icon-store"></view>
+      <text class="mgi-name">门店管理</text>
+    </view>
+    <view class="mg-item" bindtap="manageSettings">
+      <view class="mgi-icon icon-settings"></view>
+      <text class="mgi-name">设置</text>
+    </view>
+    <view class="mg-item disabled">
+      <view class="mgi-icon icon-lock"></view>
+      <text class="mgi-name">敬请期待</text>
+    </view>
+  </view>
+
+  <view class="sub-tabs">
+    <view class="sub-tab {{subTab == 0 ? 'active' : ''}}" bindtap="switchSubTab" data-idx="0">战绩公示</view>
+    <view class="sub-tab {{subTab == 1 ? 'active' : ''}}" bindtap="switchSubTab" data-idx="1">人员管理</view>
+  </view>
+
+  <!-- 战绩公示板 -->
+  <view class="card" wx:if="{{subTab == 0}}">
+    <view class="card-head">
+      <text class="card-title">今日战绩公示</text>
+      <view class="report-switch">
+        <view class="switch-btn {{reportType == 'anchor' ? 'active' : ''}}" bindtap="switchReportType" data-type="anchor">主播</view>
+        <view class="switch-btn {{reportType == 'broker' ? 'active' : ''}}" bindtap="switchReportType" data-type="broker">经纪人</view>
+      </view>
+    </view>
+
+    <!-- 主播表 -->
+    <view class="report-table" wx:if="{{reportType == 'anchor'}}">
+      <view class="table-header">
+        <text class="th th-name">姓名</text>
+        <text class="th th-num">视频</text>
+        <text class="th th-num">获客</text>
+        <text class="th th-num">直播</text>
+        <text class="th th-status">状态</text>
+      </view>
+      <view class="table-row" wx:for="{{anchorReports}}" wx:key="id">
+        <text class="td td-name">{{item.name}}</text>
+        <text class="td td-num">{{item.videos}}</text>
+        <text class="td td-num highlight">{{item.leads}}</text>
+        <text class="td td-num">{{item.lives}}</text>
+        <text class="td td-status {{item.status}}">{{item.statusText}}</text>
+      </view>
+      <view class="table-footer">
+        <text class="tf-label">总计</text>
+        <text class="tf-num">{{anchorTotal.videos}}</text>
+        <text class="tf-num highlight">{{anchorTotal.leads}}</text>
+        <text class="tf-num">{{anchorTotal.lives}}</text>
+        <text class="tf-num">-</text>
+      </view>
+    </view>
+
+    <!-- 经纪人表 -->
+    <view class="report-table" wx:else>
+      <view class="table-header">
+        <text class="th th-name">姓名</text>
+        <text class="th th-num">获客</text>
+        <text class="th th-num">带看</text>
+        <text class="th th-num">回访</text>
+        <text class="th th-status">状态</text>
+      </view>
+      <view class="table-row" wx:for="{{brokerReports}}" wx:key="id">
+        <text class="td td-name">{{item.name}}</text>
+        <text class="td td-num">{{item.leads}}</text>
+        <text class="td td-num highlight">{{item.showings}}</text>
+        <text class="td td-num">{{item.callbacks}}</text>
+        <text class="td td-status {{item.status}}">{{item.statusText}}</text>
+      </view>
+      <view class="table-footer">
+        <text class="tf-label">总计</text>
+        <text class="tf-num">{{brokerTotal.leads}}</text>
+        <text class="tf-num highlight">{{brokerTotal.showings}}</text>
+        <text class="tf-num">{{brokerTotal.callbacks}}</text>
+        <text class="tf-num">-</text>
+      </view>
+    </view>
+
+    <view class="screenshot-tip">长按截图可群内公示</view>
+  </view>
+
+  <!-- 人员管理 -->
+  <view class="card" wx:if="{{subTab == 1}}">
+    <view class="card-head">
+      <text class="card-title">全部成员 ({{memberList.length}})</text>
+    </view>
+    <view class="member-list">
+      <view class="member-item" wx:for="{{memberList}}" wx:key="id" bindtap="showMemberDetail" data-id="{{item.id}}">
+        <view class="mi-left">
+          <text class="mi-name">{{item.name}}</text>
+          <view class="mi-meta">
+            <text class="mi-role {{item.role}}">{{item.roleText}}</text>
+            <text class="mi-business-type" wx:if="{{item.businessTypeText}}">{{item.businessTypeText}}</text>
+            <text class="mi-store" wx:if="{{item.storeName}}">{{item.storeName}}</text>
+            <text class="mi-time">{{item.joinTime}}</text>
+          </view>
+        </view>
+        <view class="mi-right">
+          <view class="mi-phone-icon icon-phone" bindtap="callMember" data-phone="{{item.phone}}" catchtap="callMember"></view>
+          <view class="mi-change-btn" bindtap="changeRole" data-id="{{item.id}}" data-name="{{item.name}}" catchtap="changeRole">更改</view>
+          <text class="mi-arrow">></text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

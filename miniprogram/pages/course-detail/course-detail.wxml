@@ -1,0 +1,131 @@
+<!-- 课程详情页 -->
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error" wx:elif="{{error}}">
+    <text class="error-text">{{error}}</text>
+  </view>
+
+  <!-- 课程内容 -->
+  <view wx:else>
+    <!-- 视频区域 -->
+    <view class="video-section">
+      <!-- 视频占位容器 -->
+      <view class="video-container">
+        <view class="video-placeholder">
+          <view class="video-icon icon-play"></view>
+          <text class="video-title">{{course.title || '课程视频'}}</text>
+        </view>
+
+        <!-- 访客遮罩 -->
+        <view class="member-mask" wx:if="{{!isMember}}">
+          <view class="mask-content">
+            <text class="mask-title">加入星火计划</text>
+            <text class="mask-desc">解锁完整课程内容</text>
+            <button class="mask-btn" bindtap="onJoinPlan">立即加入</button>
+          </view>
+        </view>
+
+        <!-- 会员按钮 -->
+        <button class="learn-btn" wx:if="{{isMember}}" bindtap="onLearnVideo">
+          跳转到视频号学习
+        </button>
+      </view>
+    </view>
+
+    <!-- 课程信息 -->
+    <view class="course-info">
+      <text class="course-title">{{course.title}}</text>
+      <view class="course-meta">
+        <text class="meta-item">分类：{{course.category || '未分类'}}</text>
+        <text class="meta-item">类型：{{course.mediaType || '链接'}}</text>
+      </view>
+    </view>
+
+    <!-- Tab栏 -->
+    <view class="tab-bar">
+      <view class="tab-item {{activeTab === 'intro' ? 'active' : ''}}" bindtap="onTabChange" data-tab="intro">
+        简介
+      </view>
+      <view class="tab-item {{activeTab === 'catalog' ? 'active' : ''}}" bindtap="onTabChange" data-tab="catalog">
+        目录
+      </view>
+      <view class="tab-item {{activeTab === 'discussion' ? 'active' : ''}}" bindtap="onTabChange" data-tab="discussion">
+        讨论
+      </view>
+    </view>
+
+    <!-- Tab内容 -->
+    <view class="tab-content">
+      <!-- 简介 -->
+      <view class="intro-content" wx:if="{{activeTab === 'intro'}}">
+        <view class="section">
+          <text class="section-title">课程简介</text>
+          <text class="section-text">{{course.description || '暂无课程简介'}}</text>
+        </view>
+        <view class="section">
+          <text class="section-title">课程链接</text>
+          <text class="section-text">{{course.url || '暂无链接'}}</text>
+        </view>
+      </view>
+
+      <!-- 目录 -->
+      <view class="catalog-content" wx:if="{{activeTab === 'catalog'}}">
+        <view class="catalog-item">
+          <text class="catalog-title">第1节：课程介绍</text>
+          <text class="catalog-duration">05:30</text>
+        </view>
+        <view class="catalog-item">
+          <text class="catalog-title">第2节：实战操作</text>
+          <text class="catalog-duration">12:45</text>
+        </view>
+        <view class="catalog-item">
+          <text class="catalog-title">第3节：案例分析</text>
+          <text class="catalog-duration">08:15</text>
+        </view>
+      </view>
+
+      <!-- 讨论 -->
+      <view class="discussion-content" wx:if="{{activeTab === 'discussion'}}">
+        <view class="empty-discussion">
+          <text class="empty-text">暂无讨论内容</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 关联作业卡片 -->
+    <view class="related-article" wx:if="{{relatedArticle}}">
+      <view class="article-card" bindtap="onGoToArticle" hover-class="card-hover">
+        <view class="card-main">
+          <view class="card-icon icon-note"></view>
+          <text class="card-title">实战作业</text>
+          <text class="card-content">{{relatedArticle.title}}</text>
+        </view>
+        <view class="card-right">
+          <text class="card-link">查看详情</text>
+          <text class="card-arrow">></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部固定操作栏 -->
+  <view class="bottom-bar">
+    <view class="bar-item" bindtap="onCollect">
+      <view class="bar-icon icon-star-full"></view>
+      <text class="bar-text">收藏</text>
+    </view>
+    <view class="bar-item" bindtap="onShare">
+      <view class="bar-icon icon-link"></view>
+      <text class="bar-text">分享</text>
+    </view>
+    <view class="bar-item" bindtap="onConsult">
+      <view class="bar-icon icon-chat"></view>
+      <text class="bar-text">咨询</text>
+    </view>
+  </view>
+</view>

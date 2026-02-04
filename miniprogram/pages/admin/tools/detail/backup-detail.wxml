@@ -1,0 +1,147 @@
+<!-- 备份状态管理详情页面 -->
+<view class="detail-container">
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-left" bindtap="navigateBack">
+      <text class="nav-back">← 返回</text>
+    </view>
+    <view class="nav-title">备份管理</view>
+    <view class="nav-right">
+      <button class="backup-btn" bindtap="manualBackup">
+        <text class="btn-text">立即备份</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 备份状态 -->
+  <view class="status-section">
+    <view class="status-card">
+      <view class="status-title">备份状态</view>
+      <view class="status-info">
+        <view class="info-item">
+          <view class="info-label">最近备份</view>
+          <view class="info-value">{{lastBackupTime}}</view>
+        </view>
+        <view class="info-item">
+          <view class="info-label">备份总数</view>
+          <view class="info-value">{{totalBackups}}</view>
+        </view>
+        <view class="info-item">
+          <view class="info-label">自动备份</view>
+          <view class="info-value {{autoBackupEnabled ? 'enabled' : 'disabled'}}">{{autoBackupEnabled ? '开启' : '关闭'}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备份设置 -->
+  <view class="settings-section">
+    <view class="section-title">备份设置</view>
+    <view class="settings-card">
+      <view class="setting-item">
+        <view class="setting-label">自动备份</view>
+        <view class="setting-control">
+          <switch checked="{{autoBackupEnabled}}" bindchange="toggleAutoBackup"></switch>
+        </view>
+      </view>
+      <view class="setting-item">
+        <view class="setting-label">备份频率</view>
+        <view class="setting-control">
+          <picker bindchange="changeBackupFrequency" value="{{backupFrequencyIndex}}" range="{{backupFrequencies}}">
+            <view class="picker-text">{{backupFrequencies[backupFrequencyIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="setting-item">
+        <view class="setting-label">备份保留数量</view>
+        <view class="setting-control">
+          <picker bindchange="changeBackupRetention" value="{{backupRetentionIndex}}" range="{{backupRetentions}}">
+            <view class="picker-text">{{backupRetentions[backupRetentionIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="setting-item">
+        <view class="setting-label">备份路径</view>
+        <view class="setting-control">
+          <view class="path-text">{{backupPath}}</view>
+          <button class="path-btn" bindtap="changeBackupPath">
+            <text class="btn-text">修改</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备份历史 -->
+  <view class="history-section">
+    <view class="section-title">备份历史</view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{backupHistory}}" wx:key="index">
+        <view class="history-header">
+          <view class="history-time">{{item.time}}</view>
+          <view class="history-type {{item.type}}">{{item.typeText}}</view>
+        </view>
+        <view class="history-content">
+          <view class="history-info">
+            <view class="info-item">
+              <view class="info-label">大小</view>
+              <view class="info-value">{{item.size}}</view>
+            </view>
+            <view class="info-item">
+              <view class="info-label">状态</view>
+              <view class="info-value {{item.status}}">{{item.statusText}}</view>
+            </view>
+          </view>
+          <view class="history-actions">
+            <button class="action-btn view" bindtap="viewBackup" data-index="{{index}}">
+              <text class="btn-text">查看</text>
+            </button>
+            <button class="action-btn restore" bindtap="restoreBackup" data-index="{{index}}">
+              <text class="btn-text">恢复</text>
+            </button>
+            <button class="action-btn delete" bindtap="deleteBackup" data-index="{{index}}">
+              <text class="btn-text">删除</text>
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备份时间线 -->
+  <view class="timeline-section">
+    <view class="section-title">备份时间线</view>
+    <view class="timeline">
+      <view class="timeline-item" wx:for="{{backupTimeline}}" wx:key="index">
+        <view class="timeline-dot {{item.status}}"></view>
+        <view class="timeline-content">
+          <view class="timeline-time">{{item.time}}</view>
+          <view class="timeline-event">{{item.event}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备份统计 -->
+  <view class="stats-section">
+    <view class="section-title">备份统计</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <view class="stat-value">{{successfulBackups}}</view>
+        <view class="stat-label">成功备份</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{failedBackups}}</view>
+        <view class="stat-label">失败备份</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{manualBackups}}</view>
+        <view class="stat-label">手动备份</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{autoBackups}}</view>
+        <view class="stat-label">自动备份</view>
+      </view>
+    </view>
+  </view>
+</view>

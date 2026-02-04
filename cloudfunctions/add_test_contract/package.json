@@ -1,0 +1,9 @@
+{
+  "name": "add_test_contract",
+  "version": "1.0.0",
+  "description": "添加测试合同数据到 contracts 集合",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

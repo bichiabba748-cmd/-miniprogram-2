@@ -1,0 +1,26 @@
+<view class="materials-container">
+  <view class="tabs">
+    <view class="tab {{currentTab === 'text' ? 'active' : ''}}" bindtap="onTabChange" data-tab="text">文案素材</view>
+    <view class="tab {{currentTab === 'image' ? 'active' : ''}}" bindtap="onTabChange" data-tab="image">图片素材</view>
+  </view>
+
+  <view wx:if="{{currentTab === 'text'}}" class="material-list">
+    <view wx:for="{{textList}}" wx:key="id" class="text-item" bindlongpress="onDeleteMaterial" data-id="{{item.id}}">
+      <view class="text-content">{{item.content}}</view>
+      <view class="text-meta">
+        <text class="tag">{{item.category}}</text>
+        <text class="date">{{item.createTime}}</text>
+      </view>
+      <button class="btn-copy" bindtap="onCopyText" data-content="{{item.content}}">复制</button>
+    </view>
+  </view>
+
+  <view wx:if="{{currentTab === 'image'}}" class="material-list">
+    <view wx:for="{{imageList}}" wx:key="id" class="image-item">
+      <image src="{{item.url}}" mode="aspectFill" class="material-image"></image>
+      <view class="image-meta"><text class="tag">{{item.category}}</text></view>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="onUpload">+</view>
+</view>
