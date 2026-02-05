@@ -1,4 +1,17 @@
-# 忽略文件
-backup/
+# Windows
+[Dd]esktop.ini
+Thumbs.db
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+
+# Node.js
 node_modules/
-.git/
+
+# 备份文件
+backups/
