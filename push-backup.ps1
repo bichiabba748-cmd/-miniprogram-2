@@ -1,9 +1,21 @@
 Write-Host "Starting push and backup..." -ForegroundColor Green
 
-# 1. Git push
-Write-Host "1/4 Git push..." -ForegroundColor Yellow
+# 1. Git commit
+Write-Host "1/5 Git commit..." -ForegroundColor Yellow
 $currentBranch = git branch --show-current
 Write-Host "   Current branch: $currentBranch" -ForegroundColor Cyan
+$status = git status --porcelain
+if ($status) {
+    Write-Host "   Committing changes..." -ForegroundColor Yellow
+    git add -A
+    git commit -m "chore: auto commit before push"
+    Write-Host "   Commit success" -ForegroundColor Green
+} else {
+    Write-Host "   No changes to commit" -ForegroundColor Cyan
+}
+
+# 2. Git push
+Write-Host "2/5 Git push..." -ForegroundColor Yellow
 git push origin $currentBranch
 if ($LASTEXITCODE -eq 0) {
     Write-Host "   Git push success" -ForegroundColor Green
@@ -11,15 +23,15 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "   Git push failed" -ForegroundColor Red
 }
 
-# 2. Create backup
-Write-Host "2/4 Creating backup..." -ForegroundColor Yellow
+# 3. Create backup
+Write-Host "3/5 Creating backup..." -ForegroundColor Yellow
 $timestamp = Get-Date -Format 'yyyy-MM-ddTHH-mm-ss-fffZ'
 $backupPath = "backups\backup-$timestamp"
 $tempPath = "backups\temp-$timestamp"
 New-Item -ItemType Directory -Force -Path $tempPath | Out-Null
 
-# 3. Copy files (exclude node_modules)
-Write-Host "3/4 Copying files..." -ForegroundColor Yellow
+# 4. Copy files (exclude node_modules)
+Write-Host "4/5 Copying files..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force -Path "miniprogram" -Destination "$tempPath\" | Out-Null
 Copy-Item -Recurse -Force -Path "docs" -Destination "$tempPath\" | Out-Null
 
@@ -35,8 +47,8 @@ Get-ChildItem -Path "cloudfunctions" -Directory | ForEach-Object {
     }
 }
 
-# 4. Compress to ZIP (with retry)
-Write-Host "4/4 Compressing..." -ForegroundColor Yellow
+# 5. Compress to ZIP (with retry)
+Write-Host "5/5 Compressing..." -ForegroundColor Yellow
 $retryCount = 0
 $maxRetries = 3
 $success = $false
