@@ -76,7 +76,7 @@ Page({
 
     // 调用云函数获取真实数据
     wx.cloud.callFunction({
-      name: 'getleaderboardv2',
+      name: 'getleaderboardv3',
       data: {
         type: type,
         topN: page * this.data.pageSize

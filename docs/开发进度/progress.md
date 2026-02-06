@@ -33,6 +33,7 @@
 - [x] 租户跳转逻辑（切换/首页防跳转）
 
 ### 基础架构
+- [x] 云函数自动化部署脚本 (deploy-cloud-function.ps1) - 彻底解决部署依赖问题
 - [x] 创建数据库集合：users, articles, clients, applications, courses, stores, system_config, daily_materials
 - [x] 创建租赁集合：contracts, renewals, materials
 - [x] 7角色体系升级（visitor/student/customer/tenant/anchor/broker/admin）

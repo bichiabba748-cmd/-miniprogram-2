@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+  "runtime": "Nodejs16.13",
+  "handler": "index.main",
+  "memory": 128,
+  "timeout": 10,
+  "envVariables": {}
+}
