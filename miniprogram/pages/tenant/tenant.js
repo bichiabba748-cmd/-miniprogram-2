@@ -17,10 +17,24 @@ Page({
   
   onLoad() { 
     console.log('=== 租客首页加载 ===');
-    this.loadContractInfo(); 
+    this.checkLoginStatus();
   }, 
   
+  async checkLoginStatus() {
+    // 检查本地是否有 openid
+    const openid = wx.getStorageSync('openid');
+    if (openid) {
+      this.setData({ isLoggedIn: true });
+      this.loadContractInfo();
+    } else {
+      // 尝试静默登录
+      await this.onLogin(true);
+    }
+  },
+
   async loadContractInfo() { 
+    if (!this.data.isLoggedIn) return;
+
     try {
       const openid = wx.getStorageSync('openid'); 
       console.log('OpenID:', openid);
@@ -35,13 +49,14 @@ Page({
       if (res.result.success) { 
         console.log('设置顾问信息和合同信息:', res.result.data);
         this.setData({ 
-          agentName: res.result.data.brokerName, 
-          agentPhone: res.result.data.brokerPhone, 
-          agentAvatar: res.result.data.brokerAvatar || '/images/default-avatar.png',
+          agentName: res.result.data.brokerName || '王经理', 
+          agentPhone: res.result.data.brokerPhone || '15900001111', 
+          agentAvatar: res.result.data.brokerAvatar || '',
           contractInfo: res.result.data
         }); 
       } else {
         console.error('获取合同信息失败:', res.result.error);
+        // 如果获取失败，也保留默认的顾问信息，避免页面空白
       }
     } catch (error) {
       console.error('加载合同信息出错:', error);
@@ -56,10 +71,17 @@ Page({
   onCallAgent() { 
     const phoneNumber = this.data.agentPhone;
     console.log('拨打电话:', phoneNumber);
-    wx.makePhoneCall({ 
-      phoneNumber: phoneNumber,
-      fail: err => console.error('拨打电话失败:', err)
-    }); 
+    if (phoneNumber) {
+      wx.makePhoneCall({ 
+        phoneNumber: phoneNumber,
+        fail: err => console.error('拨打电话失败:', err)
+      }); 
+    } else {
+      wx.showToast({
+        title: '暂无顾问电话',
+        icon: 'none'
+      });
+    }
   }, 
   
   onContactWechat() {
@@ -84,9 +106,11 @@ Page({
     }); 
   },
   
-  async onLogin() {
+  async onLogin(silent = false) {
     try {
-      wx.showLoading({ title: '登录中...' });
+      if (!silent) {
+        wx.showLoading({ title: '登录中...' });
+      }
       
       const loginRes = await wx.cloud.callFunction({
         name: 'login',
@@ -100,28 +124,71 @@ Page({
         throw new Error('获取OpenID失败');
       }
       
-      console.log('解析到的OpenID:', openid);
-      
       wx.setStorageSync('openid', openid);
-      wx.setStorageSync('userRole', 'tenant');
-      
       this.setData({ isLoggedIn: true });
-      await this.loadContractInfo();
       
-      wx.hideLoading();
-      wx.showToast({
-        title: '登录成功',
-        icon: 'success'
-      });
+      if (!silent) {
+        wx.showToast({ title: '登录成功', icon: 'success' });
+      }
+      
+      this.loadContractInfo();
       
     } catch (err) {
-      wx.hideLoading();
       console.error('登录失败:', err);
-      wx.showModal({
-        title: '登录失败',
-        content: err.message || '请稍后重试',
-        showCancel: false
-      });
+      if (!silent) {
+        wx.showToast({
+          title: '登录失败',
+          icon: 'none'
+        });
+      }
+    } finally {
+      if (!silent) {
+        wx.hideLoading();
+      }
     }
+  },
+
+  onRenew() {
+    if (!this.data.contractInfo || !this.data.contractInfo.contractId) {
+      wx.showToast({
+        title: '合同信息不完整',
+        icon: 'none'
+      });
+      return;
+    }
+
+    wx.showModal({
+      title: '确认续租',
+      content: '是否申请续租当前房源？',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '提交中...' });
+          try {
+            const result = await wx.cloud.callFunction({
+              name: 'submitRenewal',
+              data: {
+                contractId: this.data.contractInfo.contractId
+              }
+            });
+
+            if (result.result.code === 0) {
+              wx.showToast({
+                title: '申请已提交',
+                icon: 'success'
+              });
+            } else {
+              throw new Error(result.result.message);
+            }
+          } catch (err) {
+            wx.showToast({
+              title: err.message || '提交失败',
+              icon: 'none'
+            });
+          } finally {
+            wx.hideLoading();
+          }
+        }
+      }
+    });
   }
 });
