@@ -71,11 +71,13 @@ Page({
             // 获取所有文案
             db.collection('articles').get(),
             
-            // 获取所有入伍申请
-            db.collection('applications').get(),
+            // 获取待审核的入伍申请（status为pending）
+            db.collection('applications').where({
+              status: 'pending'
+            }).get(),
             
-            // 获取所有用户
-            db.collection('users').get()
+            // 获取所有用户（设置较大的limit，避免默认10条限制）
+            db.collection('users').limit(100).get()
           ])
           .then(([reportsRes, articlesRes, applicationsRes, usersRes]) => {
       console.log('数据获取成功：');
@@ -111,34 +113,8 @@ Page({
         ];
       }
       
-      // 如果没有入伍申请数据，添加模拟数据
+      // 使用真实的入伍申请数据（不再添加模拟数据）
       let pendingUserList = applicationsRes.data;
-      if (applicationsRes.data.length === 0) {
-        pendingUserList = [
-          {
-            _id: 'mock_app_1',
-            _openid: 'applicant_test_openid_003',
-            name: '张小明',
-            phone: '138****1234',
-            identity: '经纪人(有经验)',
-            painPoints: ['缺客流', '没素材'],
-            status: 'pending',
-            createdAt: new Date()
-          },
-          {
-            _id: 'mock_app_2',
-            _openid: 'applicant_test_openid_004',
-            name: '李小红',
-            phone: '139****5678',
-            identity: '经纪人(无经验)',
-            painPoints: ['不会播'],
-            storeId: '2',
-            storeName: '和平二店',
-            status: 'pending',
-            createdAt: new Date()
-          }
-        ];
-      }
       
       // 处理用户数据，添加roleText字段
       let memberList = usersRes.data.map(user => ({
@@ -613,14 +589,18 @@ Page({
 
   // 加载人员管理列表
   fetchUserList() {
+    console.log('[fetchUserList] 开始加载人员管理列表');
     db.collection('users')
+      .limit(100)
       .get()
       .then(res => {
+        console.log('[fetchUserList] 数据库返回用户数:', res.data.length);
         // 处理用户数据，添加roleText字段
         const userList = res.data.map(user => ({
           ...user,
           roleText: this.getRoleText(user.role)
         }));
+        console.log('获取人员管理列表：', userList.length, '人');
         this.setData({ userList });
       })
       .catch(err => {
@@ -767,19 +747,44 @@ Page({
               }
             });
             
-            // 创建用户账号，使用申请中的门店信息
-            await db.collection('users').add({
-              data: {
-                name: application.name,
-                phone: application.phone,
-                identity: application.identity,
-                painPoints: application.painPoints,
-                role: 'student',
-                storeId: application.storeId,
-                storeName: application.storeName,
-                createdAt: db.serverDate()
+            // 检查是否已存在该用户（通过手机号判断，避免同一微信账号多次申请）
+            console.log('[审核通过] 检查用户是否存在，手机号:', application.phone);
+            console.log('[审核通过] 申请信息:', application);
+            
+            try {
+              // 先查询所有用户，看是否有相同手机号
+              const allUsers = await db.collection('users').where({
+                phone: application.phone
+              }).get();
+              
+              console.log('[审核通过] 查询结果:', allUsers.data.length, '个用户');
+              if (allUsers.data.length > 0) {
+                console.log('[审核通过] 已存在用户信息:', allUsers.data);
               }
-            });
+              
+              if (allUsers.data.length === 0) {
+                // 创建用户账号，使用申请中的门店信息和_openid
+                console.log('[审核通过] 创建新用户');
+                await db.collection('users').add({
+                  data: {
+                    name: application.name,
+                    phone: application.phone,
+                    identity: application.identity,
+                    painPoints: application.painPoints,
+                    role: 'student',
+                    storeId: application.storeId,
+                    storeName: application.storeName,
+                    createdAt: db.serverDate()
+                    // _openid由微信云开发自动添加
+                  }
+                });
+                console.log('[审核通过] 创建新用户成功');
+              } else {
+                console.log('[审核通过] 用户已存在，跳过创建');
+              }
+            } catch (err) {
+              console.error('[审核通过] 查询或创建用户失败:', err);
+            }
             
             wx.hideLoading();
             wx.showToast({ title: '已通过并创建账号', icon: 'success' });
@@ -792,6 +797,7 @@ Page({
             
             // 刷新人员列表
             this.fetchDashboard();
+            this.fetchUserList();
           } catch (err) {
             wx.hideLoading();
             console.error('审核通过失败:', err);

@@ -6,7 +6,7 @@
         <view class="role-badge {{userRole}}">{{roleName}}</view>
       </view>
       <view class="info-text">
-        <text class="name">星火 · {{roleName}}</text>
+        <text class="name">{{userInfo.nickName || '星火 · ' + roleName}}</text>
         <text class="desc">天津战区 · {{roleDesc}}</text>
       </view>
     </view>

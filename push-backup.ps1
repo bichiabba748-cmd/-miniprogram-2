@@ -2,7 +2,9 @@ Write-Host "Starting push and backup..." -ForegroundColor Green
 
 # 1. Git push
 Write-Host "1/4 Git push..." -ForegroundColor Yellow
-git push origin main
+$currentBranch = git branch --show-current
+Write-Host "   Current branch: $currentBranch" -ForegroundColor Cyan
+git push origin $currentBranch
 if ($LASTEXITCODE -eq 0) {
     Write-Host "   Git push success" -ForegroundColor Green
 } else {

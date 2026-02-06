@@ -68,7 +68,37 @@ Page({
     }
     
     wx.showLoading({ title: '提交中...' });
-    setTimeout(() => {
+    
+    // 映射身份到数据库字段
+    const identityMap = {
+      '经纪人(有经验)': 'agent_with_exp',
+      '经纪人(无经验)': 'agent_no_exp',
+      '店东': 'store_owner'
+    };
+    
+    // 映射痛点到数据库字段
+    const painMap = {
+      '缺客流': 'traffic',
+      '没素材': 'content',
+      '不会播': 'skill',
+      '难成交': 'convert'
+    };
+    
+    const db = wx.cloud.database();
+    
+    // 写入applications集合 - _openid由微信云开发自动添加
+    db.collection('applications').add({
+      data: {
+        name: name,
+        phone: phone,
+        identity: identityMap[identity] || 'agent_no_exp',
+        painPoints: pains.map(p => painMap[p] || p),
+        status: 'pending',
+        createTime: db.serverDate(),
+        storeId: null,
+        storeName: null
+      }
+    }).then(() => {
       wx.hideLoading();
       wx.showModal({
         title: '提交成功',
@@ -76,6 +106,10 @@ Page({
         showCancel: false,
         success: () => wx.navigateBack()
       });
-    }, 1000);
+    }).catch(err => {
+      console.error('提交申请失败:', err);
+      wx.hideLoading();
+      wx.showToast({ title: '提交失败，请重试', icon: 'none' });
+    });
   }
 });

@@ -50,6 +50,7 @@ Page({
   },
 
   onShow() {
+    console.log('[onShow] 页面显示，开始更新身份');
     this.updateIdentity();
     this.loadCloudData();
   },
@@ -58,83 +59,126 @@ Page({
     const roleCode = RoleManager.getCurrentRole();
     const roleDisplayName = RoleManager.getRoleDisplayText();
     
+    console.log('[updateIdentity] 更新角色:', roleCode, roleDisplayName);
+    
     this.setData({
       userRole: roleCode,
       roleName: roleDisplayName,
       roleDesc: '星火计划参与者',
       isNewcomer: true // 模拟新主播数据
+    }, () => {
+      console.log('[updateIdentity] setData回调完成，当前userRole:', this.data.userRole);
     });
   },
 
-  // Task 1: 暴力止血 - 注释掉所有wx.cloud.callFunction调用
+  // Task 1: 恢复云函数调用，替换模拟数据
   loadCloudData() {
     // 显示加载状态
-    wx.showLoading({ title: '网络连接中...', icon: 'none' });
+    wx.showLoading({ title: '数据同步中...', icon: 'none' });
     
-    // 暴力止血：注释掉所有cloud.callFunction调用
-    // wx.cloud.callFunction({
-    //   name: 'login',
-    //   success: res => {
-    //     const myOpenId = res.result.openid;
-    //     this.setData({ myOpenId });
-    //     
-    //     const localRole = wx.getStorageSync('currentRole') || 'visitor';
-    //     
-    //     db.collection('users').doc(myOpenId).get().then(res => {
-    //       const cloudUserData = res.data;
-    //       this.setData({ cloudUserData });
-    //       this.updateStats(cloudUserData);
-    //       wx.hideLoading();
-    //     }).catch(err => {
-    //       console.error('获取用户数据失败：', err);
-    //       wx.hideLoading();
-    //       this.updateStats(null);
-    //     });
-    //   },
-    //   fail: err => {
-    //     console.error('获取openid失败：', err);
-    //     wx.hideLoading();
-    //     this.updateStats(null);
-    //   }
-    // });
+    // 传入当前角色，用于测试角色切换时显示对应勋章
+    const currentRole = this.data.userRole;
+    console.log('[loadCloudData] 当前角色:', currentRole, '完整数据:', this.data);
     
-    // Task 1: 使用setTimeout模拟网络请求
-    setTimeout(() => {
-      // 模拟成功获取数据
-      const mockUserData = {
-        courseProgress: Math.floor(Math.random() * 100),
-        collectionCount: Math.floor(Math.random() * 50),
-        studyDuration: Math.floor(Math.random() * 100),
-        rank: Math.floor(Math.random() * 100),
-        contributionCount: Math.floor(Math.random() * 30),
-        leadsCount: Math.floor(Math.random() * 200),
-        showings: Math.floor(Math.random() * 150)
-      };
-      
-      this.setData({
-        cloudUserData: mockUserData
-      });
-      
-      this.updateStats(mockUserData);
-      wx.hideLoading();
-    }, 1000);
+    wx.cloud.callFunction({
+      name: 'getProfileData',
+      data: {
+        role: currentRole
+      },
+      success: res => {
+        console.log('[getProfileData] 调用成功：', res);
+        const { code, data } = res.result;
+        
+        if (code === 0 && data) {
+          // 调试信息：显示返回的数据结构
+          console.log('[getProfileData] 返回数据：', {
+            role: data.role,
+            medalsCount: data.medals ? data.medals.length : 0,
+            medals: data.medals
+          });
+          
+          // 1. 更新角色（以云端为准，或者仅做校验）
+          // const cloudRole = data.role;
+          // if (cloudRole && cloudRole !== this.data.userRole) {
+          //   // 可选：强制同步角色，或者仅提示
+          // }
+
+          // 1.5 更新用户信息（昵称和头像）
+          if (data.userInfo) {
+            this.setData({
+              'userInfo.nickName': data.userInfo.nickName,
+              'userInfo.avatarUrl': data.userInfo.avatarUrl
+            });
+          }
+
+          // 2. 处理仪表盘数据映射
+          this.processDashboardData(data.dashboard);
+
+          // 3. 处理勋章数据
+          if (data.medals && data.medals.length > 0) {
+            console.log('[勋章数据] 角色:', data.role, '勋章数量:', data.medals.length);
+            data.medals.forEach((medal, index) => {
+              console.log(`[勋章${index}]`, medal.name, medal.icon, 'locked:', medal.locked);
+            });
+            this.setData({ medals: data.medals });
+          }
+          
+          // 4. 处理排名信息 (如果有)
+          if (data.rankInfo) {
+             // 如果云函数返回了具体的排名列表，可以在这里更新 displayRank
+             // 目前云函数似乎只返回了 dashboard 里的排名数值
+          }
+        }
+        wx.hideLoading();
+      },
+      fail: err => {
+        console.error('[getProfileData] 调用失败：', err);
+        wx.hideLoading();
+        wx.showToast({ title: '数据同步失败', icon: 'none' });
+        // 失败时保持默认数据，不覆盖
+      }
+    });
+  },
+
+  // 将云端 dashboard 数组映射为本地 myStats 对象
+  processDashboardData(dashboard) {
+    if (!dashboard || !Array.isArray(dashboard)) return;
+
+    let newStats = { ...this.data.myStats };
+
+    dashboard.forEach(item => {
+      const val = item.value;
+      switch (item.label) {
+        case '学习进度':
+          // 去掉百分号转数字
+          newStats.courseProgress = parseInt(val) || 0;
+          break;
+        case '收藏文案':
+          newStats.collectionCount = parseInt(val) || 0;
+          break;
+        case '学习时长':
+          newStats.studyDuration = parseInt(val) || 0;
+          break;
+        case '全量排名':
+          newStats.rank = (val === '未上榜') ? 0 : (parseInt(val) || 0);
+          break;
+        case '贡献':
+          newStats.contributionCount = parseInt(val) || 0;
+          break;
+        case '累计获客':
+          newStats.leadsCount = parseInt(val) || 0;
+          break;
+        case '带看':
+          newStats.showings = parseInt(val) || 0;
+          break;
+      }
+    });
+
+    this.setData({ myStats: newStats });
   },
 
   updateStats(cloudUserData) {
-    const userRole = this.data.userRole;
-    let myStats = this.data.myStats;
-    
-    if (cloudUserData) {
-      myStats.courseProgress = cloudUserData.courseProgress || 45;
-      myStats.collectionCount = cloudUserData.collectionCount || 12;
-      myStats.studyDuration = cloudUserData.studyDuration || 0;
-      myStats.rank = cloudUserData.rank || 0;
-      myStats.contributionCount = cloudUserData.contributionCount || 0;
-      myStats.leadsCount = cloudUserData.leadsCount || 0;
-      myStats.showings = cloudUserData.showings || 0;
-    }
-    
-    this.setData({ myStats });
+    // 此方法已废弃，逻辑合并入 processDashboardData
   },
 
   handleRoleSwitch() {
@@ -238,7 +282,12 @@ Page({
     RoleManager.setRole(roleCode);
     wx.setStorageSync('currentRole', roleCode);
     this.updateIdentity();
-    this.loadCloudData();
+    
+    // 确保角色更新后再加载数据
+    setTimeout(() => {
+      this.loadCloudData();
+    }, 100);
+    
     wx.vibrateShort();
     wx.showToast({ title: `已切换: ${roleName}`, icon: 'none' });
     

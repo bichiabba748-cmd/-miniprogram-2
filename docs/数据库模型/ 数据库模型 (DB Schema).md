@@ -60,6 +60,32 @@
 - `isNewbie`：新秀标识（注册 < 30天，优先显示新秀榜）
 - `medals`：勋章系统（获客达人/带看之王/卷王等）
 
+### 勋章系统详细说明（v2.2.5+）
+
+**勋章分类规则**：
+- 通用勋章（所有角色）：初出茅庐(first_login)
+- 学习勋章（学员+主播+经纪人）：军火专家(content_master)、学霸达人(course_complete)
+- 获客勋章（主播专属）：获客达人(lead_hunter)、百人斩(lead_master)、获客王者(lead_king)
+- 转化勋章（经纪人专属）：首单达人(first_deal)、成交达人(deal_master)、销售冠军(top_seller)
+
+**勋章数据结构**：
+```json
+{
+  "id": "string (勋章ID)",
+  "name": "string (勋章名称)",
+  "icon": "string (勋章图标 emoji)",
+  "locked": "boolean (是否锁定)",
+  "progress": "number (进度百分比 0-100)",
+  "condition": "string (解锁条件说明)"
+}
+```
+
+**⚠️ 重要提示**：
+- 角色判断逻辑必须完整，包含所有角色：visitor、student、anchor、broker、admin、customer、tenant
+- 学员角色必须包含在学习勋章的条件中
+- 测试时必须覆盖所有角色，确保每个角色都能获得对应的勋章
+- 勋章图标使用emoji，不使用云存储路径
+
 ---
 
 ## B. 文案表 (articles)
