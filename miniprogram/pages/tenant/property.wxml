@@ -9,7 +9,8 @@
   <view class="page-content">
     <view class="section section-brand">
       <view class="brand-icon icon-location"></view>
-      <text class="brand-name">华苑小区物业管理处</text>
+      <text class="brand-name">{{propertyInfo.company}}</text>
+      <text class="brand-address" wx:if="{{propertyInfo.address}}">{{propertyInfo.address}}</text>
     </view>
 
     <view class="divider"></view>
@@ -18,8 +19,8 @@
       <view class="section-label icon-phone"></view>
       <text>物业电话</text>
       <view class="phone-row">
-        <text class="phone-number">022-83726688</text>
-        <button class="btn-dial" bindtap="onCallProperty">一键拨打</button>
+        <text class="phone-number">{{propertyInfo.phone || '暂无'}}</text>
+        <button class="btn-dial" bindtap="onCallProperty" disabled="{{!propertyInfo.phone}}">一键拨打</button>
       </view>
     </view>
 
@@ -28,7 +29,7 @@
     <view class="section section-hours">
       <view class="section-label icon-clock"></view>
       <text>服务时间</text>
-      <text class="hours-text">周一至周日 8:00-18:00</text>
+      <text class="hours-text">{{propertyInfo.hours}}</text>
     </view>
 
     <view class="divider"></view>
