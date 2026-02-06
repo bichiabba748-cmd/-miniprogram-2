@@ -45,20 +45,27 @@ exports.main = async (event, context) => {
       .get();
     
     // 格式化返回数据
-    const formattedContracts = contracts.data.map(contract => ({
-      _id: contract._id,
-      contractId: contract.contractId,
-      tenantName: contract.tenantName,
-      tenantPhone: contract.tenantPhone,
-      propertyAddress: contract.propertyAddress,
-      rent: contract.rent,
-      startDate: contract.startDate,
-      endDate: contract.endDate,
-      brokerName: contract.brokerName,
-      brokerPhone: contract.brokerPhone,
-      createTime: contract.createTime,
-      status: contract.status || 'active' // 默认状态为active
-    }));
+    const now = new Date();
+    const formattedContracts = contracts.data.map(contract => {
+      const endDate = new Date(contract.endDate);
+      const daysLeft = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+      
+      return {
+        _id: contract._id,
+        contractId: contract.contractId,
+        tenantName: contract.tenantName,
+        tenantPhone: contract.tenantPhone,
+        propertyAddress: contract.propertyAddress,
+        rent: contract.rent,
+        startDate: contract.startDate,
+        endDate: contract.endDate,
+        brokerName: contract.brokerName,
+        brokerPhone: contract.brokerPhone,
+        createTime: contract.createTime,
+        status: contract.status || 'active', // 默认状态为active
+        daysLeft: daysLeft > 0 ? daysLeft : 0
+      };
+    });
     
     return {
       code: 0,

@@ -239,15 +239,15 @@
 
 #### 任务1.5：替换contracts.js模拟数据（优先级：中）
 - **问题清单**：
-  - 使用静态合同数据
-  - 未调用 getBrokerContracts 云函数
-  - 合同列表不真实
-- **修改文件**：`miniprogram/pages/contracts/contracts.js`
+  - [x] 使用静态合同数据
+  - [x] 未调用 getBrokerContracts 云函数
+  - [x] 合同列表不真实
+- **修改文件**：`miniprogram/pages/broker-rental/contracts.js`
 - **验收标准**：
-  - 合同列表真实显示
-  - 分页加载正常
-  - 状态筛选有效
-  - 空数据显示友好提示
+  - [x] 合同列表真实显示
+  - [x] 分页加载正常
+  - [x] 状态筛选有效
+  - [x] 空数据显示友好提示
 
 #### 任务1.6：替换tenant.js模拟数据（优先级：中）
 - **问题清单**：
