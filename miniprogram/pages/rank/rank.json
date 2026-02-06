@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "战神榜",
   "usingComponents": {},
-  "component": false
+  "component": false,
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
 }

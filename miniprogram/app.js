@@ -1,9 +1,11 @@
 App({
   globalData: {
-    userRole: 'visitor', 
+    userRole: 'visitor',
     storeName: "链家直播大区",
     clickCount: 0,
-    clickTimer: null
+    clickTimer: null,
+    isNewAnchor: false,
+    openid: ''
   },
   onLaunch() {
     const role = wx.getStorageSync('userRole');
