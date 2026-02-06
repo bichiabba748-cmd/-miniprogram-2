@@ -152,6 +152,11 @@ page { background: #000; color: #fff; font-family: 'DIN', sans-serif; }
 }
 .call-btn:active { background: #D4B083; color: #000; }
 
+/* 图标组件 */
+.icon-phone::before {
+  content: '☎';
+}
+
 .empty-tip { text-align: center; color: #444; font-size: 24rpx; margin-top: 100rpx; }
 
 /* 悬浮新增按钮 */

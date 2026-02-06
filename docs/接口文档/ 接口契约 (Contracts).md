@@ -497,7 +497,56 @@
 
 ---
 
-### 13. getMaterials (素材查询)
+### 13. getClients (获取客户列表)
+
+**调用方**：pages/crm/client (客户管理页)
+
+```jsx
+// Request
+{
+  "page": 1,
+  "pageSize": 20,
+  "status": "follow | deal | all (可选)",
+  "searchText": "string (可选)"
+}
+
+// Response
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "_id": "string",
+        "name": "string (客户姓名)",
+        "phone": "string (手机号)",
+        "level": "number (客户等级)",
+        "status": "string (状态: follow/deal)",
+        "source": "string (来源: 直播间/短视频/熟人介绍)",
+        "date": "string (日期)",
+        "anchorName": "string (主播姓名)",
+        "daysLeft": "number (剩余天数)",
+        "brokerName": "string (经纪人姓名)",
+        "rotationCount": "number (轮转次数)"
+      }
+    ],
+    "total": "number",
+    "page": "number",
+    "pageSize": "number",
+    "hasMore": "boolean"
+  }
+}
+
+// Logic
+// 1. 从clients集合查询客户列表
+// 2. 支持按状态筛选（follow/deal/all）
+// 3. 支持按姓名或手机号搜索
+// 4. 分页查询
+// 5. 按创建时间倒序排列
+```
+
+---
+
+### 14. getMaterials (素材查询)
 
 **调用方**：pages/broker/materials (素材库页)
 

@@ -7,7 +7,11 @@ Page({
     isBroker: false,
     isAnchor: false,
     searchText: '',
-    currentTab: 'all'
+    currentTab: 'all',
+    page: 1,
+    pageSize: 20,
+    hasMore: false,
+    loading: false
   },
 
   onShow() {
@@ -24,28 +28,39 @@ Page({
   },
 
   loadData() {
-    let storageList = wx.getStorageSync('crm_clients');
-
-    if (!storageList || storageList.length === 0) {
-      storageList = [
-        { 
-          id: 1, name: '李先生 (演示)', phone: '13800138000', level: 5, status: 'follow', source: '直播间', date: '01-17 14:30',
-          anchorName: '王金牌', daysLeft: 3, brokerName: '李销冠', rotationCount: 1
-        },
-        { 
-          id: 2, name: '王女士 (演示)', phone: '13900139000', level: 4, status: 'follow', source: '短视频', date: '01-16 09:20',
-          anchorName: '王金牌', daysLeft: 1, brokerName: '张新人', rotationCount: 3 
-        },
-        { 
-          id: 3, name: '陈总 (演示)', phone: '13600136000', level: 5, status: 'deal', source: '熟人介绍', date: '01-15 18:00',
-          anchorName: '李主播', daysLeft: 0, brokerName: '赵店长', rotationCount: 1
-        }
-      ];
-      wx.setStorageSync('crm_clients', storageList);
-    }
+    this.setData({ loading: true });
     
-    this.setData({ fullList: storageList });
-    this.filterList();
+    const { page, pageSize, currentTab, searchText } = this.data;
+    
+    wx.cloud.callFunction({
+      name: 'getClients',
+      data: {
+        page: page,
+        pageSize: pageSize,
+        status: currentTab === 'all' ? undefined : currentTab,
+        searchText: searchText || undefined
+      },
+      success: res => {
+        console.log('[getClients] 调用成功：', res);
+        const { code, data } = res.result;
+        
+        if (code === 0 && data) {
+          this.setData({
+            clientList: data.list,
+            hasMore: data.hasMore,
+            loading: false
+          });
+        } else {
+          this.setData({ loading: false });
+          wx.showToast({ title: '获取数据失败', icon: 'none' });
+        }
+      },
+      fail: err => {
+        console.error('[getClients] 调用失败：', err);
+        this.setData({ loading: false });
+        wx.showToast({ title: '网络错误', icon: 'none' });
+      }
+    });
   },
 
   filterList() {
@@ -59,16 +74,23 @@ Page({
   },
 
   onSearchInput(e) {
-    this.setData({ searchText: e.detail.value }, () => { this.filterList(); });
+    this.setData({ searchText: e.detail.value, page: 1 }, () => { this.loadData(); });
   },
 
   onClearSearch() {
-    this.setData({ searchText: '' }, () => { this.filterList(); });
+    this.setData({ searchText: '', page: 1 }, () => { this.loadData(); });
   },
 
   onTabChange(e) {
     const tab = e.currentTarget.dataset.tab;
-    this.setData({ currentTab: tab }, () => { this.filterList(); });
+    this.setData({ currentTab: tab, page: 1 }, () => { this.loadData(); });
+  },
+
+  onLoadMore() {
+    const { page, hasMore, loading } = this.data;
+    if (!hasMore || loading) return;
+    
+    this.setData({ page: page + 1 }, () => { this.loadData(); });
   },
 
   onCall(e) {
@@ -94,10 +116,6 @@ Page({
   },
 
   onPullDownRefresh() {
-    this.loadData();
-    setTimeout(() => {
-      wx.stopPullDownRefresh();
-      wx.showToast({ title: '已同步最新数据', icon: 'none' });
-    }, 500);
+    this.setData({ page: 1 }, () => { this.loadData(); });
   }
 })

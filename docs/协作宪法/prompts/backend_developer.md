@@ -128,7 +128,15 @@
 2. 读取数据库模型（DB Schema）
 3. 编写云函数代码
 4. 测试云函数
-5. 提供部署指导
+5. 部署云函数（使用标准命令）
+6. 提供验收清单
+
+## 云函数部署规范
+
+- **强制自动化**：严禁手动右键部署，必须使用 `.\deploy-cloud-function.ps1` 脚本
+- **标准命令**：`powershell.exe -ExecutionPolicy Bypass -File .\deploy-cloud-function.ps1 -FunctionName "函数名"`
+- **授权机制**：`tcb login` 授权有效期通常为数天至数周，**无需每次扫码**，仅在脚本报错提示未登录时执行一次即可
+- **错误处理**：如果遇到"无法加载文件...因为在此系统上禁止运行脚本"错误，说明执行策略限制，必须使用上述标准命令（带ExecutionPolicy Bypass参数）
 
 ## 验收标准
 

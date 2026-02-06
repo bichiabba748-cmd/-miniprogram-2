@@ -34,26 +34,26 @@ Page({
   },
 
   loadClientDetail(targetId) {
-    const list = wx.getStorageSync('crm_clients') || [];
-    // 兼容 ID 类型
-    let target = list.find(item => item.id == targetId);
-
-    if (!target) {
-      // 兜底 Mock 数据
-      target = {
-        id: targetId,
-        name: '演示客户', phone: '13800000000', level: 3, status: 'follow',
-        source: '系统Mock', date: '01-01 12:00', remark: '演示数据',
-        anchorName: '王金牌', daysLeft: 7, brokerName: '待分配',
-        // 如果该客户没有历史记录，初始化为空数组
-        followList: [] 
-      };
-    }
-
-    // 🚩 修复点：不仅加载客户信息，还要加载它的跟进记录
-    this.setData({ 
-      client: target,
-      followList: target.followList || [] // 读取保存的记录
+    wx.cloud.callFunction({
+      name: 'getClientDetail',
+      data: { id: targetId },
+      success: res => {
+        console.log('[getClientDetail] 调用成功：', res);
+        const { code, data } = res.result;
+        
+        if (code === 0 && data) {
+          this.setData({ 
+            client: data,
+            followList: data.followList || []
+          });
+        } else {
+          wx.showToast({ title: '获取客户详情失败', icon: 'none' });
+        }
+      },
+      fail: err => {
+        console.error('[getClientDetail] 调用失败：', err);
+        wx.showToast({ title: '网络错误', icon: 'none' });
+      }
     });
   },
 
