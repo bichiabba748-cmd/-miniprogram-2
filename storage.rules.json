@@ -2,27 +2,27 @@
   "rules": {
     "courses/*": {
       "read": true,
-      "write": "auth.openid != null && db.command.or(db.command.eq(auth.role, 'admin'))"
+      "write": "request.auth.openid != null"
     },
     "articles/*": {
       "read": true,
-      "write": "auth.openid != null && db.command.or(db.command.eq(auth.role, 'admin'), db.command.eq(auth.role, 'anchor'), db.command.eq(auth.role, 'broker'))"
+      "write": "request.auth.openid != null"
     },
     "avatars/*": {
       "read": true,
-      "write": "auth.openid != null && resource.match(/avatars\\/\\d+\\.\\w+$/)"
+      "write": "request.auth.openid != null"
     },
     "materials/*": {
       "read": true,
-      "write": "auth.openid != null && db.command.or(db.command.eq(auth.role, 'admin'), db.command.eq(auth.role, 'anchor'), db.command.eq(auth.role, 'broker'))"
+      "write": "request.auth.openid != null"
     },
     "daily_materials/*": {
       "read": true,
-      "write": "auth.openid != null && db.command.eq(auth.role, 'admin')"
+      "write": "request.auth.openid != null"
     },
     "temp/*": {
       "read": true,
-      "write": "auth.openid != null"
+      "write": "request.auth.openid != null"
     }
   }
 }

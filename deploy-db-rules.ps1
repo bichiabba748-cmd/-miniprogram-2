@@ -1,0 +1,1 @@
+tcb database acl set --file database.rules.json --envId cloudbase-0gjqvewz98229914

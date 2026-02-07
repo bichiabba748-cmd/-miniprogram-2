@@ -13,6 +13,21 @@ exports.main = async (event, context) => {
   try {
     const { action, ...params } = event;
     
+    // 获取用户openid
+    const openid = cloud.getWXContext().OPENID;
+    console.log('storeManager 云函数调用 - 用户:', openid, '操作:', action);
+    
+    // 权限校验
+    const permissionResult = await checkPermission(openid, action);
+    if (!permissionResult.allowed) {
+      console.warn('storeManager 权限验证失败 - 用户:', openid, '操作:', action, '原因:', permissionResult.reason);
+      return {
+        code: 1002,
+        message: '权限不足',
+        reason: permissionResult.reason
+      };
+    }
+    
     switch (action) {
       case 'getStores':
         return await getStores(params);
@@ -38,6 +53,80 @@ exports.main = async (event, context) => {
     };
   }
 };
+
+// 权限校验函数
+async function checkPermission(openid, action) {
+  try {
+    // 查询用户信息
+    const userResult = await db.collection('users').where({ _openid: openid }).get();
+    
+    if (userResult.data.length === 0) {
+      return {
+        allowed: false,
+        reason: '用户不存在'
+      };
+    }
+    
+    const user = userResult.data[0];
+    const userRole = user.role || 'visitor';
+    
+    console.log('权限校验 - 用户角色:', userRole, '操作:', action);
+    
+    // 定义权限矩阵
+    const permissionMatrix = {
+      // 公共操作 - 所有角色都可访问
+      'getStores': true,
+      'getStoreDetail': true,
+      
+      // 需要管理员权限的操作
+      'createStore': ['admin'],
+      'updateStore': ['admin'],
+      'deleteStore': ['admin']
+    };
+    
+    // 检查权限
+    const requiredPermission = permissionMatrix[action];
+    
+    if (requiredPermission === undefined) {
+      return {
+        allowed: false,
+        reason: '操作不存在'
+      };
+    }
+    
+    if (requiredPermission === true) {
+      return {
+        allowed: true,
+        reason: '公共操作'
+      };
+    }
+    
+    if (Array.isArray(requiredPermission)) {
+      if (requiredPermission.includes(userRole)) {
+        return {
+          allowed: true,
+          reason: '角色权限匹配'
+        };
+      } else {
+        return {
+          allowed: false,
+          reason: `需要以下角色之一: ${requiredPermission.join(', ')}`
+        };
+      }
+    }
+    
+    return {
+      allowed: false,
+      reason: '权限检查失败'
+    };
+  } catch (error) {
+    console.error('权限校验失败:', error);
+    return {
+      allowed: false,
+      reason: '权限校验异常'
+    };
+  }
+}
 
 // 获取门店列表
 async function getStores(params) {

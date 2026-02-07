@@ -103,8 +103,62 @@ const addNewBroker = async () => {
   }
 };
 
+// 权限校验函数
+async function checkAdminPermission(openid) {
+  try {
+    // 查询用户信息
+    const userResult = await db.collection('users').where({ _openid: openid }).get();
+    
+    if (userResult.data.length === 0) {
+      return {
+        allowed: false,
+        reason: '用户不存在'
+      };
+    }
+    
+    const user = userResult.data[0];
+    const userRole = user.role || 'visitor';
+    
+    console.log('管理员权限校验 - 用户角色:', userRole);
+    
+    // 检查是否为admin角色
+    if (userRole === 'admin') {
+      return {
+        allowed: true,
+        reason: '管理员权限验证通过'
+      };
+    } else {
+      return {
+        allowed: false,
+        reason: '需要管理员角色'
+      };
+    }
+  } catch (error) {
+    console.error('管理员权限校验失败:', error);
+    return {
+      allowed: false,
+      reason: '权限校验异常'
+    };
+  }
+}
+
 exports.main = async (event, context) => {
   try {
+    // 获取用户openid
+    const openid = cloud.getWXContext().OPENID;
+    console.log('update_users_schema 云函数调用 - 用户:', openid);
+    
+    // 权限校验
+    const permissionResult = await checkAdminPermission(openid);
+    if (!permissionResult.allowed) {
+      console.warn('update_users_schema 权限验证失败 - 用户:', openid, '原因:', permissionResult.reason);
+      return {
+        code: 1002,
+        message: '权限不足',
+        reason: permissionResult.reason
+      };
+    }
+    
     console.log('🚀 开始更新 users 集合 Schema...');
 
     // 1. 确保 users 集合存在

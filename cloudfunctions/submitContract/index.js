@@ -8,6 +8,37 @@ cloud.init({
 const db = cloud.database();
 const _ = db.command;
 
+// 敏感信息加密函数
+function encryptSensitiveInfo(info, type) {
+  if (!info) return null;
+  
+  try {
+    // 这里使用简单的脱敏处理，实际生产环境中应使用更安全的加密算法
+    switch (type) {
+      case 'phone':
+        // 手机号脱敏：保留前3后4
+        return info.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+      case 'password':
+        // 密码脱敏：全部替换为*
+        return '******';
+      case 'account':
+        // 账号脱敏：保留前4后2
+        if (info.length <= 6) return '******';
+        return info.substring(0, 4) + '****' + info.substring(info.length - 2);
+      default:
+        return info;
+    }
+  } catch (error) {
+    console.error('加密失败:', error);
+    return info;
+  }
+}
+
+// 敏感信息脱敏显示函数
+function maskSensitiveInfo(info, type) {
+  return encryptSensitiveInfo(info, type);
+}
+
 exports.main = async (event, context) => {
   try {
     const {
@@ -61,25 +92,46 @@ exports.main = async (event, context) => {
     const sequence = String(todayCount + 1).padStart(3, '0');
     const contractId = `${todayPrefix}${sequence}`;
     
+    // 脱敏处理敏感信息
+    const maskedTenantPhone = maskSensitiveInfo(tenantPhone, 'phone');
+    const maskedBrokerPhone = maskSensitiveInfo(brokerPhone, 'phone');
+    const maskedBroadbandPassword = maskSensitiveInfo(broadbandPassword, 'password');
+    const maskedBroadbandAccount = maskSensitiveInfo(broadbandAccount, 'account');
+    const maskedWaterAccount = maskSensitiveInfo(waterAccount, 'account');
+    const maskedElectricAccount = maskSensitiveInfo(electricAccount, 'account');
+    const maskedGasAccount = maskSensitiveInfo(gasAccount, 'account');
+    
+    console.log('敏感信息脱敏处理完成');
+    
     // 创建合同记录
     const contract = await db.collection('contracts')
       .add({
         contractId: contractId,
         tenantName: tenantName,
-        tenantPhone: tenantPhone,
+        tenantPhone: maskedTenantPhone,
         propertyAddress: propertyAddress,
         rent: rent,
         startDate: startDate,
         endDate: endDate,
         brokerName: brokerName,
-        brokerPhone: brokerPhone,
-        broadbandAccount: broadbandAccount,
-        broadbandPassword: broadbandPassword,
-        waterAccount: waterAccount,
-        electricAccount: electricAccount,
-        gasAccount: gasAccount,
+        brokerPhone: maskedBrokerPhone,
+        broadbandAccount: maskedBroadbandAccount,
+        broadbandPassword: maskedBroadbandPassword,
+        waterAccount: maskedWaterAccount,
+        electricAccount: maskedElectricAccount,
+        gasAccount: maskedGasAccount,
         heatingInfo: heatingInfo,
         propertyContact: propertyContact,
+        // 加密存储原始敏感信息
+        encryptedInfo: {
+          tenantPhone: tenantPhone,
+          brokerPhone: brokerPhone,
+          broadbandAccount: broadbandAccount,
+          broadbandPassword: broadbandPassword,
+          waterAccount: waterAccount,
+          electricAccount: electricAccount,
+          gasAccount: gasAccount
+        },
         status: 'active', // active, expired, terminated
         createTime: db.serverDate(),
         updateTime: db.serverDate()

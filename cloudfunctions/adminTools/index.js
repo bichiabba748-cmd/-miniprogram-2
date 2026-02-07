@@ -2,6 +2,7 @@
 // 管理工具的API接口集成
 
 const cloud = require('wx-server-sdk');
+const CloudBase = require('@cloudbase/manager-node');
 
 // 初始化云环境
 cloud.init({
@@ -16,6 +17,21 @@ exports.main = async (event, context) => {
   const { action, data } = event;
   
   try {
+    // 获取用户openid
+    const openid = cloud.getWXContext().OPENID;
+    console.log('adminTools 云函数调用 - 用户:', openid, '操作:', action);
+    
+    // 权限校验
+    const permissionResult = await checkPermission(openid, action);
+    if (!permissionResult.allowed) {
+      console.warn('adminTools 权限验证失败 - 用户:', openid, '操作:', action, '原因:', permissionResult.reason);
+      return {
+        code: 1002,
+        message: '权限不足',
+        reason: permissionResult.reason
+      };
+    }
+    
     switch (action) {
       // 获取项目状态
       case 'getProjectStatus':
@@ -60,6 +76,10 @@ exports.main = async (event, context) => {
       // 更新开发进度
       case 'updateProgress':
         return await updateProgress(data);
+
+      // 更新数据库权限
+      case 'updateDatabaseRules':
+        return await updateDatabaseRules(data);
         
       default:
         return {
@@ -76,6 +96,87 @@ exports.main = async (event, context) => {
     };
   }
 };
+
+// 权限校验函数
+async function checkPermission(openid, action) {
+  try {
+    // 查询用户信息
+    const userResult = await db.collection('users').where({ _openid: openid }).get();
+    
+    if (userResult.data.length === 0) {
+      return {
+        allowed: false,
+        reason: '用户不存在'
+      };
+    }
+    
+    const user = userResult.data[0];
+    const userRole = user.role || 'visitor';
+    
+    console.log('权限校验 - 用户角色:', userRole, '操作:', action);
+    
+    // 定义权限矩阵
+    const permissionMatrix = {
+      // 公共操作 - 所有角色都可访问
+      'getProjectStatus': true,
+      'runHealthCheck': true,
+      'getDevelopmentProgress': true,
+      'getResourceUsage': true,
+      'getCloudFunctionsStatus': true,
+      'getComponentLibraryStatus': true,
+      'getBackupHistory': true,
+      
+      // 需要管理员权限的操作
+      'manualBackup': ['admin'],
+      'exportReport': ['admin'],
+      'executeOptimization': ['admin'],
+      'updateProgress': ['admin'],
+      'updateDatabaseRules': ['admin']
+    };
+    
+    // 检查权限
+    const requiredPermission = permissionMatrix[action];
+    
+    if (requiredPermission === undefined) {
+      return {
+        allowed: false,
+        reason: '操作不存在'
+      };
+    }
+    
+    if (requiredPermission === true) {
+      return {
+        allowed: true,
+        reason: '公共操作'
+      };
+    }
+    
+    if (Array.isArray(requiredPermission)) {
+      if (requiredPermission.includes(userRole)) {
+        return {
+          allowed: true,
+          reason: '角色权限匹配'
+        };
+      } else {
+        return {
+          allowed: false,
+          reason: `需要以下角色之一: ${requiredPermission.join(', ')}`
+        };
+      }
+    }
+    
+    return {
+      allowed: false,
+      reason: '权限检查失败'
+    };
+  } catch (error) {
+    console.error('权限校验失败:', error);
+    return {
+      allowed: false,
+      reason: '权限校验异常'
+    };
+  }
+}
 
 // 获取项目状态
 async function getProjectStatus() {
@@ -98,6 +199,60 @@ async function getProjectStatus() {
       data: status
     };
   } catch (error) {
+    throw error;
+  }
+}
+
+// 更新数据库权限
+async function updateDatabaseRules(data) {
+  try {
+    const { rules } = data;
+    // 获取环境ID
+    const envId = cloud.getWXContext().ENV;
+    
+    console.log('开始更新数据库权限，环境ID:', envId);
+    
+    const app = new CloudBase({
+      envId: envId
+    });
+    
+    // 尝试调用 database.updateRules
+    // 注意：传入的 rules 应该是包含 "rules" 键的对象，或者是 JSON 字符串
+    // database.rules.json 内容如: { "rules": { ... } }
+    const rulesStr = typeof rules === 'string' ? rules : JSON.stringify(rules);
+    
+    // 使用 manager-node 的 API
+    // 如果 manager-node 版本较新，应该是 commonService 调用
+    // 或者 app.database.updateRules(rulesStr)
+    
+    // 尝试直接调用
+    if (app.database && app.database.updateRules) {
+        await app.database.updateRules(rulesStr);
+    } else {
+        // 降级尝试 commonService
+        await app.commonService().call({
+            service: 'database',
+            action: 'UpdateRules',
+            data: {
+                rules: rulesStr
+            }
+        });
+    }
+    
+    return {
+      code: 0,
+      message: '数据库权限规则更新成功'
+    };
+  } catch (error) {
+    console.error('更新数据库权限失败:', error);
+    return {
+      code: 5000,
+      message: '更新数据库权限失败',
+      error: error.message
+    };
+  }
+}
+
     throw error;
   }
 }

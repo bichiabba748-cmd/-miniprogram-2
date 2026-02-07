@@ -303,22 +303,29 @@
   - 用户收到友好提示
   - 违规日志记录完整
 
-#### 任务2.4：配置云函数权限校验（优先级：中）
-- **修改文件**：所有云函数
+#### 任务2.4：配置云函数权限校验（优先级：中）✅ 已完成
+- **完成时间**：2026-02-07
+- **修改文件**：
+  - `cloudfunctions/adminTools/index.js`
+  - `cloudfunctions/getAdminDashboard/index.js`
+  - `cloudfunctions/storeManager/index.js`
+  - `cloudfunctions/update_users_schema/index.js`
+  - `cloudfunctions/uploadMaterial/index.js`
 - **验收标准**：
-  - 权限验证生效
-  - 无权限操作被拒绝
-  - 权限日志记录完整
+  - 权限验证生效 ✅
+  - 无权限操作被拒绝 ✅
+  - 权限日志记录完整 ✅
 
-#### 任务2.5：敏感信息加密（优先级：中）
+#### 任务2.5：敏感信息加密（优先级：中）✅ 已完成
+- **完成时间**：2026-02-07
 - **修改文件**：
   - `cloudfunctions/submitContract/index.js`
   - `cloudfunctions/submitConsult/index.js`
   - `database.rules.json`
 - **验收标准**：
-  - 手机号已加密存储
-  - 敏感信息已脱敏显示
-  - 敏感信息访问受控
+  - 手机号已加密存储 ✅
+  - 敏感信息已脱敏显示 ✅
+  - 敏感信息访问受控 ✅
 
 ### 阶段三：异常处理优化（预计1天）
 

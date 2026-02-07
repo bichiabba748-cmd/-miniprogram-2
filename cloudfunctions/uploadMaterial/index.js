@@ -8,11 +8,65 @@ cloud.init({
 const db = cloud.database();
 const _ = db.command;
 
+// 权限校验函数
+async function checkPermission(openid) {
+  try {
+    // 查询用户信息
+    const userResult = await db.collection('users').where({ _openid: openid }).get();
+    
+    if (userResult.data.length === 0) {
+      return {
+        allowed: false,
+        reason: '用户不存在'
+      };
+    }
+    
+    const user = userResult.data[0];
+    const userRole = user.role || 'visitor';
+    
+    console.log('权限校验 - 用户角色:', userRole);
+    
+    // 定义允许上传素材的角色
+    const allowedRoles = ['admin', 'broker', 'anchor', 'student'];
+    
+    if (allowedRoles.includes(userRole)) {
+      return {
+        allowed: true,
+        reason: '角色权限匹配'
+      };
+    } else {
+      return {
+        allowed: false,
+        reason: `需要以下角色之一: ${allowedRoles.join(', ')}`
+      };
+    }
+  } catch (error) {
+    console.error('权限校验失败:', error);
+    return {
+      allowed: false,
+      reason: '权限校验异常'
+    };
+  }
+}
+
 exports.main = async (event, context) => {
   try {
     const { fileID, type, category, title } = event;
     const wxContext = cloud.getWXContext();
     const openid = wxContext.OPENID;
+    
+    console.log('uploadMaterial 云函数调用 - 用户:', openid);
+    
+    // 权限校验
+    const permissionResult = await checkPermission(openid);
+    if (!permissionResult.allowed) {
+      console.warn('uploadMaterial 权限验证失败 - 用户:', openid, '原因:', permissionResult.reason);
+      return {
+        code: 1002,
+        message: '权限不足',
+        reason: permissionResult.reason
+      };
+    }
     
     // 验证参数
     if (!fileID || !type || !category || !title) {
