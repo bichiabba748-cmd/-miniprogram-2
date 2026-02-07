@@ -400,9 +400,9 @@ OK / OK了 / 完事儿 / 完毕 / 可以了 / 非常好 / 完美
   1. 本地操作：`git add .` + `git commit -m "提交信息"`
   2. MCP验证：`mcp_GitHub_list_commits` 查看提交
   3. 推送：`git push origin v1`（MCP暂不支持推送）
-  4. ZIP备份：`.ackup.ps1`
+  4. ZIP备份：`.backup.ps1`
 - "推送+备份（降级）" → PowerShell降级方案
-  - 执行 `.ush-backup.ps1` 脚本（自动提交+推送+备份）
+  - 执行 `.push-backup.ps1` 脚本（自动提交+推送+备份）
 
 ### 边界场景速查表
 | 你说什么 | 我该做什么 |
