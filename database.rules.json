@@ -10,10 +10,14 @@
     },
     "contracts": {
       ".read": "auth.openid == doc.tenantOpenId || auth.openid == doc.brokerOpenId",
+<<<<<<< HEAD
       ".write": "false",
       "encryptedInfo": {
         ".read": "auth.openid == doc.tenantOpenId || auth.openid == doc.brokerOpenId"
       }
+=======
+      ".write": "false"
+>>>>>>> c162c2d362268cf4f9484b7bc58e5e89e59ea2c0
     },
     "renewals": {
       ".read": "auth.openid == doc.tenantOpenId || auth.openid == doc.brokerOpenId",

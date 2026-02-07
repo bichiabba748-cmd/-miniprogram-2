@@ -1,8 +1,11 @@
 {
-  "name": "admin-tools",
+  "name": "adminTools",
   "version": "1.0.0",
   "description": "管理工具云函数",
   "main": "index.js",
+  "engines": {
+    "node": "16.13"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

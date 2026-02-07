@@ -1,13 +1,5 @@
 {
-  "permissions": {
-    "db": {
-      "cloudbase_auth": true,
-      "collections": {
-        "contracts": {
-          "read": true,
-          "write": true
-        }
-      }
-    }
-  }
+  "runtime": "Nodejs16.13",
+  "timeout": 15,
+  "memory": 128
 }

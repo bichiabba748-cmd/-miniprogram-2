@@ -93,6 +93,47 @@ exports.main = async (event, context) => {
         message: '参数错误：无效的素材分类'
       };
     }
+
+    // 内容安全检测
+    try {
+      // 1. 检测标题
+      const textCheckResult = await cloud.callFunction({
+        name: 'msgSecCheck',
+        data: {
+          type: 'text',
+          content: title
+        }
+      });
+      if (textCheckResult.result.code !== 0) {
+        return {
+          code: 87014,
+          message: '标题包含违规内容'
+        };
+      }
+
+      // 2. 检测图片 (如果是图片类型)
+      if (type === 'image') {
+        const imgCheckResult = await cloud.callFunction({
+          name: 'msgSecCheck',
+          data: {
+            type: 'image',
+            fileID: fileID
+          }
+        });
+        if (imgCheckResult.result.code !== 0) {
+          return {
+            code: 87014,
+            message: '图片包含违规内容'
+          };
+        }
+      }
+    } catch (err) {
+      console.error('内容安全检测失败:', err);
+      return {
+        code: 5001,
+        message: '内容安全检测服务异常'
+      };
+    }
     
     // 创建素材记录
     const material = await db.collection('materials')

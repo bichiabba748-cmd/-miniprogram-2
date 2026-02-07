@@ -1,16 +1,5 @@
 {
-  "permissions": {
-    "openapi": [
-      "security.msgSecCheck"
-    ],
-    "db": {
-      "cloudbase_auth": true,
-      "collections": {
-        "consults": {
-          "read": true,
-          "write": true
-        }
-      }
-    }
-  }
+  "runtime": "Nodejs16.13",
+  "timeout": 15,
+  "memory": 128
 }

@@ -53,8 +53,28 @@ exports.main = async (event, context) => {
       };
     }
     
-    // 跳过内容安全审核（在测试环境中可能无法正常工作）
-    // TODO: 在生产环境中启用内容安全审核
+    // 内容安全检测
+    try {
+      const secCheckResult = await cloud.callFunction({
+        name: 'msgSecCheck',
+        data: {
+          type: 'text',
+          content: question
+        }
+      });
+      if (secCheckResult.result.code !== 0) {
+        return {
+          code: 87014,
+          message: '咨询内容包含违规信息，请修改'
+        };
+      }
+    } catch (err) {
+      console.error('内容安全检测失败:', err);
+      return {
+        code: 5001,
+        message: '内容安全检测服务异常'
+      };
+    }
     
     // 脱敏处理敏感信息
     const maskedTenantPhone = maskSensitiveInfo(tenantPhone, 'phone');

@@ -70,6 +70,32 @@ exports.main = async (event, context) => {
         message: '参数错误：缺少必填字段'
       };
     }
+
+    // 内容安全检测
+    try {
+      const contentToCheck = [tenantName, propertyAddress, heatingInfo, propertyContact].filter(Boolean).join(' ');
+      if (contentToCheck) {
+        const secCheckResult = await cloud.callFunction({
+          name: 'msgSecCheck',
+          data: {
+            type: 'text',
+            content: contentToCheck
+          }
+        });
+        if (secCheckResult.result.code !== 0) {
+          return {
+            code: 87014,
+            message: '合同信息包含违规内容，请检查姓名、地址等字段'
+          };
+        }
+      }
+    } catch (err) {
+      console.error('内容安全检测失败:', err);
+      return {
+        code: 5001,
+        message: '内容安全检测服务异常'
+      };
+    }
     
     // 生成合同编号
     const date = new Date();
