@@ -1,56 +1,56 @@
 {
   "rules": {
     "users": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.openid == doc._openid)",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.openid == doc._openid)"
+      ".read": "auth.openid == doc._openid",
+      ".write": "auth.openid == doc._openid"
     },
     "articles": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.role == 'student' || auth.role == 'anchor' || auth.role == 'broker' || auth.role == 'visitor' || auth.role == 'customer')",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.role == 'anchor' || auth.role == 'broker')"
-    },
-    "applications": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.openid == doc._openid)",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.openid == doc._openid)"
-    },
-    "stores": {
-      ".read": "auth.openid != null",
-      ".write": "auth.openid != null && auth.role == 'admin'"
-    },
-    "system_config": {
-      ".read": "auth.openid != null",
-      ".write": "auth.openid != null && auth.role == 'admin'"
-    },
-    "courses": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.role == 'student' || auth.role == 'anchor' || auth.role == 'broker' || auth.role == 'visitor' || auth.role == 'customer')",
-      ".write": "auth.openid != null && auth.role == 'admin'"
-    },
-    "daily_materials": {
-      ".read": "auth.openid != null",
-      ".write": "auth.openid != null && auth.role == 'admin'"
+      ".read": "doc.securityLevel == 'public'",
+      ".write": "false"
     },
     "contracts": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.role == 'broker' || auth.role == 'tenant')",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.role == 'broker')"
+      ".read": "auth.openid == doc.tenantOpenId || auth.openid == doc.brokerOpenId",
+      ".write": "false"
     },
     "renewals": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.role == 'broker' || auth.role == 'tenant')",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.role == 'tenant')"
+      ".read": "auth.openid == doc.tenantOpenId || auth.openid == doc.brokerOpenId",
+      ".write": "false"
     },
-    "materials": {
-      ".read": "auth.openid != null",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.role == 'anchor' || auth.role == 'broker')"
-    },
-    "clients": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.role == 'broker' || auth.role == 'anchor')",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.role == 'broker' || auth.role == 'anchor')"
-    },
-    "reports": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.role == 'broker' || auth.role == 'anchor')",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.role == 'broker' || auth.role == 'anchor')"
+    "applications": {
+      ".read": "auth.openid == doc._openid",
+      ".write": "auth.openid == doc._openid"
     },
     "user_collections": {
-      ".read": "auth.openid != null && (auth.role == 'admin' || auth.openid == doc._openid)",
-      ".write": "auth.openid != null && (auth.role == 'admin' || auth.openid == doc._openid)"
+      ".read": "auth.openid == doc._openid",
+      ".write": "auth.openid == doc._openid"
+    },
+    "reports": {
+      ".read": "true",
+      ".write": "false"
+    },
+    "stores": {
+      ".read": "true",
+      ".write": "false"
+    },
+    "system_config": {
+      ".read": "true",
+      ".write": "false"
+    },
+    "courses": {
+      ".read": "true",
+      ".write": "false"
+    },
+    "materials": {
+      ".read": "true",
+      ".write": "false"
+    },
+    "daily_materials": {
+      ".read": "true",
+      ".write": "false"
+    },
+    "clients": {
+      ".read": "false",
+      ".write": "false"
     }
   }
 }

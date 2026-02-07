@@ -20,6 +20,30 @@ exports.main = async (event, context) => {
         message: '参数错误：name为空/identity非法/painPoints为空'
       };
     }
+
+    // 内容安全检测
+    try {
+      const secCheckResult = await cloud.callFunction({
+        name: 'msgSecCheck',
+        data: {
+          type: 'text',
+          content: name
+        }
+      });
+      if (secCheckResult.result.code !== 0) {
+        return {
+          code: 87014,
+          message: '姓名包含违规内容，请修改'
+        };
+      }
+    } catch (err) {
+      console.error('内容安全检测失败:', err);
+      // 如果检测失败（如调用超时），可以选择放行或拦截，这里选择安全拦截
+      return {
+        code: 5001,
+        message: '内容安全检测服务异常'
+      };
+    }
     
     // 2. 查重：根据 _openid 查询 applications 表
     const existingApplication = await db.collection('applications').where({
