@@ -1,6 +1,7 @@
 const app = getApp();
 const db = wx.cloud.database();
 const { RoleManager } = require('../../utils/roleManager.js');
+const cloud = require('../../utils/cloud.js');
 
 /**
  * 数据库索引建议
@@ -73,70 +74,61 @@ Page({
 
   // Task 1: 恢复云函数调用，替换模拟数据
   loadCloudData() {
-    // 显示加载状态
-    wx.showLoading({ title: '数据同步中...', icon: 'none' });
-    
     // 传入当前角色，用于测试角色切换时显示对应勋章
     const currentRole = this.data.userRole;
     console.log('[loadCloudData] 当前角色:', currentRole, '完整数据:', this.data);
     
-    wx.cloud.callFunction({
-      name: 'getProfileData',
-      data: {
-        role: currentRole
-      },
-      success: res => {
-        console.log('[getProfileData] 调用成功：', res);
-        const { code, data } = res.result;
+    cloud.call('getProfileData', {
+      role: currentRole
+    }, {
+      loadingTitle: '数据同步中...'
+    }).then(res => {
+      console.log('[getProfileData] 调用成功：', res);
+      const { code, data } = res;
+      
+      if (code === 0 && data) {
+        // 调试信息：显示返回的数据结构
+        console.log('[getProfileData] 返回数据：', {
+          role: data.role,
+          medalsCount: data.medals ? data.medals.length : 0,
+          medals: data.medals
+        });
         
-        if (code === 0 && data) {
-          // 调试信息：显示返回的数据结构
-          console.log('[getProfileData] 返回数据：', {
-            role: data.role,
-            medalsCount: data.medals ? data.medals.length : 0,
-            medals: data.medals
+        // 1. 更新角色（以云端为准，或者仅做校验）
+        // const cloudRole = data.role;
+        // if (cloudRole && cloudRole !== this.data.userRole) {
+        //   // 可选：强制同步角色，或者仅提示
+        // }
+
+        // 1.5 更新用户信息（昵称和头像）
+        if (data.userInfo) {
+          this.setData({
+            'userInfo.nickName': data.userInfo.nickName,
+            'userInfo.avatarUrl': data.userInfo.avatarUrl
           });
-          
-          // 1. 更新角色（以云端为准，或者仅做校验）
-          // const cloudRole = data.role;
-          // if (cloudRole && cloudRole !== this.data.userRole) {
-          //   // 可选：强制同步角色，或者仅提示
-          // }
-
-          // 1.5 更新用户信息（昵称和头像）
-          if (data.userInfo) {
-            this.setData({
-              'userInfo.nickName': data.userInfo.nickName,
-              'userInfo.avatarUrl': data.userInfo.avatarUrl
-            });
-          }
-
-          // 2. 处理仪表盘数据映射
-          this.processDashboardData(data.dashboard);
-
-          // 3. 处理勋章数据
-          if (data.medals && data.medals.length > 0) {
-            console.log('[勋章数据] 角色:', data.role, '勋章数量:', data.medals.length);
-            data.medals.forEach((medal, index) => {
-              console.log(`[勋章${index}]`, medal.name, medal.icon, 'locked:', medal.locked);
-            });
-            this.setData({ medals: data.medals });
-          }
-          
-          // 4. 处理排名信息 (如果有)
-          if (data.rankInfo) {
-             // 如果云函数返回了具体的排名列表，可以在这里更新 displayRank
-             // 目前云函数似乎只返回了 dashboard 里的排名数值
-          }
         }
-        wx.hideLoading();
-      },
-      fail: err => {
-        console.error('[getProfileData] 调用失败：', err);
-        wx.hideLoading();
-        wx.showToast({ title: '数据同步失败', icon: 'none' });
-        // 失败时保持默认数据，不覆盖
+
+        // 2. 处理仪表盘数据映射
+        this.processDashboardData(data.dashboard);
+
+        // 3. 处理勋章数据
+        if (data.medals && data.medals.length > 0) {
+          console.log('[勋章数据] 角色:', data.role, '勋章数量:', data.medals.length);
+          data.medals.forEach((medal, index) => {
+            console.log(`[勋章${index}]`, medal.name, medal.icon, 'locked:', medal.locked);
+          });
+          this.setData({ medals: data.medals });
+        }
+        
+        // 4. 处理排名信息 (如果有)
+        if (data.rankInfo) {
+           // 如果云函数返回了具体的排名列表，可以在这里更新 displayRank
+           // 目前云函数似乎只返回了 dashboard 里的排名数值
+        }
       }
+    }).catch(err => {
+      console.error('[getProfileData] 调用失败：', err);
+      // 失败时保持默认数据，不覆盖
     });
   },
 

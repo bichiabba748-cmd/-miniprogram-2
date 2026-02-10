@@ -63,142 +63,109 @@ Page({
     
     console.log('开始获取仪表盘数据...');
     
-    // 从本地数据库获取详细列表数据（不依赖云函数）
-          Promise.all([
-            // 获取所有战绩
-            db.collection('reports').get(),
-            
-            // 获取所有文案
-            db.collection('articles').get(),
-            
-            // 获取待审核的入伍申请（status为pending）
-            db.collection('applications').where({
-              status: 'pending'
-            }).get(),
-            
-            // 获取所有用户（设置较大的limit，避免默认10条限制）
-            db.collection('users').limit(100).get()
-          ])
-          .then(([reportsRes, articlesRes, applicationsRes, usersRes]) => {
-      console.log('数据获取成功：');
-      console.log('战绩数据:', reportsRes.data);
-      console.log('战绩数量:', reportsRes.data.length);
-      console.log('文案数据:', articlesRes.data);
-      console.log('文案数量:', articlesRes.data.length);
-      console.log('入伍申请数据:', applicationsRes.data);
-      console.log('入伍申请数量:', applicationsRes.data.length);
-      console.log('用户数据:', usersRes.data);
-      console.log('用户数量:', usersRes.data.length);
-      
-      // 如果没有战绩数据，添加模拟数据
-      let auditList = reportsRes.data;
-      if (reportsRes.data.length === 0) {
-        auditList = [
-          {
-            _id: 'mock_report_1',
-            reporterId: 'anchor_test_openid_002',
-            type: 'leads',
-            count: 15,
-            status: 'pending',
-            createdAt: new Date()
-          },
-          {
-            _id: 'mock_report_2',
-            reporterId: 'anchor_test_openid_002',
-            type: 'showings',
-            count: 3,
-            status: 'pending',
-            createdAt: new Date()
-          }
-        ];
-      }
-      
-      // 使用真实的入伍申请数据（不再添加模拟数据）
-      let pendingUserList = applicationsRes.data;
-      
-      // 处理用户数据，添加roleText字段
-      let memberList = usersRes.data.map(user => ({
-        id: user._id,
-        _openid: user._openid,
-        name: user.profile?.nickname || user.name || '未设置姓名',
-        role: user.role || 'visitor',
-        roleText: this.getRoleText(user.role),
-        phone: user.profile?.phone ? this.maskPhone(user.profile.phone) : '未设置',
-        businessType: user.business_type,
-        businessTypeText: this.getBusinessTypeText(user.business_type),
-        storeId: user.storeId,
-        storeName: user.storeName,
-        joinTime: user.createdAt ? this.formatTime(user.createdAt) : '未知',
-        application: null
-      }));
-      
-      // 如果没有用户数据，添加模拟数据
-      if (memberList.length === 0) {
-        memberList = [
-          {
-            id: 'mock_user_1',
-            _openid: 'mock_openid_1',
-            name: '王金牌',
-            role: 'anchor',
-            roleText: '实战主播',
-            phone: '138****1234',
-            joinTime: '2026-01-01',
-            application: null
-          },
-          {
-            id: 'mock_user_2',
-            _openid: 'mock_openid_2',
-            name: '李销冠',
-            role: 'broker',
-            roleText: '经纪人',
-            phone: '139****5678',
-            joinTime: '2026-01-02',
-            businessType: 'rental',
-            businessTypeText: '租赁',
-            application: null
-          },
-          {
-            id: 'mock_user_3',
-            _openid: 'mock_openid_3',
-            name: '张小明',
-            role: 'student',
-            roleText: '学员',
-            phone: '137****9876',
-            joinTime: '2026-01-03',
-            storeId: '1',
-            storeName: '河西一店',
-            application: {
-              identity: '经纪人(有经验)',
-              painPoints: ['缺客流', '没素材'],
-              status: 'approved',
-              storeId: '1',
-              storeName: '河西一店',
-              createdAt: new Date('2026-01-03')
-            }
-          },
-          {
-            id: 'mock_user_4',
-            _openid: 'mock_openid_4',
-            name: '赵小红',
-            role: 'student',
-            roleText: '学员',
-            phone: '136****5432',
-            joinTime: '2026-01-04',
-            storeId: '2',
-            storeName: '和平二店',
-            application: {
-              identity: '经纪人(无经验)',
-              painPoints: ['不会播'],
+    // 实现分批查询，减少单次查询负担
+    const fetchDataBatch = async () => {
+      try {
+        // 1. 首先获取待审核数据（数量较少，优先级高）
+        const [applicationsRes, pendingReportsRes, pendingArticlesRes] = await Promise.all([
+          db.collection('applications').where({
+            status: 'pending'
+          }).get(),
+          
+          db.collection('reports').where({
+            status: 'pending'
+          }).get(),
+          
+          db.collection('articles').where({
+            status: 'pending'
+          }).get()
+        ]);
+        
+        // 2. 然后获取用户数据（使用分页，避免一次性获取过多）
+        const usersRes = await db.collection('users')
+          .limit(50)
+          .orderBy('createdAt', 'desc')
+          .get();
+        
+        // 3. 获取所有文案（用于审核）
+        const articlesRes = await db.collection('articles')
+          .limit(50)
+          .orderBy('createdAt', 'desc')
+          .get();
+        
+        console.log('数据获取成功：');
+        console.log('待审核入伍申请:', applicationsRes.data.length);
+        console.log('待审核战绩:', pendingReportsRes.data.length);
+        console.log('待审核文案:', pendingArticlesRes.data.length);
+        console.log('用户数据:', usersRes.data.length);
+        console.log('文案数据:', articlesRes.data.length);
+        
+        // 处理数据
+        let auditList = pendingReportsRes.data;
+        if (auditList.length === 0) {
+          auditList = [
+            {
+              _id: 'mock_report_1',
+              reporterId: 'anchor_test_openid_002',
+              type: 'leads',
+              count: 15,
               status: 'pending',
-              createdAt: new Date('2026-01-04')
+              createdAt: new Date()
+            },
+            {
+              _id: 'mock_report_2',
+              reporterId: 'anchor_test_openid_002',
+              type: 'showings',
+              count: 3,
+              status: 'pending',
+              createdAt: new Date()
             }
-          }
-        ];
-      } else {
-        // 如果有真实数据，补充学员模拟数据
-        const hasStudent = memberList.some(m => m.role === 'student');
-        if (!hasStudent) {
-          memberList.push(
+          ];
+        }
+        
+        let pendingUserList = applicationsRes.data;
+        
+        // 处理用户数据，添加roleText字段
+        let memberList = usersRes.data.map(user => ({
+          id: user._id,
+          _openid: user._openid,
+          name: user.profile?.nickname || user.name || '未设置姓名',
+          role: user.role || 'visitor',
+          roleText: this.getRoleText(user.role),
+          phone: user.profile?.phone ? this.maskPhone(user.profile.phone) : '未设置',
+          businessType: user.business_type,
+          businessTypeText: this.getBusinessTypeText(user.business_type),
+          storeId: user.storeId,
+          storeName: user.storeName,
+          joinTime: user.createdAt ? this.formatTime(user.createdAt) : '未知',
+          application: null
+        }));
+        
+        // 如果没有用户数据，添加模拟数据
+        if (memberList.length === 0) {
+          memberList = [
+            {
+              id: 'mock_user_1',
+              _openid: 'mock_openid_1',
+              name: '王金牌',
+              role: 'anchor',
+              roleText: '实战主播',
+              phone: '138****1234',
+              joinTime: '2026-01-01',
+              application: null
+            },
+            {
+              id: 'mock_user_2',
+              _openid: 'mock_openid_2',
+              name: '李销冠',
+              role: 'broker',
+              roleText: '经纪人',
+              phone: '139****5678',
+              joinTime: '2026-01-02',
+              businessType: 'rental',
+              businessTypeText: '租赁',
+              application: null
+            },
             {
               id: 'mock_user_3',
               _openid: 'mock_openid_3',
@@ -207,10 +174,14 @@ Page({
               roleText: '学员',
               phone: '137****9876',
               joinTime: '2026-01-03',
+              storeId: '1',
+              storeName: '河西一店',
               application: {
                 identity: '经纪人(有经验)',
                 painPoints: ['缺客流', '没素材'],
                 status: 'approved',
+                storeId: '1',
+                storeName: '河西一店',
                 createdAt: new Date('2026-01-03')
               }
             },
@@ -222,6 +193,8 @@ Page({
               roleText: '学员',
               phone: '136****5432',
               joinTime: '2026-01-04',
+              storeId: '2',
+              storeName: '和平二店',
               application: {
                 identity: '经纪人(无经验)',
                 painPoints: ['不会播'],
@@ -229,44 +202,85 @@ Page({
                 createdAt: new Date('2026-01-04')
               }
             }
-          );
-        }
-      }
-      
-      // 关联真实学员的application数据
-      if (applicationsRes.data.length > 0) {
-        memberList = memberList.map(member => {
-          if (member.role === 'student' && !member.application) {
-            const app = applicationsRes.data.find(a => a._openid === member._openid);
-            if (app) {
-              member.application = app;
-            }
+          ];
+        } else {
+          // 如果有真实数据，补充学员模拟数据
+          const hasStudent = memberList.some(m => m.role === 'student');
+          if (!hasStudent) {
+            memberList.push(
+              {
+                id: 'mock_user_3',
+                _openid: 'mock_openid_3',
+                name: '张小明',
+                role: 'student',
+                roleText: '学员',
+                phone: '137****9876',
+                joinTime: '2026-01-03',
+                application: {
+                  identity: '经纪人(有经验)',
+                  painPoints: ['缺客流', '没素材'],
+                  status: 'approved',
+                  createdAt: new Date('2026-01-03')
+                }
+              },
+              {
+                id: 'mock_user_4',
+                _openid: 'mock_openid_4',
+                name: '赵小红',
+                role: 'student',
+                roleText: '学员',
+                phone: '136****5432',
+                joinTime: '2026-01-04',
+                application: {
+                  identity: '经纪人(无经验)',
+                  painPoints: ['不会播'],
+                  status: 'pending',
+                  createdAt: new Date('2026-01-04')
+                }
+              }
+            );
           }
-          return member;
+        }
+        
+        // 关联真实学员的application数据
+        if (applicationsRes.data.length > 0) {
+          memberList = memberList.map(member => {
+            if (member.role === 'student' && !member.application) {
+              const app = applicationsRes.data.find(a => a._openid === member._openid);
+              if (app) {
+                member.application = app;
+              }
+            }
+            return member;
+          });
+        }
+        
+        // 更新详细列表数据
+        this.setData({
+          auditList: auditList,
+          scriptList: articlesRes.data,
+          pendingUserList: pendingUserList,
+          memberList: memberList,
+          userList: usersRes.data,
+          // 确保计数正确
+          pendingReports: auditList.length,
+          pendingArticles: pendingArticlesRes.data.length,
+          pendingUsers: pendingUserList.length
         });
+        
+        console.log('仪表盘数据更新完成');
+        
+      } catch (err) {
+        console.error('加载数据失败：', err);
+        wx.showToast({ title: '加载失败', icon: 'none' });
+      } finally {
+        // 隐藏加载状态
+        wx.hideLoading();
       }
-      
-      // 更新详细列表数据
-      this.setData({
-        auditList: auditList,
-        scriptList: articlesRes.data,
-        pendingUserList: pendingUserList,
-        memberList: memberList,
-        userList: usersRes.data,
-        // 确保计数正确
-        pendingReports: auditList.length,
-        pendingArticles: articlesRes.data.length,
-        pendingUsers: pendingUserList.length
-      });
-      
-      // 隐藏加载状态
-      wx.hideLoading();
-    })
-    .catch(err => {
-      console.error('加载数据失败：', err);
-      wx.hideLoading();
-      wx.showToast({ title: '加载失败', icon: 'none' });
-    });
+    };
+    
+    // 执行分批查询
+    fetchDataBatch();
   },
   
   // 格式化时间

@@ -1,3 +1,5 @@
+const cloud = require('../../utils/cloud.js');
+
 Page({ 
   data: {
     isLoggedIn: false,
@@ -39,23 +41,24 @@ Page({
       const openid = wx.getStorageSync('openid'); 
       console.log('OpenID:', openid);
       
-      const res = await wx.cloud.callFunction({ 
-        name: 'getContractInfo', 
-        data: { tenant_openid: openid } 
+      const data = await cloud.call('getContractInfo', { 
+        tenant_openid: openid 
+      }, {
+        loadingTitle: '加载合同信息...'
       }); 
       
-      console.log('云函数返回结果:', res);
+      console.log('云函数返回结果:', data);
       
-      if (res.result.success) { 
-        console.log('设置顾问信息和合同信息:', res.result.data);
+      if (data && data.success) { 
+        console.log('设置顾问信息和合同信息:', data.data);
         this.setData({ 
-          agentName: res.result.data.brokerName || '王经理', 
-          agentPhone: res.result.data.brokerPhone || '15900001111', 
-          agentAvatar: res.result.data.brokerAvatar || '',
-          contractInfo: res.result.data
+          agentName: data.data.brokerName || '王经理', 
+          agentPhone: data.data.brokerPhone || '15900001111', 
+          agentAvatar: data.data.brokerAvatar || '',
+          contractInfo: data.data
         }); 
       } else {
-        console.error('获取合同信息失败:', res.result.error);
+        console.error('获取合同信息失败');
         // 如果获取失败，也保留默认的顾问信息，避免页面空白
       }
     } catch (error) {
@@ -108,17 +111,13 @@ Page({
   
   async onLogin(silent = false) {
     try {
-      if (!silent) {
-        wx.showLoading({ title: '登录中...' });
-      }
-      
-      const loginRes = await wx.cloud.callFunction({
-        name: 'login',
-        data: {}
+      const loginRes = await cloud.call('login', {}, {
+        loadingTitle: silent ? null : '登录中...',
+        showError: !silent
       });
       
       console.log('登录返回完整结果:', loginRes);
-      const openid = loginRes.result.openid || loginRes.result.data?.openid;
+      const openid = loginRes.openid || loginRes.data?.openid;
       
       if (!openid) {
         throw new Error('获取OpenID失败');
@@ -141,10 +140,6 @@ Page({
           icon: 'none'
         });
       }
-    } finally {
-      if (!silent) {
-        wx.hideLoading();
-      }
     }
   },
 
@@ -162,30 +157,23 @@ Page({
       content: '是否申请续租当前房源？',
       success: async (res) => {
         if (res.confirm) {
-          wx.showLoading({ title: '提交中...' });
           try {
-            const result = await wx.cloud.callFunction({
-              name: 'submitRenewal',
-              data: {
-                contractId: this.data.contractInfo.contractId
-              }
+            const result = await cloud.call('submitRenewal', {
+              contractId: this.data.contractInfo.contractId
+            }, {
+              loadingTitle: '提交中...'
             });
 
-            if (result.result.code === 0) {
+            if (result && (result.code === 0 || result.success)) {
               wx.showToast({
                 title: '申请已提交',
                 icon: 'success'
               });
             } else {
-              throw new Error(result.result.message);
+              throw new Error(result.message || '提交失败');
             }
           } catch (err) {
-            wx.showToast({
-              title: err.message || '提交失败',
-              icon: 'none'
-            });
-          } finally {
-            wx.hideLoading();
+            console.error('续租申请失败:', err);
           }
         }
       }

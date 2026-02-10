@@ -1,4 +1,5 @@
 const app = getApp();
+const cloud = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -62,17 +63,16 @@ Page({
         status = 'expired';
       }
 
-      const res = await wx.cloud.callFunction({
-        name: 'getBrokerContracts',
-        data: {
-          page: this.data.page,
-          pageSize: this.data.pageSize,
-          status: status
-        }
+      const data = await cloud.call('getBrokerContracts', {
+        page: this.data.page,
+        pageSize: this.data.pageSize,
+        status: status
+      }, {
+        loadingTitle: reset ? null : '加载中...'
       });
 
-      if (res.result.code === 0) {
-        const { list, total, hasMore } = res.result.data;
+      if (data && data.code === 0) {
+        const { list, total, hasMore } = data.data;
         
         // TODO: 如果后端支持 'expiring' 状态，Tab 0 应该传 'expiring'
         // 目前 Tab 0 和 Tab 1 都显示 active 状态的合同
@@ -82,24 +82,18 @@ Page({
           hasMore: hasMore,
           page: this.data.page + 1
         });
-      } else {
-        wx.showToast({
-          title: res.result.message || '加载失败',
-          icon: 'none'
-        });
       }
     } catch (err) {
       console.error('加载合同列表失败:', err);
-      wx.showToast({
-        title: '加载失败，请重试',
-        icon: 'none'
-      });
     } finally {
       this.setData({ 
         isLoading: false,
         isRefreshing: false
       });
-      wx.stopPullDownRefresh();
+      
+      if (reset) {
+        wx.stopPullDownRefresh();
+      }
     }
   },
 

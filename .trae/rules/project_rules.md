@@ -44,6 +44,52 @@ docs/接口文档/接口契约 (Contracts).md - API接口
 docs/开发进度/progress.md             - 开发进度
 ```
 
+### 小程序语法规范（重要！）
+**本项目是微信小程序，必须使用以下语法规范：**
+
+#### 导入导出语法
+```javascript
+// ✅ 正确：使用 CommonJS 语法
+const module = require('./module.js');
+const { functionName } = require('./module.js');
+module.exports = { functionName };
+
+// ❌ 错误：不要使用 ES6 语法
+import module from './module.js';
+export { functionName };
+```
+
+#### 模块导入示例
+```javascript
+// ✅ 正确导入方式
+const { Logger } = require('./logger');
+const { handleError } = require('./errorHandler');
+const cloud = require('../../utils/cloud.js');
+
+// ❌ 错误导入方式
+import { Logger } from './logger';
+import { call as cloud } from '../../utils/cloud.js';
+```
+
+#### 模块导出示例
+```javascript
+// ✅ 正确导出方式
+module.exports = {
+  Logger,
+  createLogger,
+  queryLogs
+};
+
+// ❌ 错误导出方式
+export {
+  Logger,
+  createLogger,
+  queryLogs
+};
+```
+
+**重要提醒：微信小程序环境不支持 ES6 模块语法，必须使用 CommonJS 的 require/module.exports 语法！**
+
 ### 步骤2：简洁报告（≤3行）
 ```
 已读取必读文档；

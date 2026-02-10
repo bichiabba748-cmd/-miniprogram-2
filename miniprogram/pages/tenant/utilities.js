@@ -1,3 +1,5 @@
+const cloud = require('../../utils/cloud.js');
+
 Page({ 
    data: { 
      electricAccount: '', 
@@ -15,17 +17,18 @@ Page({
    
    async loadUtilityAccounts() { 
      try { 
-       const res = await wx.cloud.callFunction({ 
-         name: 'getContractInfo', 
-         data: { tenant_openid: wx.getStorageSync('openid') } 
+       const data = await cloud.call('getContractInfo', { 
+         tenant_openid: wx.getStorageSync('openid') 
+       }, {
+         loadingTitle: '加载中...'
        }); 
        
-       if (res.result.success && res.result.data.utilities) { 
+       if (data && data.success && data.data && data.data.utilities) { 
          this.setData({ 
-           electricAccount: res.result.data.utilities.electric_account || '', 
-           waterAccount: res.result.data.utilities.water_account || '', 
-           gasAccount: res.result.data.utilities.gas_account || '', 
-           heatingAccount: res.result.data.utilities.heating_account || '' 
+           electricAccount: data.data.utilities.electric_account || '', 
+           waterAccount: data.data.utilities.water_account || '', 
+           gasAccount: data.data.utilities.gas_account || '', 
+           heatingAccount: data.data.utilities.heating_account || '' 
          }); 
        } 
      } catch (error) { 

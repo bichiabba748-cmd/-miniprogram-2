@@ -1,3 +1,5 @@
+const cloud = require('../../utils/cloud.js');
+
 Page({
   data: {
     // 表单数据模型

@@ -1,6 +1,7 @@
 const app = getApp();
 // 🚩 引入宪法
 const { RoleManager } = require('../../utils/roleManager.js');
+const cloud = require('../../utils/cloud.js');
 // 初始化云数据库
 const db = wx.cloud.database();
 const _ = db.command;
@@ -90,22 +91,19 @@ Page({
 
   // 从云数据库获取文章数据
   getArticles() {
-    wx.showLoading({ title: '加载文案中...' });
-    
-    // 使用云函数获取文章数据
-    wx.cloud.callFunction({
-      name: 'getArticles',
-      data: {
-        category: this.data.currentTab === '全部' ? 'all' : this.data.currentTab,
-        page: 1,
-        pageSize: 50
-      }
-    })
-    .then(res => {
-      if (res.result.code === 0 && res.result.data.list.length > 0) {
-        const total = res.result.data.total || 0;
+    cloud.call('getArticles', {
+      category: this.data.currentTab === '全部' ? 'all' : this.data.currentTab,
+      page: 1,
+      pageSize: 50
+    }, {
+      loading: true,
+      title: '加载文案中...',
+      showError: true
+    }).then(res => {
+      if (res.code === 0 && res.data.list.length > 0) {
+        const total = res.data.total || 0;
         
-        const scripts = res.result.data.list.map((item, index) => ({
+        const scripts = res.data.list.map((item, index) => ({
           id: item._id,
           code: `XH-${String(index + 1).padStart(3, '0')}`,
           title: item.title,
@@ -130,22 +128,12 @@ Page({
         
         this.getUserCollectionStatus(scripts);
       } else {
-        wx.hideLoading();
         this.setData({
           scripts: [],
           filteredScripts: [],
           totalArticles: 0
         });
       }
-    })
-    .catch(err => {
-      wx.hideLoading();
-      console.error('获取文案失败:', err);
-      // 失败时显示默认内容
-      this.setData({
-        scripts: [],
-        filteredScripts: []
-      });
     });
   },
 

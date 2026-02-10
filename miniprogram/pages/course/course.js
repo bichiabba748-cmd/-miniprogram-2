@@ -1,5 +1,6 @@
 const app = getApp();
 const { RoleManager } = require('../../utils/roleManager.js');
+const cloud = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -26,14 +27,13 @@ Page({
   },
 
   loadCourses() {
-    wx.showLoading({ title: '加载中...' });
-
-    wx.cloud.callFunction({
-      name: 'get_courses'
+    cloud.call('get_courses', {}, {
+      loading: true,
+      title: '加载课程中...',
+      showError: true
     }).then(res => {
-      wx.hideLoading();
-      if (res.result.code === 0) {
-        const courses = res.result.data.map(course => ({
+      if (res.code === 0) {
+        const courses = res.data.map(course => ({
           ...course,
           view: this.formatViewCount(course.view)
         }));
@@ -41,12 +41,7 @@ Page({
           courses,
           filteredCourses: courses
         });
-      } else {
-        wx.showToast({ title: res.result.message, icon: 'none' });
       }
-    }).catch(err => {
-      wx.hideLoading();
-      wx.showToast({ title: '加载失败', icon: 'none' });
     });
   },
 

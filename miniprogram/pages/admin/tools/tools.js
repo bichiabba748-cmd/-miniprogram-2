@@ -1,4 +1,6 @@
 // 管理工具页面逻辑
+const cloud = require('../../../utils/cloud.js');
+
 Page({
   data: {
     // 健康状态
@@ -574,36 +576,34 @@ Page({
     this.setData({ loading: true, loadingText: '同步真实进度...' });
     
     // 调用云函数获取最新的开发进度（会自动从云存储读取）
-    wx.cloud.callFunction({
-      name: 'adminTools',
-      data: {
-        action: 'getDevelopmentProgress'
-      }
-    }).then((progressResult) => {
-      if (progressResult.result.success) {
-        const realPercentage = progressResult.result.data.percentage;
+    cloud.call('adminTools', {
+      action: 'getDevelopmentProgress'
+    }, {
+      loadingTitle: '获取进度中...'
+    }).then((progressData) => {
+      if (progressData.success) {
+        const realPercentage = progressData.data.percentage;
         console.log('获取到真实进度:', realPercentage);
         
         // 调用云函数更新开发进度
-        return wx.cloud.callFunction({
-          name: 'adminTools',
+        return cloud.call('adminTools', {
+          action: 'updateProgress',
           data: {
-            action: 'updateProgress',
-            data: {
-              percentage: realPercentage,
-              completedTasks: 31,
-              cloudFunctions: 14
-            }
+            percentage: realPercentage,
+            completedTasks: 31,
+            cloudFunctions: 14
           }
+        }, {
+          loadingTitle: '更新进度中...'
         });
       } else {
         throw new Error('获取进度失败');
       }
-    }).then((updateResult) => {
-      console.log('更新进度结果:', updateResult);
+    }).then((updateData) => {
+      console.log('更新进度结果:', updateData);
       
-      if (updateResult.result.success) {
-        const realPercentage = updateResult.result.data.percentage;
+      if (updateData.success) {
+        const realPercentage = updateData.data.percentage;
         this.setData({ loading: false });
         this.showToast('进度同步成功，真实进度：' + realPercentage + '%', 'success');
         // 刷新状态以显示最新进度
@@ -612,7 +612,7 @@ Page({
         }, 500);
       } else {
         this.setData({ loading: false });
-        this.showToast('进度同步失败: ' + (updateResult.result.message || '未知错误'), 'error');
+        this.showToast('进度同步失败: ' + (updateData.message || '未知错误'), 'error');
       }
     }).catch((error) => {
       console.error('同步进度失败:', error);

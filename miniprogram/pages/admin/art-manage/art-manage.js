@@ -1,4 +1,8 @@
 const app = getApp();
+const { RoleManager } = require('../../../utils/roleManager.js');
+const cloud = require('../../../utils/cloud.js');
+
+// 初始化云数据库
 const db = wx.cloud.database();
 const _ = db.command;
 
@@ -29,36 +33,25 @@ Page({
   },
 
   fetchArticles() {
-    wx.showLoading({ title: '加载中...' });
-    
     // 使用云函数获取数据，与art.js保持一致
-    wx.cloud.callFunction({
-      name: 'getArticles',
-      data: {
-        category: this.data.currentTab === 'all' ? 'all' : this.data.currentTab,
-        page: this.data.currentPage,
-        pageSize: this.data.pageSize
-      }
-    })
-    .then(res => {
-      console.log('获取到的文案数据:', res.result);
+    cloud.call('getArticles', {
+      category: this.data.currentTab === 'all' ? 'all' : this.data.currentTab,
+      page: this.data.currentPage,
+      pageSize: this.data.pageSize
+    }, {
+      loadingTitle: '加载中...'
+    }).then(data => {
+      console.log('获取到的文案数据:', data);
       
-      if (res.result.code === 0) {
+      if (data && data.list) {
         this.setData({
-          articleList: res.result.data.list,
-          filteredList: res.result.data.list,
-          total: res.result.data.total
+          articleList: data.list,
+          filteredList: data.list,
+          total: data.total
         });
-        wx.hideLoading();
-      } else {
-        wx.hideLoading();
-        wx.showToast({ title: res.result.message || '加载失败', icon: 'none' });
       }
-    })
-    .catch(err => {
+    }).catch(err => {
       console.error('获取文案列表失败:', err);
-      wx.hideLoading();
-      wx.showToast({ title: '加载失败', icon: 'none' });
     });
   },
 

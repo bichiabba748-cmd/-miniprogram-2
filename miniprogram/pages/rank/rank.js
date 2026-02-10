@@ -1,5 +1,6 @@
 const app = getApp();
 const { RoleManager } = require('../../utils/roleManager.js');
+const cloud = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -75,18 +76,17 @@ Page({
     }
 
     // 调用云函数获取真实数据
-    wx.cloud.callFunction({
-      name: 'getleaderboardv3',
-      data: {
-        type: type,
-        topN: page * this.data.pageSize
-      }
+    cloud.call('getleaderboardv3', {
+      type: type,
+      topN: page * this.data.pageSize
+    }, {
+      loadingTitle: refresh ? null : '加载中...'
     })
     .then(res => {
-      console.log('排行榜数据获取成功：', res.result);
+      console.log('排行榜数据获取成功：', res);
 
-      if (res.result.code === 0) {
-        const data = res.result.data;
+      if (res && res.code === 0) {
+        const data = res.data;
         const list = data.list || [];
 
         // 处理数据格式
@@ -132,7 +132,7 @@ Page({
           useMockData: false
         });
       } else {
-        console.error('云函数返回错误：', res.result.message);
+        console.error('云函数返回错误：', res.message);
         // 云函数返回错误，使用模拟数据
         this.setData({ useMockData: true });
         this.loadMockData(page);

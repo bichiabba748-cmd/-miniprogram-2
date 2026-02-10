@@ -1,3 +1,5 @@
+const cloud = require('../../utils/cloud.js');
+
 Page({
   data: {
     propertyInfo: {
@@ -14,18 +16,18 @@ Page({
   },
   
   async loadPropertyInfo() {
-    wx.showLoading({ title: '加载中...' });
     try {
       const openid = wx.getStorageSync('openid');
-      const res = await wx.cloud.callFunction({
-        name: 'getContractInfo',
-        data: { tenant_openid: openid }
+      const data = await cloud.call('getContractInfo', { 
+        tenant_openid: openid 
+      }, {
+        loadingTitle: '加载中...'
       });
 
-      console.log('物业信息获取结果:', res);
+      console.log('物业信息获取结果:', data);
 
-      if (res.result.success && res.result.data.propertyManagement) {
-        const pm = res.result.data.propertyManagement;
+      if (data && data.success && data.data && data.data.propertyManagement) {
+        const pm = data.data.propertyManagement;
         this.setData({
           propertyInfo: {
             company: pm.company || '暂无物业信息',
@@ -43,12 +45,6 @@ Page({
       }
     } catch (err) {
       console.error('加载物业信息失败:', err);
-      wx.showToast({
-        title: '加载失败',
-        icon: 'none'
-      });
-    } finally {
-      wx.hideLoading();
     }
   },
   

@@ -1,3 +1,5 @@
+const cloud = require('../../utils/cloud.js');
+
 Page({
   data: {
     tenantName: '',
@@ -31,30 +33,24 @@ Page({
       return;
     }
 
-    wx.showLoading({ title: '提交中...' });
-
-    wx.cloud.callFunction({
-      name: 'submitContract',
-      data: {
-        tenantName,
-        tenantPhone,
-        propertyAddress,
-        rent: parseFloat(rent),
-        startDate,
-        endDate,
-        ownerName,
-        ownerPhone,
-        brokerOpenId: getApp().globalData.openid
-      }
+    cloud.call('submitContract', {
+      tenantName,
+      tenantPhone,
+      propertyAddress,
+      rent: parseFloat(rent),
+      startDate,
+      endDate,
+      ownerName,
+      ownerPhone,
+      brokerOpenId: getApp().globalData.openid
+    }, {
+      loadingTitle: '提交中...'
     }).then(res => {
-      wx.hideLoading();
       wx.showToast({ title: '报单成功', icon: 'success' });
       setTimeout(() => {
         wx.navigateTo({ url: '/pages/broker-rental/contracts' });
       }, 1500);
     }).catch(err => {
-      wx.hideLoading();
-      wx.showToast({ title: '提交失败', icon: 'none' });
       console.error('submitContract error:', err);
     });
   }

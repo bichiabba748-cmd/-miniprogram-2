@@ -1,5 +1,6 @@
 const app = getApp();
 const { RoleManager } = require('../../utils/roleManager.js');
+const cloud = require('../../utils/cloud.js');
 // 初始化云数据库
 const db = wx.cloud.database();
 const _ = db.command;
@@ -175,30 +176,59 @@ Page({
     // 先设置默认数据，避免黑屏
     this.setData({ reports: defaultReports });
     
-    // 使用Promise.race实现超时处理
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('请求超时')), 5000);
-    });
-    
-    const dbPromise = db.collection('reports')
-      .orderBy('createdAt', 'desc') // 按创建时间倒序
-      .limit(10) // 最多获取10条
-      .get();
-    
-    Promise.race([dbPromise, timeoutPromise])
-      .then(res => {
+    // 实现带缓存的战报获取
+    const fetchReportsWithCache = async () => {
+      try {
+        // 尝试从本地缓存获取
+        const cachedReports = wx.getStorageSync('reports_cache');
+        const cacheTime = wx.getStorageSync('reports_cache_time');
+        const now = Date.now();
+        
+        // 缓存有效期5分钟
+        if (cachedReports && cacheTime && (now - cacheTime < 5 * 60 * 1000)) {
+          console.log('从缓存获取战报数据');
+          this.setData({ reports: cachedReports });
+          return;
+        }
+        
+        // 使用Promise.race实现超时处理
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('请求超时')), 5000);
+        });
+        
+        const dbPromise = db.collection('reports')
+          .where({
+            status: 'approved' // 只获取已审核的战报
+          })
+          .orderBy('createdAt', 'desc') // 按创建时间倒序
+          .limit(10) // 最多获取10条
+          .get();
+        
+        const res = await Promise.race([dbPromise, timeoutPromise]);
+        
         if (res.data && res.data.length > 0) {
           // 提取战报内容
-          const reportContents = res.data.map(item => item.content);
-          this.setData({
-            reports: reportContents
-          });
+          const reportContents = res.data.map(item => item.content || '').filter(Boolean);
+          
+          if (reportContents.length > 0) {
+            this.setData({
+              reports: reportContents
+            });
+            
+            // 缓存结果
+            wx.setStorageSync('reports_cache', reportContents);
+            wx.setStorageSync('reports_cache_time', now);
+          }
         }
-      })
-      .catch(err => {
+        
+      } catch (err) {
         console.error('获取战报失败:', err);
         // 失败时保持默认数据
-      });
+      }
+    };
+    
+    // 执行获取战报
+    fetchReportsWithCache();
   },
 
   updateIdentity() {
@@ -394,30 +424,23 @@ Page({
   // 处理手机号授权事件
   onGetPhoneNumber(e) {
     if (e.detail.errMsg === 'getPhoneNumber:ok') {
-      wx.showLoading({ title: '授权中...' });
-      
       // 调用云函数处理手机号授权
-      wx.cloud.callFunction({
-        name: 'login',
-        data: {
-          cloudID: e.detail.cloudID,
-          referrerId: this.data.referrerId,
-          referrerRole: this.data.referrerRole,
-          referrerName: this.data.referrerName
-        }
-      }).then(res => {
-        wx.hideLoading();
-        
-        if (res.result.success) {
+      cloud.call('login', {
+        cloudID: e.detail.cloudID,
+        referrerId: this.data.referrerId,
+        referrerRole: this.data.referrerRole,
+        referrerName: this.data.referrerName
+      }, {
+        loadingTitle: '授权中...'
+      }).then(data => {
+        if (data.success) {
           this.setData({ showAuthModal: false, isUnlocked: true });
           wx.showToast({ title: '解锁成功', icon: 'success' });
         } else {
           wx.showToast({ title: '授权失败，请重试', icon: 'none' });
         }
       }).catch(err => {
-        wx.hideLoading();
         console.error('手机号授权失败:', err);
-        wx.showToast({ title: '授权失败，请重试', icon: 'none' });
       });
     } else {
       wx.showToast({ title: '授权失败，请重试', icon: 'none' });

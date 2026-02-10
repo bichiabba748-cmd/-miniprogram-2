@@ -1,4 +1,5 @@
 const { RoleManager } = require('../../utils/roleManager.js');
+const cloud = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -32,34 +33,28 @@ Page({
     
     const { page, pageSize, currentTab, searchText } = this.data;
     
-    wx.cloud.callFunction({
-      name: 'getClients',
-      data: {
-        page: page,
-        pageSize: pageSize,
-        status: currentTab === 'all' ? undefined : currentTab,
-        searchText: searchText || undefined
-      },
-      success: res => {
-        console.log('[getClients] 调用成功：', res);
-        const { code, data } = res.result;
-        
-        if (code === 0 && data) {
-          this.setData({
-            clientList: data.list,
-            hasMore: data.hasMore,
-            loading: false
-          });
-        } else {
-          this.setData({ loading: false });
-          wx.showToast({ title: '获取数据失败', icon: 'none' });
-        }
-      },
-      fail: err => {
-        console.error('[getClients] 调用失败：', err);
+    cloud.call('getClients', {
+      page: page,
+      pageSize: pageSize,
+      status: currentTab === 'all' ? undefined : currentTab,
+      searchText: searchText || undefined
+    }, {
+      loadingTitle: '加载中...'
+    }).then(data => {
+      console.log('[getClients] 调用成功：', data);
+      
+      if (data && data.list) {
+        this.setData({
+          clientList: data.list,
+          hasMore: data.hasMore,
+          loading: false
+        });
+      } else {
         this.setData({ loading: false });
-        wx.showToast({ title: '网络错误', icon: 'none' });
       }
+    }).catch(err => {
+      console.error('[getClients] 调用失败：', err);
+      this.setData({ loading: false });
     });
   },
 

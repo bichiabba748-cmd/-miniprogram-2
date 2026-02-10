@@ -1,3 +1,5 @@
+const cloud = require('../../utils/cloud.js');
+
 Page({
   data: {
     testResults: [],
@@ -18,81 +20,51 @@ Page({
 
   // 测试报单
   testSubmitContract: function () {
-    wx.showLoading({ title: '测试中...' });
-    
-    wx.cloud.callFunction({
-      name: 'submitContract',
-      data: {
-        tenantName: '测试租客',
-        tenantPhone: '13800138000',
-        propertyAddress: '北京市朝阳区测试小区',
-        rent: 3000,
-        startDate: '2026-02-01',
-        endDate: '2026-08-01',
-        brokerName: '测试经纪人',
-        brokerPhone: '13900139000'
-      }
-    }).then(res => {
-      wx.hideLoading();
-      this.addTestResult('submitContract', JSON.stringify(res.result, null, 2));
-      if (res.result.code === 0) {
-        wx.showToast({ title: '测试成功', icon: 'success' });
-      } else {
-        wx.showToast({ title: '测试失败', icon: 'none' });
-      }
+    cloud.call('submitContract', {
+      tenantName: '测试租客',
+      tenantPhone: '13800138000',
+      propertyAddress: '北京市朝阳区测试小区',
+      rent: 3000,
+      startDate: '2026-02-01',
+      endDate: '2026-08-01',
+      brokerName: '测试经纪人',
+      brokerPhone: '13900139000'
+    }, {
+      loadingTitle: '测试中...'
+    }).then(data => {
+      this.addTestResult('submitContract', JSON.stringify(data, null, 2));
+      wx.showToast({ title: '测试成功', icon: 'success' });
     }).catch(err => {
-      wx.hideLoading();
-      this.addTestResult('submitContract', '错误: ' + JSON.stringify(err, null, 2));
-      wx.showToast({ title: '测试失败', icon: 'none' });
+      this.addTestResult('submitContract', '错误: ' + (err.message || JSON.stringify(err)));
     });
   },
 
   // 测试续租
   testSubmitRenewal: function () {
-    wx.showLoading({ title: '测试中...' });
-    
-    wx.cloud.callFunction({
-      name: 'submitRenewal',
-      data: {
-        contractId: 'HY20260131001'
-      }
-    }).then(res => {
-      wx.hideLoading();
-      this.addTestResult('submitRenewal', JSON.stringify(res.result, null, 2));
-      if (res.result.code === 0) {
-        wx.showToast({ title: '测试成功', icon: 'success' });
-      } else {
-        wx.showToast({ title: '测试失败', icon: 'none' });
-      }
+    cloud.call('submitRenewal', {
+      contractId: 'HY20260131001'
+    }, {
+      loadingTitle: '测试中...'
+    }).then(data => {
+      this.addTestResult('submitRenewal', JSON.stringify(data, null, 2));
+      wx.showToast({ title: '测试成功', icon: 'success' });
     }).catch(err => {
-      wx.hideLoading();
-      this.addTestResult('submitRenewal', '错误: ' + JSON.stringify(err, null, 2));
-      wx.showToast({ title: '测试失败', icon: 'none' });
+      this.addTestResult('submitRenewal', '错误: ' + (err.message || JSON.stringify(err)));
     });
   },
 
   // 测试咨询
   testSubmitConsult: function () {
-    wx.showLoading({ title: '测试中...' });
-    
-    wx.cloud.callFunction({
-      name: 'submitConsult',
-      data: {
-        tenantPhone: '13800138000',
-        question: '测试咨询问题，请问如何办理宽带？'
-      }
-    }).then(res => {
-      wx.hideLoading();
-      this.addTestResult('submitConsult', JSON.stringify(res.result, null, 2));
-      if (res.result.code === 0) {
-        wx.showToast({ title: '测试成功', icon: 'success' });
-      } else {
-        wx.showToast({ title: '测试失败', icon: 'none' });
-      }
+    cloud.call('submitConsult', {
+      tenantPhone: '13800138000',
+      question: '测试咨询问题，请问如何办理宽带？'
+    }, {
+      loadingTitle: '测试中...'
+    }).then(data => {
+      this.addTestResult('submitConsult', JSON.stringify(data, null, 2));
+      wx.showToast({ title: '测试成功', icon: 'success' });
     }).catch(err => {
-      wx.hideLoading();
-      this.addTestResult('submitConsult', '错误: ' + JSON.stringify(err, null, 2));
-      wx.showToast({ title: '测试失败', icon: 'none' });
+      this.addTestResult('submitConsult', '错误: ' + (err.message || JSON.stringify(err)));
     });
   },
 
@@ -924,5 +896,29 @@ Page({
       this.addTestResult('logger', '错误: ' + JSON.stringify(err, null, 2));
       wx.showToast({ title: '测试失败', icon: 'none' });
     }
+  },
+
+  // 测试生成测试数据
+  testInitTestData: function () {
+    wx.showLoading({ title: '测试中...' });
+    
+    wx.cloud.callFunction({
+      name: 'init_test_data'
+    }).then(res => {
+      wx.hideLoading();
+      this.addTestResult('init_test_data', JSON.stringify(res.result, null, 2));
+      if (res.result.code === 0) {
+        wx.showToast({ 
+          title: `成功初始化${res.result.data.reportsCount}条战绩+${res.result.data.applicationsCount}条申请`, 
+          icon: 'success' 
+        });
+      } else {
+        wx.showToast({ title: '测试失败', icon: 'none' });
+      }
+    }).catch(err => {
+      wx.hideLoading();
+      this.addTestResult('init_test_data', '错误: ' + JSON.stringify(err, null, 2));
+      wx.showToast({ title: '测试失败', icon: 'none' });
+    });
   }
 });

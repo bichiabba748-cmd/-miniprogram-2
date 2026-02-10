@@ -1,4 +1,5 @@
 const { RoleManager } = require('../../utils/roleManager.js');
+const cloud = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -34,26 +35,21 @@ Page({
   },
 
   loadClientDetail(targetId) {
-    wx.cloud.callFunction({
-      name: 'getClientDetail',
-      data: { id: targetId },
-      success: res => {
-        console.log('[getClientDetail] 调用成功：', res);
-        const { code, data } = res.result;
-        
-        if (code === 0 && data) {
-          this.setData({ 
-            client: data,
-            followList: data.followList || []
-          });
-        } else {
-          wx.showToast({ title: '获取客户详情失败', icon: 'none' });
-        }
-      },
-      fail: err => {
-        console.error('[getClientDetail] 调用失败：', err);
-        wx.showToast({ title: '网络错误', icon: 'none' });
+    cloud.call('getClientDetail', { 
+      id: targetId 
+    }, {
+      loadingTitle: '加载中...'
+    }).then(data => {
+      console.log('[getClientDetail] 调用成功：', data);
+      
+      if (data) {
+        this.setData({ 
+          client: data,
+          followList: data.followList || []
+        });
       }
+    }).catch(err => {
+      console.error('[getClientDetail] 调用失败：', err);
     });
   },
 
