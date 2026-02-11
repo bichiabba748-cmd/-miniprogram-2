@@ -339,7 +339,14 @@ Page({
     
     if (action === 'goToArt') return wx.switchTab({ url: '/pages/art/art' });
     if (action === 'goToCourse') return wx.switchTab({ url: '/pages/course/course' });
-    if (action === 'goToRank') return wx.navigateTo({ url: '/pages/rank/rank' });
+    if (action === 'goToRank') {
+      // 租赁经纪人跳转到租赁专用排行榜
+      if (this.data.isRentalBroker) {
+        return wx.navigateTo({ url: '/pages/broker-rental/leaderboard' });
+      }
+      // 其他角色跳转到通用排行榜
+      return wx.navigateTo({ url: '/pages/rank/rank' });
+    }
     if (action === 'goToAgent') return wx.switchTab({ url: '/pages/profile/profile' });
     
     // 租赁经纪人工具路由
@@ -349,6 +356,16 @@ Page({
     if (action === 'rental_materials') return wx.navigateTo({ url: '/pages/broker-rental/materials' });
     if (action === 'rental_leaderboard') return wx.navigateTo({ url: '/pages/broker-rental/leaderboard' });
     if (action === 'rental_service') return wx.navigateTo({ url: '/pages/broker-rental/service' });
+    
+    // 主播相关功能
+    if (action === 'openScript') return this.openScript();
+    if (action === 'openSchool') return this.openSchool();
+    if (action === 'checkAccount') return this.checkAccount();
+    
+    // 经纪人相关功能
+    if (action === 'openCalc') return this.openCalc();
+    if (action === 'openTax') return this.openTax();
+    if (action === 'openSchedule') return this.openSchedule();
     
     wx.showToast({ title: '功能开发中', icon: 'none' });
   },
@@ -474,5 +491,60 @@ Page({
     wx.showToast({ title: '上报成功', icon: 'success' });
   },
   goToJoin() { wx.navigateTo({ url: '/pages/join/join' }); },
-  goToRank() { wx.navigateTo({ url: '/pages/rank/rank' }); }
+  goToRank() {
+    // 租赁经纪人跳转到租赁专用排行榜
+    if (this.data.isRentalBroker) {
+      return wx.navigateTo({ url: '/pages/broker-rental/leaderboard' });
+    }
+    // 其他角色跳转到通用排行榜
+    wx.navigateTo({ url: '/pages/rank/rank' });
+  },
+
+  // 主播功能实现
+  openScript() {
+    wx.showModal({
+      title: '直播脚本',
+      content: '📜 直播脚本功能\n\n- 每日热点脚本更新\n- 学区房专题脚本\n- 新房推荐脚本\n- 避坑指南脚本\n\n功能开发中，敬请期待！',
+      showCancel: false
+    });
+  },
+
+  openSchool() {
+    wx.showModal({
+      title: '学区查询',
+      content: '🏫 学区查询功能\n\n- 小学学区划分\n- 初中学区划分\n- 学区房推荐\n- 入学政策解读\n\n功能开发中，敬请期待！',
+      showCancel: false
+    });
+  },
+
+  checkAccount() {
+    wx.showModal({
+      title: '账号诊断',
+      content: '🩺 账号诊断功能\n\n- 账号活跃度分析\n- 内容质量评估\n- 获客效果分析\n- 优化建议报告\n\n功能开发中，敬请期待！',
+      showCancel: false
+    });
+  },
+
+  // 经纪人功能实现
+  openCalc() {
+    wx.navigateTo({
+      url: '/pages/tools/calculator/calculator'
+    });
+  },
+
+  openTax() {
+    wx.showModal({
+      title: '税费计算',
+      content: '📝 税费计算功能\n\n- 契税计算\n- 增值税计算\n- 个人所得税计算\n- 过户费用估算\n\n功能开发中，敬请期待！',
+      showCancel: false
+    });
+  },
+
+  openSchedule() {
+    wx.showModal({
+      title: '直播排期',
+      content: '🗓️ 直播排期功能\n\n- 每周直播计划\n- 热点话题排期\n- 嘉宾邀请管理\n- 直播效果追踪\n\n功能开发中，敬请期待！',
+      showCancel: false
+    });
+  }
 })

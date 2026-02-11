@@ -70,23 +70,32 @@ exports.main = async (event, context) => {
         }).count();
         
         // 计算排名
-        const allUsers = await db.collection('clients')
-          .aggregate()
-          .group({
-            _id: '$owner_id',
-            leads: _.sum(1)
-          })
-          .sort({ leads: -1 })
-          .end();
-        
         let rank = 0;
-        let currentRank = 1;
-        for (const item of allUsers.list) {
-          if (item._id === openid) {
-            rank = currentRank;
-            break;
+        try {
+          const allUsers = await db.collection('clients')
+            .aggregate()
+            .group({
+              _id: '$owner_id',
+              leads: _.sum(1)
+            })
+            .sort({ leads: -1 })
+            .end();
+          
+          console.log('Aggregate result for dashboard:', JSON.stringify(allUsers));
+          
+          if (allUsers && allUsers.list && Array.isArray(allUsers.list)) {
+            let currentRank = 1;
+            for (const item of allUsers.list) {
+              if (item._id === openid) {
+                rank = currentRank;
+                break;
+              }
+              currentRank++;
+            }
           }
-          currentRank++;
+        } catch (aggregateErr) {
+          console.error('Dashboard aggregate error:', aggregateErr);
+          rank = 0;
         }
         
         dashboard = [
@@ -150,23 +159,32 @@ exports.main = async (event, context) => {
       }).count();
       
       // 计算排名
-      const allUsers = await db.collection('clients')
-        .aggregate()
-        .group({
-          _id: '$owner_id',
-          leads: _.sum(1)
-        })
-        .sort({ leads: -1 })
-        .end();
-      
       let rank = 0;
-      let currentRank = 1;
-      for (const item of allUsers.list) {
-        if (item._id === openid) {
-          rank = currentRank;
-          break;
+      try {
+        const allUsers = await db.collection('clients')
+          .aggregate()
+          .group({
+            _id: '$owner_id',
+            leads: _.sum(1)
+          })
+          .sort({ leads: -1 })
+          .end();
+        
+        console.log('Aggregate result for rankInfo:', JSON.stringify(allUsers));
+        
+        if (allUsers && allUsers.list && Array.isArray(allUsers.list)) {
+          let currentRank = 1;
+          for (const item of allUsers.list) {
+            if (item._id === openid) {
+              rank = currentRank;
+              break;
+            }
+            currentRank++;
+          }
         }
-        currentRank++;
+      } catch (aggregateErr) {
+        console.error('RankInfo aggregate error:', aggregateErr);
+        rank = 0;
       }
       
       rankInfo = {

@@ -74,8 +74,8 @@ exports.main = async (event, context) => {
       hasMore: (page - 1) * pageSize + pageSize < total
     };
     
-    // 缓存结果
-    if (useCache) {
+    // 缓存结果（仅缓存非空数据）
+    if (useCache && data.list.length > 0) {
       try {
         await cloud.database().collection('cache').where({ key: cacheKey }).remove();
         await cloud.database().collection('cache').add({

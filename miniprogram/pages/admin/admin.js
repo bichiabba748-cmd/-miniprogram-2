@@ -44,10 +44,13 @@ Page({
     auditList: [], // 战绩审核列表
     scriptList: [], // 文案审核列表
     userList: [], // 人员管理列表
+    leadsList: [], // 线索管理列表
     showEditModal: false,
+    showLeadsModal: false,
     editingArticle: {},
     editingArticleId: '',
     editingCategoryIndex: 0,
+    selectedLead: {},
     articleCategories: ['口播', '探盘', '口盘', 'IP', '避坑', '获客']
   },
 
@@ -494,6 +497,74 @@ Page({
   onEditContentChange(e) {
     this.setData({
       'editingArticle.content.script': e.detail.value
+    });
+  },
+
+  // 线索管理相关方法
+  loadLeads() {
+    wx.showLoading({ title: '加载线索...' });
+    
+    // 模拟加载线索数据
+    setTimeout(() => {
+      wx.hideLoading();
+      
+      const leads = [
+        {
+          id: 1,
+          name: '张先生',
+          phone: '138****1234',
+          source: '微信获客',
+          status: '未分配',
+          createdAt: '2026-02-10 14:30',
+          requirement: '预算200万，想在河西买学区房'
+        },
+        {
+          id: 2,
+          name: '李女士',
+          phone: '139****5678',
+          source: '在线咨询',
+          status: '已分配',
+          assignTo: '王金牌',
+          createdAt: '2026-02-10 10:20',
+          requirement: '想租和平区两室一厅'
+        }
+      ];
+      
+      this.setData({ leadsList: leads });
+    }, 1000);
+  },
+
+  showLeadsDetail(e) {
+    const lead = this.data.leadsList[e.currentTarget.dataset.index];
+    this.setData({ selectedLead: lead, showLeadsModal: true });
+  },
+
+  closeLeadsModal() {
+    this.setData({ showLeadsModal: false, selectedLead: {} });
+  },
+
+  assignLead() {
+    wx.showActionSheet({
+      itemList: ['王金牌', '李销冠', '陈经理'],
+      success: (res) => {
+        const assignee = ['王金牌', '李销冠', '陈经理'][res.tapIndex];
+        
+        // 更新线索状态
+        const updatedLeads = this.data.leadsList.map(lead => {
+          if (lead.id === this.data.selectedLead.id) {
+            return { ...lead, status: '已分配', assignTo: assignee };
+          }
+          return lead;
+        });
+        
+        this.setData({ leadsList: updatedLeads });
+        this.closeLeadsModal();
+        
+        wx.showToast({
+          title: `线索已分配给${assignee}`,
+          icon: 'success'
+        });
+      }
     });
   },
 

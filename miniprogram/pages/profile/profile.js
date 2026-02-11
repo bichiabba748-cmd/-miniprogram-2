@@ -82,11 +82,10 @@ Page({
       role: currentRole
     }, {
       loadingTitle: '数据同步中...'
-    }).then(res => {
-      console.log('[getProfileData] 调用成功：', res);
-      const { code, data } = res;
+    }).then(data => {
+      console.log('[getProfileData] 调用成功：', data);
       
-      if (code === 0 && data) {
+      if (data) {
         // 调试信息：显示返回的数据结构
         console.log('[getProfileData] 返回数据：', {
           role: data.role,

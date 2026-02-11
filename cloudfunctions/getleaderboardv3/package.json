@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "获取龙虎榜数据云函数",
   "main": "index.js",
+  "engines": {
+    "node": "16.13"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,11 +13,5 @@
   "license": "ISC",
   "dependencies": {
     "wx-server-sdk": "latest"
-  },
-  "cloudbase_config": {
-    "runtime": "Nodejs16.13",
-    "handler": "index.main",
-    "memory": 128,
-    "timeout": 10
   }
 }

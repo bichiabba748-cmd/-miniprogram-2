@@ -1,0 +1,190 @@
+<view class="container">
+  <!-- 贷款类型 Tab -->
+  <view class="loan-type-tabs">
+    <view class="tab {{loanType === 'commercial' ? 'active' : ''}}" bindtap="switchLoanType" data-type="commercial">商业贷款</view>
+    <view class="tab {{loanType === 'fund' ? 'active' : ''}}" bindtap="switchLoanType" data-type="fund">公积金</view>
+    <view class="tab {{loanType === 'combined' ? 'active' : ''}}" bindtap="switchLoanType" data-type="combined">组合贷</view>
+  </view>
+
+  <!-- 输入表单 -->
+  <view class="form-section">
+    <!-- 商业贷款输入 -->
+    <block wx:if="{{loanType === 'commercial' || loanType === 'combined'}}">
+      <view class="form-item">
+        <text class="label">商贷金额(万元)</text>
+        <input class="input" type="digit" value="{{commercialAmount}}" bindinput="onCommercialAmountInput" placeholder="100"/>
+      </view>
+      <view class="form-item">
+        <text class="label">商贷利率</text>
+        <view class="rate-selector" bindtap="showCommercialRateModal">
+          <text class="rate-value">{{commercialRateOptions[commercialRateIndex].value}}%</text>
+          <text class="rate-label">{{commercialRateOptions[commercialRateIndex].label}}</text>
+          <text class="rate-arrow">></text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 公积金贷款输入 -->
+    <block wx:if="{{loanType === 'fund' || loanType === 'combined'}}">
+      <view class="form-item">
+        <text class="label">公积金金额(万元)</text>
+        <input class="input" type="digit" value="{{fundAmount}}" bindinput="onFundAmountInput" placeholder="50"/>
+      </view>
+      <view class="form-item">
+        <text class="label">公积金利率</text>
+        <view class="rate-selector" bindtap="showFundRateModal">
+          <text class="rate-value">{{fundRateOptions[fundRateIndex].value}}%</text>
+          <text class="rate-label">{{fundRateOptions[fundRateIndex].label}}</text>
+          <text class="rate-arrow">></text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 公共字段：贷款年限 -->
+    <view class="form-item">
+      <text class="label">贷款年限</text>
+      <picker mode="selector" range="{{yearOptions}}" value="{{yearIndex}}" bindchange="onYearChange">
+        <view class="picker">
+          <text class="picker-text">{{years}}年</text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 还款方式 -->
+    <view class="form-item">
+      <text class="label">还款方式</text>
+      <view class="repayment-tabs">
+        <view class="repayment-tab {{repaymentType === 'equal_interest' ? 'active' : ''}}" bindtap="switchRepaymentType" data-type="equal_interest">等额本息</view>
+        <view class="repayment-tab {{repaymentType === 'equal_principal' ? 'active' : ''}}" bindtap="switchRepaymentType" data-type="equal_principal">等额本金</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 计算按钮 -->
+  <view class="calc-btn-wrap">
+    <button class="calc-btn {{loading ? 'loading' : ''}}" bindtap="calculate" disabled="{{loading}}">
+      <text wx:if="{{!loading}}">开始计算</text>
+      <text wx:if="{{loading}}">计算中...</text>
+    </button>
+  </view>
+
+  <!-- 结果展示区域 -->
+  <view class="result-section" wx:if="{{showResult}}">
+    <view class="result-card">
+      <view class="result-title">计算结果({{repaymentType === 'equal_interest' ? '等额本息' : '等额本金'}})</view>
+      <view class="result-row">
+        <view class="result-item">
+          <text class="result-label">每月还款</text>
+          <text class="result-value">{{monthlyPayment}}元</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">利息总额</text>
+          <text class="result-value">{{totalInterest}}万</text>
+        </view>
+      </view>
+      <view class="result-row">
+        <view class="result-item">
+          <text class="result-label">还款总额</text>
+          <text class="result-value">{{totalPayment}}万</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">贷款总额</text>
+          <text class="result-value">{{loanAmount}}万</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 智能分析条 -->
+    <view class="analysis-bar" bindtap="showComparison" wx:if="{{comparisonData}}">
+      <text class="analysis-text">{{comparisonText}}</text>
+      <text class="analysis-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error-toast" wx:if="{{errorMsg}}">
+    <text>{{errorMsg}}</text>
+  </view>
+
+  <!-- 商贷利率选择弹窗 -->
+  <view class="modal-mask" wx:if="{{showCommercialRateModal}}" bindtap="closeCommercialRateModal"></view>
+  <view class="rate-modal" wx:if="{{showCommercialRateModal}}">
+    <view class="rate-modal-header">
+      <text class="rate-modal-title">选择商贷利率</text>
+      <text class="rate-modal-close" bindtap="closeCommercialRateModal">×</text>
+    </view>
+    <view class="rate-modal-body">
+      <view class="rate-option {{commercialRateIndex === index ? 'active' : ''}}" 
+            wx:for="{{commercialRateOptions}}" 
+            wx:key="index"
+            bindtap="selectCommercialRate"
+            data-index="{{index}}">
+        <text class="rate-option-value">{{item.value}}%</text>
+        <text class="rate-option-label">{{item.label}}</text>
+        <text class="rate-option-check" wx:if="{{commercialRateIndex === index}}">✓</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 公积金利率选择弹窗 -->
+  <view class="modal-mask" wx:if="{{showFundRateModal}}" bindtap="closeFundRateModal"></view>
+  <view class="rate-modal" wx:if="{{showFundRateModal}}">
+    <view class="rate-modal-header">
+      <text class="rate-modal-title">选择公积金利率</text>
+      <text class="rate-modal-close" bindtap="closeFundRateModal">×</text>
+    </view>
+    <view class="rate-modal-body">
+      <view class="rate-option {{fundRateIndex === index ? 'active' : ''}}" 
+            wx:for="{{fundRateOptions}}" 
+            wx:key="index"
+            bindtap="selectFundRate"
+            data-index="{{index}}">
+        <text class="rate-option-value">{{item.value}}%</text>
+        <text class="rate-option-label">{{item.label}}</text>
+        <text class="rate-option-check" wx:if="{{fundRateIndex === index}}">✓</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 对照弹窗 -->
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="closeModal"></view>
+  <view class="modal-content" wx:if="{{showModal}}">
+    <view class="modal-header">
+      <text class="modal-title">还款方式对比</text>
+      <text class="modal-close" bindtap="closeModal">×</text>
+    </view>
+    <view class="modal-body">
+      <view class="comparison-table">
+        <view class="table-header">
+          <text class="th">对比项</text>
+          <text class="th">等额本息</text>
+          <text class="th">等额本金</text>
+        </view>
+        <view class="table-row">
+          <text class="td label">首月还款</text>
+          <text class="td">{{comparisonData.equalInterest.firstMonth}}元</text>
+          <text class="td">{{comparisonData.equalPrincipal.firstMonth}}元</text>
+        </view>
+        <view class="table-row">
+          <text class="td label">每月递减</text>
+          <text class="td">-</text>
+          <text class="td">{{comparisonData.equalPrincipal.decreaseAmount}}元</text>
+        </view>
+        <view class="table-row">
+          <text class="td label">利息总额</text>
+          <text class="td">{{comparisonData.equalInterest.totalInterest}}万</text>
+          <text class="td">{{comparisonData.equalPrincipal.totalInterest}}万</text>
+        </view>
+        <view class="table-row highlight">
+          <text class="td label">总还款额</text>
+          <text class="td">{{comparisonData.equalInterest.totalPayment}}万</text>
+          <text class="td">{{comparisonData.equalPrincipal.totalPayment}}万</text>
+        </view>
+      </view>
+      <view class="comparison-tip">
+        <text>{{comparisonTip}}</text>
+      </view>
+    </view>
+  </view>
+</view>

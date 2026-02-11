@@ -34,9 +34,29 @@
       <text class="ac-label">文案审核</text>
       <text class="ac-num">{{pendingArticles}}</text>
     </view>
-    <view class="audit-card" bindtap="toggleAuditDetail" data-type="user">
-      <text class="ac-label">入伍申请</text>
-      <text class="ac-num">{{pendingUsers}}</text>
+    <view class="audit-card" bindtap="loadLeads">
+      <text class="ac-label">线索管理</text>
+      <text class="ac-num">{{leadsList.length}}</text>
+    </view>
+  </view>
+
+  <!-- 线索管理列表 -->
+  <view class="card" wx:if="{{leadsList.length > 0}}">
+    <view class="card-head">
+      <text class="card-title">线索管理</text>
+    </view>
+    <view class="leads-list">
+      <view class="lead-item" wx:for="{{leadsList}}" wx:key="id" bindtap="showLeadsDetail" data-index="{{index}}">
+        <view class="lead-info">
+          <text class="lead-name">{{item.name}}</text>
+          <text class="lead-phone">{{item.phone}}</text>
+        </view>
+        <view class="lead-meta">
+          <text class="lead-source">{{item.source}}</text>
+          <text class="lead-status" wx:if="{{item.status === '未分配'}}">未分配</text>
+          <text class="lead-status assigned" wx:else>已分配给{{item.assignTo}}</text>
+        </view>
+      </view>
     </view>
   </view>
 

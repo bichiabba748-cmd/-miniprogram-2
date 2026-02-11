@@ -33,6 +33,68 @@ Page({
   },
 
   onUpload() {
-    wx.showToast({ title: '上传功能开发中', icon: 'none' });
+    console.log('开始上传素材');
+    
+    // 选择图片或视频
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        console.log('选择媒体成功:', res);
+        this.uploadToCloud(res.tempFiles[0]);
+      },
+      fail: (err) => {
+        console.error('选择媒体失败:', err);
+        wx.showToast({ title: '选择文件失败', icon: 'none' });
+      }
+    });
+  },
+
+  // 上传到云存储
+  uploadToCloud(tempFile) {
+    wx.showLoading({ title: '上传中...' });
+    
+    const fileName = `materials/${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
+    
+    wx.cloud.uploadFile({
+      cloudPath: fileName,
+      filePath: tempFile.tempFilePath,
+      success: (res) => {
+        console.log('上传成功:', res);
+        this.saveMaterial(res.fileID);
+      },
+      fail: (err) => {
+        console.error('上传失败:', err);
+        wx.hideLoading();
+        wx.showToast({ title: '上传失败', icon: 'none' });
+      }
+    });
+  },
+
+  // 保存素材信息到数据库
+  saveMaterial(fileID) {
+    // 模拟保存到数据库
+    setTimeout(() => {
+      wx.hideLoading();
+      
+      // 更新本地数据
+      const newMaterial = {
+        id: Date.now(),
+        url: fileID,
+        category: '房源实拍',
+        createTime: new Date().getMonth() + 1 + '-' + new Date().getDate()
+      };
+      
+      this.setData({
+        imageList: [newMaterial, ...this.data.imageList]
+      });
+      
+      wx.showToast({
+        title: '上传成功',
+        icon: 'success'
+      });
+    }, 1000);
   }
 });

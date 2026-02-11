@@ -31,9 +31,10 @@ Page({
       loading: true,
       title: '加载课程中...',
       showError: true
-    }).then(res => {
-      if (res.code === 0) {
-        const courses = res.data.map(course => ({
+    }).then(data => {
+      // cloud.call 返回的是 res.result.data，直接是数据数组
+      if (data && Array.isArray(data)) {
+        const courses = data.map(course => ({
           ...course,
           view: this.formatViewCount(course.view)
         }));

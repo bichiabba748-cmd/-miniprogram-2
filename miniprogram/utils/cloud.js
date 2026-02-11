@@ -44,9 +44,6 @@ const call = async (name, data = {}, options = {}) => {
     const cachedValue = getCache(generateCacheKeyForCall())
     if (cachedValue !== null) {
       logger.info(`云函数调用缓存命中: ${name}`)
-      if (showLoading) {
-        wx.hideLoading()
-      }
       return cachedValue
     }
   }
@@ -97,7 +94,7 @@ const call = async (name, data = {}, options = {}) => {
     }
 
     // 检查业务状态码
-    if (res.result && res.result.code !== 0) {
+    if (res.result && res.result.code !== undefined && res.result.code !== 0) {
       const error = new Error(res.result.message || '未知错误')
       error.code = res.result.code
       error.data = res.result.data

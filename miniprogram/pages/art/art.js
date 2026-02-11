@@ -99,11 +99,12 @@ Page({
       loading: true,
       title: '加载文案中...',
       showError: true
-    }).then(res => {
-      if (res.code === 0 && res.data.list.length > 0) {
-        const total = res.data.total || 0;
+    }).then(data => {
+      // cloud.call 返回的是 res.result.data，直接是数据对象
+      if (data && data.list && data.list.length > 0) {
+        const total = data.total || 0;
         
-        const scripts = res.data.list.map((item, index) => ({
+        const scripts = data.list.map((item, index) => ({
           id: item._id,
           code: `XH-${String(index + 1).padStart(3, '0')}`,
           title: item.title,

@@ -89,18 +89,59 @@ Page({
   
   onContactWechat() {
     console.log('点击微信联系');
-    wx.showToast({
-      title: '微信联系功能开发中',
-      icon: 'none'
+    wx.showModal({
+      title: '微信联系顾问',
+      content: '微信：15900001111',
+      showCancel: true,
+      confirmText: '复制微信',
+      cancelText: '关闭',
+      success: (res) => {
+        if (res.confirm) {
+          // 复制微信号
+          wx.setClipboardData({
+            data: '15900001111',
+            success: () => {
+              wx.showToast({
+                title: '微信号已复制',
+                icon: 'success',
+                duration: 2000
+              });
+            },
+            fail: (err) => {
+              console.error('复制失败:', err);
+              wx.showToast({
+                title: '复制失败',
+                icon: 'none'
+              });
+            }
+          });
+        }
+      }
     });
   },
   
   onAdClick() { 
-    wx.showModal({ 
-      title: '广告位', 
-      content: '该功能即将上线，敬请期待', 
-      showCancel: false 
-    }); 
+    console.log('点击广告位');
+    
+    // 显示广告详情
+    wx.showModal({
+      title: '优惠活动',
+      content: '🎉 本月租房特惠：\n\n1. 签约1年以上免1个月房租\n2. 新客首单立减500元\n3. 老客推荐新客各得300元红包\n\n活动时间：2026.02.01-2026.02.29\n\n详情咨询：15900001111',
+      showCancel: true,
+      confirmText: '立即咨询',
+      cancelText: '稍后了解',
+      success: (res) => {
+        if (res.confirm) {
+          // 拨打电话咨询
+          wx.makePhoneCall({
+            phoneNumber: '15900001111',
+            fail: () => {
+              wx.showToast({ title: '拨打电话失败', icon: 'none' });
+            }
+          });
+        }
+      }
+    });
   }, 
   
   onCallManager() { 

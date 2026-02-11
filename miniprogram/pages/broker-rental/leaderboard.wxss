@@ -13,7 +13,7 @@
 .title {
   font-size: 36rpx;
   font-weight: bold;
-  color: #d4af37;
+  color: #D4B083;
 }
 
 /* 榜单类型切换 */
@@ -34,7 +34,7 @@
 }
 
 .tab-item.active {
-  background-color: #d4af37;
+  background-color: #D4B083;
 }
 
 .tab-item.active text {
@@ -57,7 +57,7 @@
 
 .loading-text {
   font-size: 28rpx;
-  color: #d4af37;
+  color: #D4B083;
 }
 
 /* 榜单列表 */
@@ -96,7 +96,7 @@
 }
 
 .rank.top {
-  background-color: #d4af37;
+  background-color: #D4B083;
 }
 
 .rank-number {
@@ -122,7 +122,7 @@
   height: 80rpx;
   border-radius: 50%;
   margin-right: 16rpx;
-  border: 2rpx solid #d4af37;
+  border: 2rpx solid #D4B083;
 }
 
 .broker-details {
@@ -162,9 +162,19 @@
 }
 
 .performance-value {
-  font-size: 28rpx;
+  font-size: 32rpx;
   font-weight: bold;
-  color: #d4af37;
+  color: #D4B083;
+}
+
+.performance-value.amount {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.performance-item.main .performance-value {
+  font-size: 36rpx;
+  color: #D4B083;
 }
 
 /* 排名变化 */

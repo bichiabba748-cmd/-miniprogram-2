@@ -1,7 +1,7 @@
 <view class="container">
   <!-- 头部导航 -->
   <view class="header">
-    <text class="title">租赁经纪人龙虎榜</text>
+    <text class="title">本月签约榜</text>
   </view>
 
   <!-- 榜单类型切换 -->
@@ -46,19 +46,15 @@
         </view>
       </view>
 
-      <!-- 业绩数据 -->
+      <!-- 业绩数据：签约单数 + 签约总额 -->
       <view class="performance">
-        <view class="performance-item">
-          <text class="performance-label">获客</text>
-          <text class="performance-value">{{item.leads}}</text>
+        <view class="performance-item main">
+          <text class="performance-label">签约单数</text>
+          <text class="performance-value">{{item.contracts}}</text>
         </view>
         <view class="performance-item">
-          <text class="performance-label">带看</text>
-          <text class="performance-value">{{item.showings}}</text>
-        </view>
-        <view class="performance-item">
-          <text class="performance-label">成交</text>
-          <text class="performance-value">{{item.deals}}</text>
+          <text class="performance-label">签约总额</text>
+          <text class="performance-value amount">{{item.totalAmount}}</text>
         </view>
       </view>
 

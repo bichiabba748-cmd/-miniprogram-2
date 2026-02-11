@@ -118,7 +118,33 @@ Page({
   // 查看门店详情
   viewStoreDetail(e) {
     const storeId = e.currentTarget.dataset.id;
-    wx.showToast({ title: '详情功能开发中', icon: 'none' });
+    const store = this.data.stores.find(s => s._id === storeId);
+    
+    if (store) {
+      console.log('查看门店详情:', store);
+      
+      // 显示门店详情
+      wx.showModal({
+        title: '门店详情',
+        content: `门店名称：${store.name}\n门店编码：${store.code}\n详细地址：${store.address}\n负责人：${store.managerName}\n联系电话：${store.phone}\n门店状态：${store.status === 'active' ? '营业中' : '已停用'}\n创建时间：${store.createdAt ? store.createdAt.toLocaleString() : '未知'}`,
+        showCancel: true,
+        confirmText: '联系负责人',
+        cancelText: '关闭',
+        success: (res) => {
+          if (res.confirm) {
+            // 拨打电话
+            wx.makePhoneCall({
+              phoneNumber: store.phone,
+              fail: () => {
+                wx.showToast({ title: '拨打电话失败', icon: 'none' });
+              }
+            });
+          }
+        }
+      });
+    } else {
+      wx.showToast({ title: '门店信息不存在', icon: 'none' });
+    }
   },
 
   // 创建门店

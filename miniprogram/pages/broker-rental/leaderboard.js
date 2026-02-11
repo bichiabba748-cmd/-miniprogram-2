@@ -1,4 +1,9 @@
 // pages/broker-rental/leaderboard.js
+// 租赁经纪人签约排行榜
+
+const app = getApp();
+const cloud = require('../../utils/cloud.js');
+
 Page({
 
   /**
@@ -6,10 +11,10 @@ Page({
    */
   data: {
     // 模拟数据开关
-    useMockData: true,
+    useMockData: false,
     // 榜单类型：total(累计), month(月度)
-    leaderboardType: 'total',
-    // 模拟榜单数据
+    leaderboardType: 'month',
+    // 模拟榜单数据（签约单数 + 签约总额）
     mockLeaderboardData: {
       total: [
         {
@@ -17,9 +22,8 @@ Page({
           name: '王金牌',
           avatar: '../../images/icons/avatars/top1.png',
           store: '河西大悦城店',
-          leads: 158,
-          showings: 45,
-          deals: 12,
+          contracts: 158,
+          totalAmount: 285600,
           rankingChange: 0
         },
         {
@@ -27,9 +31,8 @@ Page({
           name: '李销冠',
           avatar: '../../images/icons/avatars/top2.png',
           store: '和平区店',
-          leads: 126,
-          showings: 38,
-          deals: 10,
+          contracts: 126,
+          totalAmount: 226800,
           rankingChange: 1
         },
         {
@@ -37,9 +40,8 @@ Page({
           name: '张三',
           avatar: '../../images/icons/avatars/top3.png',
           store: '南开店',
-          leads: 98,
-          showings: 32,
-          deals: 8,
+          contracts: 98,
+          totalAmount: 176400,
           rankingChange: -1
         },
         {
@@ -47,9 +49,8 @@ Page({
           name: '赵四',
           avatar: '../../images/icons/avatars/top4.png',
           store: '河西店',
-          leads: 85,
-          showings: 28,
-          deals: 7,
+          contracts: 85,
+          totalAmount: 153000,
           rankingChange: 0
         },
         {
@@ -57,9 +58,8 @@ Page({
           name: '钱五',
           avatar: '../../images/icons/avatars/top5.png',
           store: '河东店',
-          leads: 72,
-          showings: 25,
-          deals: 6,
+          contracts: 72,
+          totalAmount: 129600,
           rankingChange: 2
         }
       ],
@@ -69,9 +69,8 @@ Page({
           name: '李销冠',
           avatar: '../../images/icons/avatars/top1.png',
           store: '和平区店',
-          leads: 56,
-          showings: 18,
-          deals: 5,
+          contracts: 56,
+          totalAmount: 100800,
           rankingChange: 2
         },
         {
@@ -79,9 +78,8 @@ Page({
           name: '王金牌',
           avatar: '../../images/icons/avatars/top2.png',
           store: '河西大悦城店',
-          leads: 48,
-          showings: 15,
-          deals: 4,
+          contracts: 48,
+          totalAmount: 86400,
           rankingChange: -1
         },
         {
@@ -89,9 +87,8 @@ Page({
           name: '赵四',
           avatar: '../../images/icons/avatars/top3.png',
           store: '河西店',
-          leads: 36,
-          showings: 12,
-          deals: 3,
+          contracts: 36,
+          totalAmount: 64800,
           rankingChange: 1
         },
         {
@@ -99,9 +96,8 @@ Page({
           name: '张三',
           avatar: '../../images/icons/avatars/top4.png',
           store: '南开店',
-          leads: 32,
-          showings: 10,
-          deals: 2,
+          contracts: 32,
+          totalAmount: 57600,
           rankingChange: -1
         },
         {
@@ -109,9 +105,8 @@ Page({
           name: '孙六',
           avatar: '../../images/icons/avatars/top5.png',
           store: '北辰店',
-          leads: 28,
-          showings: 9,
-          deals: 2,
+          contracts: 28,
+          totalAmount: 50400,
           rankingChange: 0
         }
       ]
@@ -154,24 +149,71 @@ Page({
         });
       }, 500);
     } else {
-      // 真实数据加载（后续对接云函数）
+      // 真实数据加载（调用云函数）
       this.loadRealLeaderboardData();
     }
   },
 
   /**
-   * 加载真实榜单数据（后续实现）
+   * 加载真实榜单数据
    */
-  loadRealLeaderboardData() {
-    // 这里将对接云函数获取真实数据
-    // 暂时使用模拟数据作为兜底
-    setTimeout(() => {
+  async loadRealLeaderboardData() {
+    try {
+      const type = this.data.leaderboardType;
+      
+      // 调用云函数获取签约排行榜数据
+      const result = await cloud.call('getleaderboardv3', {
+        type: type === 'month' ? 'month' : 'all',
+        topN: 50,
+        businessType: 'rental'
+      }, {
+        loadingTitle: null
+      });
+
+      console.log('租赁排行榜数据：', result);
+
+      if (result && result.list) {
+        // 格式化数据
+        const formattedData = result.list.map((item, index) => ({
+          id: item._openid || index,
+          name: item.nickname || '未知用户',
+          avatar: item.avatar || '/images/avatar.png',
+          store: item.store || '',
+          contracts: item.contracts || 0,
+          totalAmount: item.totalAmount || (item.contracts || 0) * 1800, // 估算金额
+          rankingChange: 0 // 排名变化需要历史数据对比
+        }));
+
+        this.setData({
+          leaderboardData: formattedData,
+          loading: false
+        });
+      } else {
+        // 云函数返回数据格式不正确，使用模拟数据
+        console.warn('云函数返回数据格式不正确，使用模拟数据');
+        const data = this.data.mockLeaderboardData[this.data.leaderboardType];
+        this.setData({
+          leaderboardData: data,
+          loading: false,
+          useMockData: true
+        });
+      }
+    } catch (err) {
+      console.error('加载排行榜数据失败：', err);
+      // 使用模拟数据
       const data = this.data.mockLeaderboardData[this.data.leaderboardType];
       this.setData({
         leaderboardData: data,
-        loading: false
+        loading: false,
+        useMockData: true
       });
-    }, 1000);
+      
+      wx.showToast({
+        title: '使用测试数据',
+        icon: 'none',
+        duration: 2000
+      });
+    }
   },
 
   /**
@@ -179,34 +221,21 @@ Page({
    */
   switchLeaderboardType(e) {
     const type = e.currentTarget.dataset.type;
+    if (type === this.data.leaderboardType) return;
+
     this.setData({
-      leaderboardType: type
+      leaderboardType: type,
+      leaderboardData: []
+    }, () => {
+      this.loadLeaderboardData();
     });
-    this.loadLeaderboardData();
   },
 
   /**
-   * 页面相关事件处理函数--监听用户下拉动作
+   * 下拉刷新
    */
   onPullDownRefresh() {
     this.loadLeaderboardData();
     wx.stopPullDownRefresh();
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom() {
-    // 后续可实现分页加载
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-    return {
-      title: '租赁经纪人龙虎榜',
-      path: '/pages/broker-rental/leaderboard'
-    };
   }
-})
+});

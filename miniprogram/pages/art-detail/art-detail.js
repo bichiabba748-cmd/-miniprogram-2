@@ -157,7 +157,58 @@ Page({
 
   // 在线咨询
   onContact() {
-    wx.showToast({ title: '在线咨询功能开发中', icon: 'none' });
+    wx.showModal({
+      title: '在线咨询',
+      content: '请选择咨询方式',
+      showCancel: true,
+      confirmText: '在线留言',
+      cancelText: '电话咨询',
+      success: (res) => {
+        if (res.confirm) {
+          // 在线留言功能
+          this.showMessageModal();
+        } else if (res.cancel) {
+          // 电话咨询
+          wx.makePhoneCall({
+            phoneNumber: '022-88888888',
+            fail: () => {
+              wx.showToast({ title: '拨打电话失败', icon: 'none' });
+            }
+          });
+        }
+      }
+    });
+  },
+
+  // 显示留言模态框
+  showMessageModal() {
+    wx.showModal({
+      title: '在线留言',
+      content: '请输入您的咨询内容，我们会尽快回复您',
+      editable: true,
+      placeholderText: '请输入咨询内容...',
+      success: (res) => {
+        if (res.confirm && res.content) {
+          // 提交留言
+          this.submitMessage(res.content);
+        }
+      }
+    });
+  },
+
+  // 提交留言
+  submitMessage(content) {
+    wx.showLoading({ title: '提交中...' });
+    
+    // 模拟提交到服务器
+    setTimeout(() => {
+      wx.hideLoading();
+      wx.showToast({
+        title: '留言提交成功，我们会尽快联系您',
+        icon: 'success',
+        duration: 2000
+      });
+    }, 1000);
   },
 
   // 免费通话

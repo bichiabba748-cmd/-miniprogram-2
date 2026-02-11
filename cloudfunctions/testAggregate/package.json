@@ -1,7 +1,7 @@
 {
-  "name": "init_articles",
+  "name": "testAggregate",
   "version": "1.0.0",
-  "description": "初始化文案数据",
+  "description": "测试聚合查询",
   "main": "index.js",
   "engines": {
     "node": "16.13"

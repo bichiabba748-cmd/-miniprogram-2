@@ -39,9 +39,63 @@ page { background: #000; color: #fff; }
 .r-val { font-size: 28rpx; font-weight: bold; color: #eee; display: block; }
 .r-link { font-size: 22rpx; color: #D4B083; margin-top: 6rpx; text-decoration: underline; }
 
-/* 加载状态 */
-.loading-state { text-align: center; padding: 40rpx 0; }
-.loading-text { font-size: 24rpx; color: #666; }
+/* 全局加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 40rpx;
+}
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #333;
+  border-top-color: #D4B083;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.loading-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-top: 30rpx;
+}
+
+/* 错误状态 */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 40rpx;
+}
+.error-icon {
+  font-size: 80rpx;
+  margin-bottom: 30rpx;
+}
+.error-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+.error-detail {
+  font-size: 24rpx;
+  color: #444;
+  text-align: center;
+  margin-bottom: 40rpx;
+  padding: 0 40rpx;
+}
+.retry-btn {
+  background: #D4B083;
+  color: #000;
+  font-size: 28rpx;
+  padding: 20rpx 60rpx;
+  border-radius: 40rpx;
+  font-weight: bold;
+}
 
 /* 加载更多 */
 .load-more { text-align: center; padding: 30rpx 0; }

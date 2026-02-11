@@ -9,172 +9,256 @@ Page({
     top3: [],
     others: [],
     userRole: 'visitor',
+    businessType: 'anchor', // 业务类型：anchor/rental/trading/new_house
     canViewFull: false,
+    // 排行榜标题
+    rankTitle: '本月主播获客榜',
+    // 数据字段名（用于显示）
+    countField: 'leads',
+    countLabel: '获客',
     // 分页加载相关
     page: 1,
     pageSize: 10,
     hasMore: true,
-    isLoading: false,
-    isRefreshing: false,
+    // 标准三态加载状态
+    loading: true,      // 加载中状态
+    errorMsg: '',       // 错误信息
     // 空数据提示
-    showEmpty: false,
-    // 是否使用模拟数据
-    useMockData: false
+    showEmpty: false
   },
 
-  // 模拟数据 - 云函数未部署时使用
-  mockData: [
-    { id: 1, name: '王金牌', leads: 158, scripts: 12, store: '河西店', avatar: '/images/avatar.png', rank: 1 },
-    { id: 2, name: '陈店长', leads: 120, scripts: 8, store: '南开店', avatar: '/images/avatar.png', rank: 2 },
-    { id: 3, name: '李销冠', leads: 98, scripts: 15, store: '和平店', avatar: '/images/avatar.png', rank: 3 },
-    { id: 4, name: '张主播', leads: 85, scripts: 10, store: '河东店', avatar: '/images/avatar.png', rank: 4 },
-    { id: 5, name: '刘经纪', leads: 72, scripts: 6, store: '红桥店', avatar: '/images/avatar.png', rank: 5 },
-    { id: 6, name: '赵达人', leads: 65, scripts: 9, store: '滨海店', avatar: '/images/avatar.png', rank: 6 },
-    { id: 7, name: '孙经理', leads: 58, scripts: 7, store: '西青店', avatar: '/images/avatar.png', rank: 7 },
-    { id: 8, name: '周顾问', leads: 45, scripts: 5, store: '北辰店', avatar: '/images/avatar.png', rank: 8 },
-    { id: 9, name: '吴专员', leads: 38, scripts: 4, store: '津南店', avatar: '/images/avatar.png', rank: 9 },
-    { id: 10, name: '郑助理', leads: 32, scripts: 3, store: '武清店', avatar: '/images/avatar.png', rank: 10 }
-  ],
-
   onLoad() {
+    console.log('[调试] onLoad触发', Date.now());
     this.setData({ isNewAnchor: app.globalData.isNewAnchor });
-    this.updateUserRole();
-    this.loadRankData();
+    this.updateUserInfo();
+    console.log('[调试] onLoad调用loadRankData');
+    // 延迟100ms执行，避免与onShow竞态
+    setTimeout(() => {
+      this.loadRankData();
+    }, 100);
   },
 
   onShow() {
-    this.updateUserRole();
+    console.log('[调试] onShow触发', Date.now());
+    this.updateUserInfo();
+    // onShow不触发加载，避免与onLoad竞态
   },
 
-  updateUserRole() {
+  updateUserInfo() {
     const role = RoleManager.getCurrentRole();
+    const businessType = RoleManager.getBusinessType() || 'anchor';
     const canViewFull = ['anchor', 'broker', 'admin'].includes(role);
+    
+    // 根据角色和业务类型设置标题和字段
+    const { rankTitle, countField, countLabel } = this.getRankConfig(role, businessType);
+    
     this.setData({
       userRole: role,
-      canViewFull: canViewFull
+      businessType: businessType,
+      canViewFull: canViewFull,
+      rankTitle: rankTitle,
+      countField: countField,
+      countLabel: countLabel
     });
   },
 
-  // 加载排行榜数据
-  loadRankData(refresh = false) {
-    if (this.data.isLoading) return;
+  // 获取排行榜配置
+  getRankConfig(role, businessType) {
+    // 租赁经纪人
+    if (role === 'broker' && businessType === 'rental') {
+      return {
+        rankTitle: '本月签约榜',
+        countField: 'contracts',
+        countLabel: '签约'
+      };
+    }
+    
+    // 买卖经纪人
+    if (role === 'broker' && businessType === 'trading') {
+      return {
+        rankTitle: '本月带看榜',
+        countField: 'showings',
+        countLabel: '带看'
+      };
+    }
+    
+    // 新房经纪人
+    if (role === 'broker' && businessType === 'new_house') {
+      return {
+        rankTitle: '本月带看榜',
+        countField: 'showings',
+        countLabel: '带看'
+      };
+    }
+    
+    // 默认（主播）
+    return {
+      rankTitle: '本月主播获客榜',
+      countField: 'leads',
+      countLabel: '获客'
+    };
+  },
+
+  // 加载排行榜数据 - 标准三态：loading / success / empty / fail
+  async loadRankData(refresh = false) {
+    console.log('[调试] loadRankData函数开始执行', Date.now(), 'refresh:', refresh);
+    
+    // 防止重复加载 - 使用实例变量作为锁
+    if (this._isLoadingData && !refresh) {
+      console.log('[调试] 正在加载中（锁），跳过重复调用');
+      return;
+    }
+    
+    // 设置加载锁
+    this._isLoadingData = true;
 
     const page = refresh ? 1 : this.data.page;
     const type = this.data.activeTab;
+    const businessType = this.data.businessType;
 
+    console.log('[调试] 开始加载排行榜数据，类型：', type, '业务类型：', businessType, '页码：', page);
+
+    // 设置加载状态 - 关闭所有可能的loading变量
     this.setData({
+      loading: true,
       isLoading: true,
-      isRefreshing: refresh
+      isRefreshing: refresh,
+      errorMsg: '',
+      showEmpty: false
     });
 
-    console.log('开始加载排行榜数据，类型：', type, '页码：', page);
+    let errorMsg = '';
+    let top3 = [];
+    let others = [];
+    let showEmpty = false;
+    let hasMore = false;
+    let newPage = page;
+    let returnedBusinessType = businessType;
 
-    // 如果已经确定使用模拟数据，直接加载
-    if (this.data.useMockData) {
-      this.loadMockData(page);
-      return;
-    }
+    try {
+      // 调用云函数获取真实数据 - 添加10秒超时
+      const cloudCallPromise = cloud.call('getleaderboardv3', {
+        type: type,
+        topN: page * this.data.pageSize,
+        businessType: businessType
+      }, {
+        showLoading: false
+      });
+      
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('请求超时，请检查网络')), 10000);
+      });
+      
+      console.log('[调试] 发起云函数调用，等待响应...');
+      const res = await Promise.race([cloudCallPromise, timeoutPromise]);
+      console.log('[调试] 云函数响应成功');
 
-    // 调用云函数获取真实数据
-    cloud.call('getleaderboardv3', {
-      type: type,
-      topN: page * this.data.pageSize
-    }, {
-      loadingTitle: refresh ? null : '加载中...'
-    })
-    .then(res => {
-      console.log('排行榜数据获取成功：', res);
+      console.log('[调试] 排行榜原始返回：', JSON.stringify(res, null, 2));
 
-      if (res && res.code === 0) {
-        const data = res.data;
-        const list = data.list || [];
-
-        // 处理数据格式
-        const formattedList = list.map((item, index) => ({
-          id: item._openid || index,
-          name: item.nickname || '未知用户',
-          leads: item.leads || 0,
-          scripts: item.scripts || 0,
-          store: item.store || '',
-          avatar: item.avatar || '/images/avatar.png',
-          rank: item.rank || (index + 1),
-          isMe: item._openid === app.globalData.openid
-        }));
-
-        // 分离top3和其他
-        const top3 = formattedList.slice(0, 3);
-        const others = formattedList.slice(3);
-
-        // 添加当前用户数据（如果不在列表中）
-        let finalOthers = others;
-        if (data.myRank && !formattedList.some(item => item.isMe)) {
-          const myData = {
-            id: 'me',
-            name: '我',
-            leads: data.myRank.leads || 0,
-            scripts: 0,
-            store: '',
-            avatar: '/images/avatar.png',
-            rank: data.myRank.rank || 0,
-            isMe: true
-          };
-          finalOthers = [...others, myData];
-        }
-
-        this.setData({
-          top3: top3,
-          others: this.data.canViewFull ? finalOthers : [],
-          page: page + 1,
-          hasMore: list.length >= page * this.data.pageSize,
-          showEmpty: list.length === 0,
-          isLoading: false,
-          isRefreshing: false,
-          useMockData: false
-        });
+      // 解析数据结构 - 支持多种可能格式
+      let resultData = null;
+      if (res && res.list && Array.isArray(res.list)) {
+        // 格式A: {list: [], myRank: {}, businessType: ''}
+        resultData = res;
+        console.log('[调试] 识别为格式A：直接包含list');
+      } else if (res && res.data && res.data.list && Array.isArray(res.data.list)) {
+        // 格式B: {code: 0, data: {list: [], myRank: {}, businessType: ''}}
+        resultData = res.data;
+        console.log('[调试] 识别为格式B：嵌套在data中');
+      } else if (res && res.result && res.result.list && Array.isArray(res.result.list)) {
+        // 格式C: {result: {list: [], myRank: {}, businessType: ''}}
+        resultData = res.result;
+        console.log('[调试] 识别为格式C：嵌套在result中');
       } else {
-        console.error('云函数返回错误：', res.message);
-        // 云函数返回错误，使用模拟数据
-        this.setData({ useMockData: true });
-        this.loadMockData(page);
+        console.error('[调试] 无法识别的数据结构：', res);
+        throw new Error('数据格式错误：无法找到list字段');
       }
-    })
-    .catch(err => {
-      console.error('加载排行榜数据失败，切换到模拟数据：', err);
-      // 云函数调用失败，使用模拟数据
-      this.setData({ useMockData: true });
-      this.loadMockData(page);
-    });
-  },
 
-  // 加载模拟数据
-  loadMockData(page) {
-    console.log('使用模拟数据，页码：', page);
+      console.log('[调试] 解析后的数据：', resultData);
 
-    const allData = this.mockData;
-    const start = 0;
-    const end = page * this.data.pageSize;
-    const list = allData.slice(start, end);
+      // 安全获取数据
+      const list = Array.isArray(resultData.list) ? resultData.list : [];
+      returnedBusinessType = resultData.businessType || businessType;
+      const myRank = resultData.myRank || null;
 
-    // 分离top3和其他
-    const top3 = list.slice(0, 3);
-    const others = list.slice(3);
+      console.log('[调试] list长度：', list.length, 'myRank：', myRank);
 
-    this.setData({
-      top3: top3,
-      others: this.data.canViewFull ? others : [],
-      page: page + 1,
-      hasMore: end < allData.length,
-      showEmpty: list.length === 0,
-      isLoading: false,
-      isRefreshing: false
-    });
+      // 处理数据格式
+      const formattedList = list.map((item, index) => ({
+        id: item._openid || item.id || index,
+        name: item.nickname || item.name || '未知用户',
+        leads: item.leads || 0,
+        contracts: item.contracts || 0,
+        showings: item.showings || 0,
+        scripts: item.scripts || 0,
+        store: item.store || '',
+        avatar: item.avatar || item.avatarUrl || '/images/avatar.png',
+        rank: item.rank || (index + 1),
+        isMe: item._openid === app.globalData.openid
+      }));
 
-    // 显示提示
-    if (page === 1) {
+      // 分离top3和其他
+      top3 = formattedList.slice(0, 3);
+      const remaining = formattedList.slice(3);
+
+      // 添加当前用户数据（如果不在列表中且myRank存在）
+      let finalOthers = remaining;
+      if (myRank && !formattedList.some(item => item.isMe)) {
+        const myData = {
+          id: 'me',
+          name: '我',
+          leads: myRank.leads || 0,
+          contracts: myRank.contracts || 0,
+          showings: myRank.showings || 0,
+          scripts: 0,
+          store: '',
+          avatar: '/images/avatar.png',
+          rank: myRank.rank || 0,
+          isMe: true
+        };
+        finalOthers = [...remaining, myData];
+      }
+
+      others = this.data.canViewFull ? finalOthers : [];
+      showEmpty = formattedList.length === 0;
+      hasMore = list.length >= page * this.data.pageSize && !showEmpty;
+      newPage = page + 1;
+
+      console.log('[调试] 处理完成 - top3:', top3.length, 'others:', others.length, 'showEmpty:', showEmpty);
+
+    } catch (err) {
+      console.error('[调试] 加载失败：', err);
+      errorMsg = err.message || '加载失败，请稍后重试';
+      top3 = [];
+      others = [];
+      showEmpty = false;
+      hasMore = false;
+
       wx.showToast({
-        title: '使用测试数据',
+        title: '加载失败：' + errorMsg,
         icon: 'none',
-        duration: 2000
+        duration: 3000
+      });
+    } finally {
+      // 无论成功失败，都关闭loading并更新数据
+      console.log('[调试] finally已执行，关闭所有loading状态');
+      
+      // 释放加载锁
+      this._isLoadingData = false;
+      
+      this.setData({
+        top3: top3,
+        others: others,
+        page: newPage,
+        hasMore: hasMore,
+        showEmpty: showEmpty,
+        loading: false,
+        isLoading: false,
+        isRefreshing: false,
+        errorMsg: errorMsg,
+        businessType: returnedBusinessType
+      }, () => {
+        console.log('[调试] setData回调完成，当前loading状态：', this.data.loading);
       });
     }
   },
@@ -182,17 +266,25 @@ Page({
   // 下拉刷新
   onPullDownRefresh() {
     console.log('触发下拉刷新');
-    this.setData({ page: 1, hasMore: true });
-    this.loadRankData(true);
-    wx.stopPullDownRefresh();
+    this.setData({ page: 1, hasMore: true, errorMsg: '' });
+    this.loadRankData(true).then(() => {
+      wx.stopPullDownRefresh();
+    });
   },
 
   // 上拉加载更多
   onReachBottom() {
     console.log('触发上拉加载');
-    if (this.data.hasMore && !this.data.isLoading) {
+    if (this.data.hasMore && !this.data.loading && !this.data.errorMsg) {
       this.loadRankData();
     }
+  },
+
+  // 重试加载
+  retryLoad() {
+    console.log('用户点击重试');
+    this.setData({ page: 1, hasMore: true, errorMsg: '' });
+    this.loadRankData(true);
   },
 
   // 切换标签

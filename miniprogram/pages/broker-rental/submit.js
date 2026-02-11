@@ -45,7 +45,7 @@ Page({
       brokerOpenId: getApp().globalData.openid
     }, {
       loadingTitle: '提交中...'
-    }).then(res => {
+    }).then(data => {
       wx.showToast({ title: '报单成功', icon: 'success' });
       setTimeout(() => {
         wx.navigateTo({ url: '/pages/broker-rental/contracts' });

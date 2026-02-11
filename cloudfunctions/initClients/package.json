@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "初始化客户测试数据",
   "main": "index.js",
+  "engines": {
+    "node": "16.13"
+  },
   "dependencies": {
     "wx-server-sdk": "~2.6.3"
   }
