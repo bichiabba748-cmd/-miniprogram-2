@@ -533,10 +533,8 @@ Page({
   },
 
   openTax() {
-    wx.showModal({
-      title: '税费计算',
-      content: '📝 税费计算功能\n\n- 契税计算\n- 增值税计算\n- 个人所得税计算\n- 过户费用估算\n\n功能开发中，敬请期待！',
-      showCancel: false
+    wx.navigateTo({
+      url: '/pages/tools/tax/tax'
     });
   },
 

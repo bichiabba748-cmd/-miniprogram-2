@@ -1,0 +1,246 @@
+<!-- 税费计算器 - 黑金主题 -->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <text class="title">税费计算器</text>
+    <view class="placeholder"></view>
+  </view>
+
+  <!-- 基础数据输入区 -->
+  <frost-card class="input-section">
+    <view class="section-title">基础数据</view>
+    
+    <view class="input-item">
+      <text class="input-label">房屋总价 (万)</text>
+      <input 
+        class="input-field" 
+        type="digit" 
+        placeholder="请输入房屋总价"
+        value="{{totalPrice}}"
+        bindinput="onTotalPriceInput"
+      />
+    </view>
+    
+    <view class="input-item">
+      <text class="input-label">房屋面积 (㎡)</text>
+      <input 
+        class="input-field" 
+        type="digit" 
+        placeholder="请输入房屋面积"
+        value="{{area}}"
+        bindinput="onAreaInput"
+      />
+    </view>
+    
+    <view class="input-item">
+      <text class="input-label">原购价格 (万)</text>
+      <input 
+        class="input-field" 
+        type="digit" 
+        placeholder="可选，用于差额征收个税"
+        value="{{originalPrice}}"
+        bindinput="onOriginalPriceInput"
+      />
+    </view>
+  </frost-card>
+
+  <!-- 关键属性选择区 -->
+  <frost-card class="options-section">
+    <view class="section-title">关键属性</view>
+    
+    <!-- 买方状态 -->
+    <view class="option-group">
+      <text class="option-label">买方状态</text>
+      <view class="option-list">
+        <view 
+          wx:for="{{homeCountOptions}}" 
+          wx:key="value"
+          class="option-item {{homeCount === item.value ? 'active' : ''}}"
+          data-value="{{item.value}}"
+          bindtap="onHomeCountChange"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+    
+    <!-- 卖方年限 -->
+    <view class="option-group">
+      <text class="option-label">卖方年限</text>
+      <view class="option-list">
+        <view 
+          wx:for="{{yearsOptions}}" 
+          wx:key="value"
+          class="option-item {{years === item.value ? 'active' : ''}}"
+          data-value="{{item.value}}"
+          bindtap="onYearsChange"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+    
+    <!-- 是否唯一住房 -->
+    <view class="option-group">
+      <text class="option-label">卖方唯一住房</text>
+      <view class="option-list">
+        <view 
+          wx:for="{{onlyHomeOptions}}" 
+          wx:key="value"
+          class="option-item {{isOnlyHome === item.value ? 'active' : ''}}"
+          data-value="{{item.value}}"
+          bindtap="onOnlyHomeChange"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+    
+    <!-- 土地性质 -->
+    <view class="option-group">
+      <text class="option-label">土地性质</text>
+      <view class="option-list">
+        <view 
+          wx:for="{{landTypeOptions}}" 
+          wx:key="value"
+          class="option-item {{landType === item.value ? 'active' : ''}}"
+          data-value="{{item.value}}"
+          bindtap="onLandTypeChange"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+  </frost-card>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <gold-button
+      text="{{loading ? '计算中...' : '立即计算'}}"
+      type="primary"
+      size="large"
+      disabled="{{loading || !totalPrice || !area}}"
+      bindtap="calculateTax"
+    />
+    <view class="reset-btn" bindtap="reset">
+      <text class="reset-text">重置</text>
+    </view>
+  </view>
+
+  <!-- 计算结果 -->
+  <block wx:if="{{result}}">
+    <frost-card class="result-section">
+      <view class="section-title">费用清单</view>
+      
+      <!-- 契税 -->
+      <view class="result-item">
+        <view class="result-header">
+          <view class="result-name-wrap">
+            <text class="result-name">契税</text>
+            <text class="info-icon" data-type="deedTax" bindtap="showTaxInfo">ⓘ</text>
+          </view>
+          <text class="result-value">{{result.deedTax}} 万</text>
+        </view>
+        <view class="result-detail">
+          <text class="result-rate">税率 {{result.deedTaxRate}}%</text>
+          <block wx:if="{{result.hasDeedTaxBonus}}">
+            <view class="bonus-tag">
+              <text class="bonus-icon">💡</text>
+              <text class="bonus-text">新政红利：原税率3%，立省 {{result.deedTaxSaved}} 万！</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      
+      <!-- 增值税 -->
+      <view class="result-item">
+        <view class="result-header">
+          <view class="result-name-wrap">
+            <text class="result-name">增值税</text>
+            <text class="info-icon" data-type="vat" bindtap="showTaxInfo">ⓘ</text>
+          </view>
+          <text class="result-value {{result.vatExempt ? 'exempt' : ''}}">{{result.vat}} 万</text>
+        </view>
+        <view class="result-detail">
+          <block wx:if="{{result.vatExempt}}">
+            <view class="bonus-tag">
+              <text class="bonus-icon">💡</text>
+              <text class="bonus-text">新政红利：满2年免征，取消普宅限制！</text>
+            </view>
+          </block>
+          <block wx:else>
+            <text class="result-rate">不满2年，全额征收5%</text>
+          </block>
+        </view>
+      </view>
+      
+      <!-- 个税 -->
+      <view class="result-item">
+        <view class="result-header">
+          <view class="result-name-wrap">
+            <text class="result-name">个人所得税</text>
+            <text class="info-icon" data-type="personalTax" bindtap="showTaxInfo">ⓘ</text>
+          </view>
+          <text class="result-value {{result.personalTaxExempt ? 'exempt' : ''}}">{{result.personalTax}} 万</text>
+        </view>
+        <view class="result-detail">
+          <block wx:if="{{result.personalTaxExempt}}">
+            <text class="exempt-text">满五唯一，免征</text>
+          </block>
+          <block wx:else>
+            <view class="tax-method">
+              <text class="method-text">{{result.personalTaxMethod}}</text>
+              <text class="method-toggle" bindtap="togglePersonalTaxMethod">
+                [切换{{useLevyMethod ? '差额征收' : '核定征收'}}]
+              </text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 土地出让金 -->
+      <view class="result-item">
+        <view class="result-header">
+          <view class="result-name-wrap">
+            <text class="result-name">土地出让金</text>
+            <text class="info-icon" data-type="landTransferFee" bindtap="showTaxInfo">ⓘ</text>
+          </view>
+          <text class="result-value {{result.landTransferFeeExempt ? 'exempt' : ''}}">{{result.landTransferFee}} 万</text>
+        </view>
+        <view class="result-detail">
+          <block wx:if="{{result.landTransferFeeExempt}}">
+            <text class="exempt-text">出让土地，免征</text>
+          </block>
+          <block wx:else>
+            <text class="result-rate">{{result.landType === '划拨' ? '划拨土地，按1%征收' : '附记需补交，按1%征收'}}</text>
+          </block>
+        </view>
+      </view>
+
+      <!-- 分隔线 -->
+      <view class="divider"></view>
+      
+      <!-- 合计 -->
+      <view class="total-section">
+        <text class="total-label">税费合计</text>
+        <text class="total-value">{{result.totalTax}} 万</text>
+      </view>
+    </frost-card>
+  </block>
+
+  <!-- 空状态引导 -->
+  <block wx:if="{{!result && !loading}}">
+    <empty-state 
+      title="请输入房屋信息" 
+      description="填写上方表单后，点击按钮开始计算交易税费"
+    />
+  </block>
+
+  <!-- 错误提示 -->
+  <view wx:if="{{error}}" class="error-toast">
+    <text class="error-text">{{error}}</text>
+  </view>
+</view>

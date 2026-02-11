@@ -33,6 +33,7 @@
     "pages/crm/client-detail",
     "pages/tools/daily/daily",
     "pages/tools/calculator/calculator",
+    "pages/tools/tax/tax",
     "pages/tenant/tenant",
     "pages/tenant/contract",
     "pages/tenant/property",

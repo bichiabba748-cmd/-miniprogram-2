@@ -1,5 +1,5 @@
 /* 黑金设计风格 */
-/* 背景黑 (#0a0a0a), 文字白, 按钮金 (#d4af37) */
+/* 背景黑 (#0a0a0a), 文字白, 按钮金 (#D4B083) */
 
 /* 基础样式 */
 page {
@@ -24,7 +24,7 @@ page {
 }
 
 .loading-text {
-  color: #d4af37;
+  color: #D4B083;
   font-size: 32rpx;
 }
 
@@ -103,7 +103,7 @@ page {
 
 .mask-title {
   font-size: 48rpx;
-  color: #d4af37;
+  color: #D4B083;
   margin-bottom: 20rpx;
   font-weight: bold;
 }
@@ -116,7 +116,7 @@ page {
 }
 
 .mask-btn {
-  background-color: #d4af37;
+  background-color: #D4B083;
   color: #0a0a0a;
   font-size: 32rpx;
   padding: 20rpx 60rpx;
@@ -130,7 +130,7 @@ page {
   bottom: 40rpx;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #d4af37;
+  background-color: #D4B083;
   color: #0a0a0a;
   font-size: 32rpx;
   padding: 20rpx 60rpx;
@@ -187,7 +187,7 @@ page {
 }
 
 .tab-item.active {
-  color: #d4af37;
+  color: #D4B083;
 }
 
 .tab-item.active::after {
@@ -198,7 +198,7 @@ page {
   transform: translateX(-50%);
   width: 80rpx;
   height: 4rpx;
-  background-color: #d4af37;
+  background-color: #D4B083;
 }
 
 /* Tab内容 */
@@ -254,7 +254,7 @@ page {
 
 .catalog-duration {
   font-size: 28rpx;
-  color: #d4af37;
+  color: #D4B083;
 }
 
 /* 讨论内容 */
@@ -296,7 +296,7 @@ page {
 .article-card:hover,
 .article-card.card-hover {
   background-color: #1a1a1a;
-  border-color: #d4af37;
+  border-color: #D4B083;
   transform: scale(0.98);
 }
 
@@ -307,7 +307,7 @@ page {
 
 .card-title {
   font-size: 32rpx;
-  color: #d4af37;
+  color: #D4B083;
   margin-bottom: 10rpx;
   display: block;
 }
@@ -333,14 +333,14 @@ page {
 
 .card-link {
   font-size: 32rpx;
-  color: #d4af37;
+  color: #D4B083;
   margin-bottom: 10rpx;
 }
 
 .card-arrow {
   font-size: 36rpx;
   font-weight: bold;
-  color: #d4af37;
+  color: #D4B083;
   line-height: 1;
 }
 
@@ -379,7 +379,7 @@ page {
 }
 
 .bar-item:hover .bar-text {
-  color: #d4af37;
+  color: #D4B083;
 }
 
 /* 图标组件 */
@@ -397,8 +397,4 @@ page {
 
 .icon-link::before {
   content: '🔗';
-}
-
-.icon-chat::before {
-  content: '💬';
 }
