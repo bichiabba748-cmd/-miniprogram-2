@@ -1,0 +1,99 @@
+<view class="script-container">
+  <view class="category-tabs">
+    <scroll-view scroll-x class="tabs-scroll" enable-flex>
+      <view 
+        class="tab-item {{item.key === currentCategory ? 'active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="key"
+        data-category="{{item.key}}"
+        bindtap="onCategoryChange"
+      >
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="script-list">
+    <view 
+      class="script-card"
+      wx:for="{{scriptList}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onScriptTap"
+    >
+      <view class="card-header">
+        <text class="card-title">{{item.title}}</text>
+        <text class="card-duration">{{item.durationMin}}分钟</text>
+      </view>
+      <view class="card-scene">{{item.scene}}</view>
+      <view class="card-tags">
+        <text class="tag" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{scriptList.length === 0}}">
+      <text class="empty-text">暂无脚本</text>
+      <text class="empty-hint">该分类下暂无脚本模板</text>
+    </view>
+  </view>
+</view>
+
+<view class="detail-mask" wx:if="{{showDetail}}" bindtap="onCloseDetail">
+  <view class="detail-content" catchtap>
+    <view class="detail-header">
+      <text class="detail-title">{{currentScript.title}}</text>
+      <text class="detail-close" bindtap="onCloseDetail">✕</text>
+    </view>
+    
+    <view class="detail-scene">
+      <text class="scene-label">适用场景：</text>
+      <text class="scene-text">{{currentScript.scene}}</text>
+    </view>
+
+    <view class="detail-section">
+      <view class="section-title">开场</view>
+      <view class="section-content">{{currentScript.content.opening}}</view>
+    </view>
+
+    <view class="detail-section">
+      <view class="section-title">痛点</view>
+      <view class="section-content">
+        <view class="list-item" wx:for="{{currentScript.content.painPoints}}" wx:key="*this">
+          • {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <view class="section-title">价值点</view>
+      <view class="section-content">
+        <view class="list-item" wx:for="{{currentScript.content.valuePoints}}" wx:key="*this">
+          • {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <view class="section-title">互动引导</view>
+      <view class="section-content">
+        <view class="list-item" wx:for="{{currentScript.content.interaction}}" wx:key="*this">
+          • {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="detail-section">
+      <view class="section-title">收尾</view>
+      <view class="section-content">{{currentScript.content.cta}}</view>
+    </view>
+
+    <view class="detail-notes" wx:if="{{currentScript.content.notes}}">
+      <text class="notes-label">主播提示：</text>
+      <text class="notes-text">{{currentScript.content.notes}}</text>
+    </view>
+
+    <view class="detail-actions">
+      <button class="copy-button" bindtap="onCopyScript">复制脚本</button>
+    </view>
+  </view>
+</view>

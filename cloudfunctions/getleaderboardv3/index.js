@@ -270,7 +270,7 @@ async function getTradingLeaderboard(timeCondition, topN, openid) {
       
       if (myCount > 0) {
         const higherRankUsers = await db.collection('reports')
-          .where(queryCondition)
+          .where(matchCondition)
           .aggregate()
           .group({
             _id: '$reporterId',

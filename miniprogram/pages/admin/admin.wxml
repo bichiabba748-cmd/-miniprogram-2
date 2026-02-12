@@ -192,6 +192,10 @@
       <view class="mgi-icon icon-graduation"></view>
       <text class="mgi-name">课程管理</text>
     </view>
+    <view class="mg-item" bindtap="manageScript">
+      <view class="mgi-icon icon-script"></view>
+      <text class="mgi-name">脚本管理</text>
+    </view>
     <view class="mg-item" bindtap="manageAssign">
       <view class="mgi-icon icon-hand"></view>
       <text class="mgi-name">线索指派</text>
@@ -203,10 +207,6 @@
     <view class="mg-item" bindtap="manageSettings">
       <view class="mgi-icon icon-settings"></view>
       <text class="mgi-name">设置</text>
-    </view>
-    <view class="mg-item disabled">
-      <view class="mgi-icon icon-lock"></view>
-      <text class="mgi-name">敬请期待</text>
     </view>
   </view>
 

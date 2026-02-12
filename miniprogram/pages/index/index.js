@@ -9,11 +9,11 @@ const _ = db.command;
 const ANCHOR_TOOLS = [
   { name: '星火日签', icon: '📅', action: 'openMarketing' },
   { name: '直播脚本', icon: '📜', action: 'openScript' },
+  { name: '直播排期', icon: '🗓️', action: 'openSchedule' },
   { name: '购房资料', icon: '📂', action: 'openResource' },
   { name: '待拍文案', icon: '📝', action: 'openPendingArt' },
   { name: '学区查询', icon: '🏫', action: 'openSchool' },
   { name: '账号诊断', icon: '🩺', action: 'checkAccount' },
-  { name: '线索管理', icon: '🔍', action: 'crm_client' },
   { name: '邀请入队', icon: '🤝', action: 'inviteMember' }
 ];
 
@@ -502,11 +502,7 @@ Page({
 
   // 主播功能实现
   openScript() {
-    wx.showModal({
-      title: '直播脚本',
-      content: '📜 直播脚本功能\n\n- 每日热点脚本更新\n- 学区房专题脚本\n- 新房推荐脚本\n- 避坑指南脚本\n\n功能开发中，敬请期待！',
-      showCancel: false
-    });
+    wx.navigateTo({ url: '/pages/tools/script/script' });
   },
 
   openSchool() {
@@ -539,10 +535,6 @@ Page({
   },
 
   openSchedule() {
-    wx.showModal({
-      title: '直播排期',
-      content: '🗓️ 直播排期功能\n\n- 每周直播计划\n- 热点话题排期\n- 嘉宾邀请管理\n- 直播效果追踪\n\n功能开发中，敬请期待！',
-      showCancel: false
-    });
+    wx.navigateTo({ url: '/pages/tools/schedule/schedule' });
   }
 })

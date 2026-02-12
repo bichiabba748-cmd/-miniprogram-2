@@ -380,6 +380,8 @@
 
 ✅ **user_collections** - 用户收藏表
 
+✅ **script_templates** - 直播脚本模板表
+
 ---
 
 ## I. 租赁合同表 (contracts)
@@ -461,6 +463,52 @@
 - `articleTitle`：文章标题（冗余存储，提高查询效率）
 - `articleCategory`：文章分类（冗余存储，提高查询效率）
 - `shootingAt`：加入待拍摄的时间（用于统计待拍摄时长）
+
+---
+
+## M. 直播脚本模板表 (script_templates)
+
+```json
+{
+  "_id": "auto-generated",
+  "id": "number (业务ID，用于排序)",
+  "title": "string (脚本标题)",
+  "category": "daily_hot | school_zone | listing_intro | deal_story | avoid_pit",
+  "scene": "string (适用场景描述)",
+  "tags": ["string (标签数组)"],
+  "durationMin": "number (时长分钟)",
+  "content": {
+    "opening": "string (开场白)",
+    "painPoints": ["string (痛点数组)"],
+    "valuePoints": ["string (价值点数组)"],
+    "interaction": ["string (互动引导数组)"],
+    "cta": "string (收尾行动号召)",
+    "notes": "string (主播提示, 可选)"
+  },
+  "status": "draft | published | archived",
+  "sort": "number (排序权重，越大越靠前)",
+  "version": "string (版本号)",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
+}
+```
+
+**关键字段说明**：
+
+- `category`：脚本分类
+    - `daily_hot`: 每日热点
+    - `school_zone`: 学区房专题
+    - `listing_intro`: 房源讲解
+    - `deal_story`: 成交故事
+    - `avoid_pit`: 避坑科普
+- `status`：发布状态
+    - `draft`: 草稿（仅admin可见）
+    - `published`: 已发布（前端可见）
+    - `archived`: 已归档（不显示）
+- `sort`：排序权重，用于置顶和排序
+- `content`：脚本内容结构，按PRD定义
+
+---
 
 ## 索引设计
 
