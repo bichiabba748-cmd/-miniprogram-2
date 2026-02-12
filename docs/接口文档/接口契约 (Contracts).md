@@ -1213,6 +1213,100 @@
 
 ---
 
+### 31. getScriptTemplates (获取脚本模板列表)
+
+**调用方**：pages/tools/script (直播脚本库)
+
+```jsx
+// Request
+{
+  "category": "daily_hot | school_zone | listing_intro | deal_story | avoid_pit (可选)",
+  "status": "published | draft | archived (可选，默认published)",
+  "keyword": "string (可选，搜索标题)",
+  "page": 1,
+  "pageSize": 20
+}
+
+// Response
+{
+  "code": 0,
+  "message": "获取成功",
+  "data": {
+    "list": [
+      {
+        "_id": "string",
+        "id": "number (业务ID)",
+        "title": "string (脚本标题)",
+        "category": "string (分类)",
+        "scene": "string (适用场景)",
+        "tags": ["string"],
+        "durationMin": "number (时长分钟)",
+        "content": {
+          "opening": "string (开场白)",
+          "painPoints": ["string"],
+          "valuePoints": ["string"],
+          "interaction": ["string"],
+          "cta": "string (收尾行动号召)",
+          "notes": "string (主播提示)"
+        },
+        "status": "string (状态)",
+        "sort": "number (排序权重)",
+        "version": "string (版本号)",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      }
+    ],
+    "total": 100,
+    "page": 1,
+    "pageSize": 20,
+    "hasMore": true
+  }
+}
+
+// Core Logic
+// 1. 构建查询条件（分类、状态、关键词）
+// 2. 默认只返回published状态的脚本
+// 3. 按sort降序、createdAt降序排序
+// 4. 分页查询并返回结果
+```
+
+---
+
+### 32. init_script_templates (初始化脚本模板数据)
+
+**调用方**：pages/admin/script-manage (脚本管理页)
+
+```jsx
+// Request
+{}
+
+// Response
+{
+  "code": 0,
+  "message": "脚本模板初始化成功",
+  "data": {
+    "count": 10,
+    "success": 10,
+    "failed": 0,
+    "successRate": "100.00%",
+    "skipped": false
+  }
+}
+
+// Error Codes
+// 403: 权限不足，仅管理员可执行
+// 500: 服务器错误
+
+// Core Logic
+// 1. 验证调用者是否为admin角色
+// 2. 检查script_templates集合是否已有数据
+// 3. 如果已有数据，返回skipped=true，不重复初始化
+// 4. 如果无数据，批量插入10条示例脚本（覆盖5个分类）
+// 5. 返回插入结果统计
+```
+
+---
+
 ## 接口规范说明
 
 ### 错误码规范

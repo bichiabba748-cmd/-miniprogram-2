@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "直播排期",
+  "navigationBarBackgroundColor": "#000",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#000",
+  "usingComponents": {
+    "frost-card": "/components/frost-card/index",
+    "gold-button": "/components/gold-button/index",
+    "empty-state": "/components/empty-state/index"
+  }
+}

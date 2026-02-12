@@ -1,0 +1,271 @@
+/* 黑金主题 - 直播脚本库 */
+page {
+  background: #000;
+  color: #fff;
+}
+
+.script-container {
+  min-height: 100vh;
+  background: #000;
+}
+
+/* 分类 Tabs */
+.category-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #000;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #222;
+}
+
+.tabs-scroll {
+  white-space: nowrap;
+  padding: 0 20rpx;
+}
+
+.tab-item {
+  display: inline-block;
+  padding: 16rpx 32rpx;
+  margin-right: 16rpx;
+  font-size: 28rpx;
+  color: #888;
+  background: #111;
+  border-radius: 8rpx;
+  transition: all 0.3s;
+}
+
+.tab-item:last-child {
+  margin-right: 0;
+}
+
+.tab-item.active {
+  background: #D4B083;
+  color: #000;
+  font-weight: 500;
+}
+
+/* 脚本列表 */
+.script-list {
+  padding: 20rpx;
+}
+
+.script-card {
+  background: #111;
+  border: 1rpx solid #222;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  transition: all 0.3s;
+}
+
+.script-card:active {
+  background: #1a1a1a;
+  transform: scale(0.98);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.card-title {
+  flex: 1;
+  font-size: 30rpx;
+  color: #fff;
+  font-weight: 500;
+  line-height: 1.4;
+  padding-right: 16rpx;
+}
+
+.card-duration {
+  font-size: 22rpx;
+  color: #D4B083;
+  background: rgba(212, 176, 131, 0.1);
+  padding: 6rpx 12rpx;
+  border-radius: 4rpx;
+  white-space: nowrap;
+}
+
+.card-scene {
+  font-size: 24rpx;
+  color: #888;
+  margin-bottom: 16rpx;
+  line-height: 1.4;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.tag {
+  font-size: 22rpx;
+  color: #D4B083;
+  background: rgba(212, 176, 131, 0.1);
+  padding: 6rpx 16rpx;
+  border-radius: 4rpx;
+}
+
+/* 空态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.empty-hint {
+  font-size: 24rpx;
+  color: #444;
+}
+
+/* 详情弹层 */
+.detail-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.detail-content {
+  width: 100%;
+  max-height: 90vh;
+  background: #111;
+  border-radius: 16rpx;
+  border: 1rpx solid #222;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #222;
+  background: #111;
+}
+
+.detail-title {
+  flex: 1;
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 500;
+  line-height: 1.4;
+  padding-right: 20rpx;
+}
+
+.detail-close {
+  font-size: 48rpx;
+  color: #666;
+  padding: 0 10rpx;
+  line-height: 1;
+}
+
+.detail-scene {
+  padding: 24rpx 30rpx;
+  background: #0a0a0a;
+  border-bottom: 1rpx solid #222;
+}
+
+.scene-label {
+  font-size: 24rpx;
+  color: #888;
+  margin-right: 8rpx;
+}
+
+.scene-text {
+  font-size: 26rpx;
+  color: #D4B083;
+}
+
+.detail-section {
+  padding: 24rpx 30rpx;
+  border-bottom: 1rpx solid #1a1a1a;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #D4B083;
+  font-weight: 500;
+  margin-bottom: 16rpx;
+}
+
+.section-content {
+  font-size: 26rpx;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.list-item {
+  margin-bottom: 12rpx;
+  line-height: 1.6;
+}
+
+.list-item:last-child {
+  margin-bottom: 0;
+}
+
+.detail-notes {
+  padding: 24rpx 30rpx;
+  background: rgba(212, 176, 131, 0.05);
+  border-top: 1rpx solid #1a1a1a;
+}
+
+.notes-label {
+  font-size: 24rpx;
+  color: #D4B083;
+  margin-right: 8rpx;
+}
+
+.notes-text {
+  font-size: 24rpx;
+  color: #888;
+  line-height: 1.5;
+}
+
+.detail-actions {
+  padding: 20rpx 30rpx 30rpx;
+  background: #111;
+  border-top: 1rpx solid #222;
+}
+
+.copy-button {
+  width: 100%;
+  background: #D4B083;
+  color: #000;
+  font-size: 32rpx;
+  font-weight: 500;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 8rpx;
+  border: none;
+  padding: 0;
+}
+
+.copy-button::after {
+  border: none;
+}
+
+.copy-button:active {
+  background: #c4a073;
+}

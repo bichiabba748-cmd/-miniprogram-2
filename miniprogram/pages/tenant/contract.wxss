@@ -74,7 +74,7 @@
 
 .card-title { 
   font-size: 28rpx; 
-  color: #d4af37; 
+  color: #D4B083; 
   margin-bottom: 20rpx; 
   display: block; 
 } 
@@ -94,7 +94,7 @@
 .data-value { 
   font-size: 48rpx; 
   font-weight: bold; 
-  color: #d4af37; 
+  color: #D4B083; 
   margin-bottom: 8rpx; 
 } 
 
@@ -141,8 +141,8 @@
 
 .btn-call { 
   background: #2a2a2a; 
-  color: #d4af37; 
-  border: 1rpx solid #d4af37; 
+  color: #D4B083; 
+  border: 1rpx solid #D4B083; 
   border-radius: 8rpx; 
   font-size: 28rpx; 
   padding: 16rpx; 
@@ -161,7 +161,7 @@
 
 .btn-renew { 
   width: 100%; 
-  background: linear-gradient(90deg, #d4af37 0%, #f4d477 100%); 
+  background: #D4B083; 
   color: #0a0a0a; 
   font-size: 32rpx; 
   font-weight: bold; 
@@ -198,20 +198,4 @@
 
 .icon-key::before {
   content: '🔑';
-}
-
-.icon-chart::before {
-  content: '📊';
-}
-
-.icon-user::before {
-  content: '👤';
-}
-
-.icon-building::before {
-  content: '🏢';
-}
-
-.icon-fire::before {
-  content: '🔥';
 }

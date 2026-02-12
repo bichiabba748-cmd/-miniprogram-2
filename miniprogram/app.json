@@ -1,0 +1,103 @@
+<<<<<<< HEAD
+=======
+{
+  "pages": [
+    "pages/index/index",
+    "pages/art/art",
+    "pages/course/course",
+    "pages/course-detail/course-detail",
+    "pages/profile/profile",
+    "pages/admin/admin",
+    "pages/admin/art-manage/art-manage",
+    "pages/admin/course-manage/course-manage",
+    "pages/admin/script-manage/script-manage",
+    "pages/admin/store-manage/store-manage",
+    "pages/admin/settings/settings",
+    "pages/admin/tools/tools",
+    "pages/admin/tools/help/help",
+    "pages/admin/tools/detail/progress-detail",
+    "pages/admin/tools/detail/health-detail",
+    "pages/admin/tools/detail/backup-detail",
+    "pages/admin/tools/detail/resource-detail",
+    "pages/admin/tools/detail/function-detail",
+    "pages/admin/tools/detail/component-detail",
+    "pages/admin/user-detail/user-detail",
+    "pages/art-detail/art-detail",
+    "pages/rank/rank",
+    "pages/agent/agent",
+    "pages/agent-detail/agent-detail",
+    "pages/report/report",
+    "pages/contribute/contribute",
+    "pages/success/success",
+    "pages/message/message",
+    "pages/join/join",
+    "pages/crm/clue",
+    "pages/crm/client",
+    "pages/crm/client-detail",
+    "pages/tools/daily/daily",
+    "pages/tools/calculator/calculator",
+    "pages/tools/tax/tax",
+    "pages/tools/script/script",
+    "pages/tools/schedule/schedule",
+    "pages/tenant/tenant",
+    "pages/tenant/contract",
+    "pages/tenant/property",
+    "pages/tenant/broadband",
+    "pages/tenant/utilities",
+    "pages/tenant/service",
+    "pages/tenant/life",
+    "pages/tenant/consult",
+    "pages/broker-rental/index",
+    "pages/broker-rental/contracts",
+    "pages/broker-rental/submit",
+    "pages/broker-rental/verify",
+    "pages/broker-rental/materials",
+    "pages/broker-rental/leaderboard",
+    "pages/broker-rental/service",
+    "pages/test/test",
+    "pages/invite/invite",
+    "pages/collections/collections"
+  ],
+  "window": {
+    "backgroundColor": "#000000",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#000000",
+    "navigationBarTitleText": "链家直播大区",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#D4B083",
+    "backgroundColor": "#111111",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/icons/home.png",
+        "selectedIconPath": "images/icons/home.png"
+      },
+      {
+        "pagePath": "pages/art/art",
+        "text": "文案",
+        "iconPath": "images/icons/business.png",
+        "selectedIconPath": "images/icons/business-active.png"
+      },
+      {
+        "pagePath": "pages/course/course",
+        "text": "课程",
+        "iconPath": "images/icons/examples.png",
+        "selectedIconPath": "images/icons/examples-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/icons/usercenter.png",
+        "selectedIconPath": "images/icons/usercenter-active.png"
+      }
+    ]
+  },
+  "functionalPages": false,
+  "sitemapLocation": "sitemap.json"
+}
+>>>>>>> temp-fixes

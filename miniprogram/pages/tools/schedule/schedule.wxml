@@ -1,0 +1,150 @@
+<view class="schedule-container">
+  <view class="page-header">
+    <text class="page-title">本周直播排期</text>
+    <gold-button text="新增排期" size="small" bind:tap="onAddSchedule" />
+  </view>
+
+  <view class="schedule-list" wx:if="{{scheduleList.length > 0}}">
+    <frost-card 
+      wx:for="{{scheduleList}}" 
+      wx:key="id" 
+      size="medium"
+      class="schedule-item {{item.status === 'completed' ? 'completed' : ''}}"
+    >
+      <view class="schedule-header">
+        <view class="schedule-date">
+          <text class="date-text">{{item.date}}</text>
+          <text class="time-text">{{item.timeRange}}</text>
+        </view>
+        <view class="schedule-status {{item.status}}">
+          <text>{{item.status === 'completed' ? '已完成' : '待直播'}}</text>
+        </view>
+      </view>
+
+      <view class="schedule-content">
+        <view class="theme-row">
+          <text class="theme-label">主题：</text>
+          <text class="theme-text">{{item.theme}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">内容类型：</text>
+          <text class="info-text">{{item.contentType}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">目标人群：</text>
+          <text class="info-text">{{item.targetRole}}</text>
+        </view>
+        <view class="info-row" wx:if="{{item.notes}}">
+          <text class="info-label">备注：</text>
+          <text class="info-text notes">{{item.notes}}</text>
+        </view>
+      </view>
+
+      <view class="schedule-actions">
+        <view class="action-btn complete-btn" bindtap="onToggleComplete" data-id="{{item.id}}">
+          <text>{{item.status === 'completed' ? '取消完成' : '标记完成'}}</text>
+        </view>
+        <view class="action-btn edit-btn" bindtap="onEditSchedule" data-id="{{item.id}}">
+          <text>编辑</text>
+        </view>
+        <view class="action-btn delete-btn" bindtap="onDeleteSchedule" data-id="{{item.id}}">
+          <text>删除</text>
+        </view>
+      </view>
+    </frost-card>
+  </view>
+
+  <empty-state 
+    wx:if="{{scheduleList.length === 0}}"
+    title="暂无排期"
+    desc="点击上方按钮新增直播排期"
+    actionText="新增排期"
+    bind:action="onAddSchedule"
+  />
+</view>
+
+<view class="modal-mask" wx:if="{{showAddModal || showEditModal}}" bindtap="onCloseAddModal">
+  <view class="modal-content" catchtap>
+    <view class="modal-header">
+      <text class="modal-title">{{showEditModal ? '编辑排期' : '新增排期'}}</text>
+      <text class="modal-close" bindtap="{{showEditModal ? 'onCloseEditModal' : 'onCloseAddModal'}}">✕</text>
+    </view>
+
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">直播日期</text>
+        <picker mode="date" value="{{formData.date}}" start="{{minDate}}" bindchange="onDateChange">
+          <view class="form-picker">
+            <text>{{formData.date}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">时间段</text>
+        <input 
+          class="form-input" 
+          value="{{formData.timeRange}}" 
+          placeholder="例如：20:00-21:00"
+          bindinput="onTimeRangeChange"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">直播主题</text>
+        <input 
+          class="form-input" 
+          value="{{formData.theme}}" 
+          placeholder="请输入直播主题"
+          bindinput="onThemeInput"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">内容类型</text>
+        <picker mode="selector" range="{{contentTypeOptions}}" bindchange="onContentTypeChange">
+          <view class="form-picker">
+            <text>{{formData.contentType}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">目标人群</text>
+        <picker mode="selector" range="{{targetRoleOptions}}" bindchange="onTargetRoleChange">
+          <view class="form-picker">
+            <text>{{formData.targetRole}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">备注（选填）</text>
+        <textarea 
+          class="form-textarea" 
+          value="{{formData.notes}}" 
+          placeholder="请输入备注信息"
+          bindinput="onNotesInput"
+          maxlength="200"
+        />
+      </view>
+    </view>
+
+    <view class="modal-footer">
+      <gold-button 
+        text="取消" 
+        size="medium" 
+        type="secondary"
+        bind:tap="{{showEditModal ? 'onCloseEditModal' : 'onCloseAddModal'}}"
+      />
+      <gold-button 
+        text="确定" 
+        size="medium"
+        bind:tap="{{showEditModal ? 'onSubmitEdit' : 'onSubmitAdd'}}"
+      />
+    </view>
+  </view>
+</view>

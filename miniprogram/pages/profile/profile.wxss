@@ -270,7 +270,7 @@ page { background: #000; color: #fff; font-family: 'DIN', sans-serif; }
   width: 24rpx; height: 24rpx; line-height: 24rpx;
   text-align: center; font-size: 16rpx; border-radius: 50%; color: #000; font-weight: bold;
 }
-.r1 { background: #FFD700; } /* 金 */
+.r1 { background: #D4B083; } /* 金 */
 .r2 { background: #C0C0C0; } /* 银 */
 .r3 { background: #CD7F32; } /* 铜 */
 

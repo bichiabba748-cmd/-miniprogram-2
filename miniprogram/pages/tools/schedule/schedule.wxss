@@ -1,0 +1,280 @@
+/* 黑金主题 - 直播排期 */
+page {
+  background: #000;
+  color: #fff;
+}
+
+.schedule-container {
+  min-height: 100vh;
+  background: #000;
+  padding: 20rpx;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 0 10rpx;
+}
+
+.page-title {
+  font-size: 36rpx;
+  color: #D4B083;
+  font-weight: 500;
+}
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.schedule-item {
+  transition: all 0.3s;
+}
+
+.schedule-item.completed {
+  opacity: 0.6;
+}
+
+.schedule-item.completed .theme-text {
+  text-decoration: line-through;
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #222;
+}
+
+.schedule-date {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.date-text {
+  font-size: 28rpx;
+  color: #D4B083;
+  font-weight: 500;
+}
+
+.time-text {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.schedule-status {
+  padding: 8rpx 16rpx;
+  border-radius: 4rpx;
+  font-size: 22rpx;
+}
+
+.schedule-status.pending {
+  background: rgba(212, 176, 131, 0.1);
+  color: #D4B083;
+}
+
+.schedule-status.completed {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+}
+
+.schedule-content {
+  margin-bottom: 20rpx;
+}
+
+.theme-row {
+  margin-bottom: 16rpx;
+}
+
+.theme-label {
+  font-size: 24rpx;
+  color: #888;
+  margin-right: 8rpx;
+}
+
+.theme-text {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 12rpx;
+}
+
+.info-label {
+  font-size: 24rpx;
+  color: #888;
+  min-width: 140rpx;
+}
+
+.info-text {
+  font-size: 24rpx;
+  color: #fff;
+  flex: 1;
+}
+
+.info-text.notes {
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.schedule-actions {
+  display: flex;
+  gap: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #222;
+}
+
+.action-btn {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  transition: all 0.3s;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.complete-btn {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  border: 1rpx solid rgba(76, 175, 80, 0.3);
+}
+
+.edit-btn {
+  background: rgba(212, 176, 131, 0.1);
+  color: #D4B083;
+  border: 1rpx solid rgba(212, 176, 131, 0.3);
+}
+
+.delete-btn {
+  background: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+  border: 1rpx solid rgba(244, 67, 54, 0.3);
+}
+
+/* 弹窗 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.modal-content {
+  width: 100%;
+  max-height: 90vh;
+  background: #111;
+  border-radius: 16rpx;
+  border: 1rpx solid #222;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #222;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.modal-close {
+  font-size: 48rpx;
+  color: #666;
+  padding: 0 10rpx;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-size: 26rpx;
+  color: #D4B083;
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  background: #1a1a1a;
+  border: 1rpx solid #333;
+  border-radius: 8rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-picker {
+  background: #1a1a1a;
+  border: 1rpx solid #333;
+  border-radius: 8rpx;
+  padding: 20rpx 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28rpx;
+  color: #fff;
+}
+
+.picker-arrow {
+  font-size: 20rpx;
+  color: #666;
+}
+
+.form-textarea {
+  background: #1a1a1a;
+  border: 1rpx solid #333;
+  border-radius: 8rpx;
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 120rpx;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 30rpx 30rpx;
+  border-top: 1rpx solid #222;
+}
