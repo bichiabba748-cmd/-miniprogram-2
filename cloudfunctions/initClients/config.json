@@ -1,6 +1,0 @@
-{
-  "runtime": "Nodejs16.13",
-  "handler": "index.main",
-  "memorySize": 128,
-  "timeout": 15
-}

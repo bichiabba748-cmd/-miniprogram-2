@@ -1,9 +1,0 @@
-{
-  "name": "init_rental_collections",
-  "version": "1.0.0",
-  "description": "初始化租赁板块数据库集合",
-  "main": "index.js",
-  "dependencies": {
-    "wx-server-sdk": "~2.6.3"
-  }
-}

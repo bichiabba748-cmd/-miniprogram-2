@@ -1,9 +1,0 @@
-{
-  "name": "get_course_detail",
-  "version": "1.0.0",
-  "description": "获取课程详情",
-  "main": "index.js",
-  "dependencies": {
-    "wx-server-sdk": "~2.6.3"
-  }
-}

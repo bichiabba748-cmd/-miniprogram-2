@@ -1,9 +1,0 @@
-{
-  "name": "analyzeArticle",
-  "version": "1.0.0",
-  "description": "AI文案拆解分析",
-  "main": "index.js",
-  "dependencies": {
-    "wx-server-sdk": "~2.6.3"
-  }
-}

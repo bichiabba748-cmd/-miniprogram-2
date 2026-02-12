@@ -1,7 +1,0 @@
-{
-  "permissions": {},
-  "runtime": "Nodejs18.15",
-  "handler": "index.main",
-  "memory": 128,
-  "timeout": 5
-}
