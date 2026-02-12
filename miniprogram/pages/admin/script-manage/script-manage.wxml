@@ -13,13 +13,13 @@
     <view class="filter-item">
       <text class="filter-label">分类：</text>
       <picker mode="selector" range="{{['全部', '每日热点', '学区房专题', '房源讲解', '成交故事', '避坑科普']}}" bindchange="onFilterCategory">
-        <view class="filter-picker">{{filterCategory ? categories.find(c => c.key === filterCategory).name : '全部'}}</view>
+        <view class="filter-picker">{{filterCategoryText}}</view>
       </picker>
     </view>
     <view class="filter-item">
       <text class="filter-label">状态：</text>
       <picker mode="selector" range="{{['全部', '草稿', '已发布', '已归档']}}" bindchange="onFilterStatus">
-        <view class="filter-picker">{{filterStatus ? statusOptions.find(s => s.key === filterStatus).name : '全部'}}</view>
+        <view class="filter-picker">{{filterStatusText}}</view>
       </picker>
     </view>
   </view>
@@ -34,7 +34,7 @@
           </view>
         </view>
         <view class="script-meta">
-          <text class="script-category">{{categories.find(c => c.key === item.category).name}}</text>
+          <text class="script-category">{{item.categoryName}}</text>
           <text class="script-duration">{{item.durationMin}}分钟</text>
           <text class="script-sort">排序:{{item.sort}}</text>
         </view>
@@ -158,7 +158,7 @@
         </view>
         <view class="detail-row">
           <text class="detail-label">分类：</text>
-          <text class="detail-value">{{categories.find(c => c.key === currentScript.category).name}}</text>
+          <text class="detail-value">{{currentScript.categoryName}}</text>
         </view>
         <view class="detail-row">
           <text class="detail-label">场景：</text>

@@ -11,6 +11,8 @@ Page({
     currentScript: null,
     filterCategory: '',
     filterStatus: '',
+    filterCategoryText: '全部',
+    filterStatusText: '全部',
     form: {
       title: '',
       category: '',
@@ -46,6 +48,16 @@ Page({
     this.loadScripts();
   },
 
+  getCategoryName(key) {
+    const cat = this.data.categories.find(c => c.key === key);
+    return cat ? cat.name : key;
+  },
+
+  getStatusName(key) {
+    const status = this.data.statusOptions.find(s => s.key === key);
+    return status ? status.name : key;
+  },
+
   loadScripts() {
     wx.showLoading({ title: '加载中...' });
     
@@ -64,7 +76,12 @@ Page({
       .orderBy('createdAt', 'desc')
       .get()
       .then(res => {
-        this.setData({ scripts: res.data });
+        const scripts = res.data.map(s => ({
+          ...s,
+          categoryName: this.getCategoryName(s.category),
+          statusName: this.getStatusName(s.status)
+        }));
+        this.setData({ scripts });
         wx.hideLoading();
       })
       .catch(err => {
@@ -77,7 +94,8 @@ Page({
   onFilterCategory(e) {
     const index = e.detail.value;
     const category = index === 0 ? '' : this.data.categories[index - 1].key;
-    this.setData({ filterCategory: category }, () => {
+    const categoryText = index === 0 ? '全部' : this.data.categories[index - 1].name;
+    this.setData({ filterCategory: category, filterCategoryText: categoryText }, () => {
       this.loadScripts();
     });
   },
@@ -85,7 +103,8 @@ Page({
   onFilterStatus(e) {
     const index = e.detail.value;
     const status = index === 0 ? '' : this.data.statusOptions[index - 1].key;
-    this.setData({ filterStatus: status }, () => {
+    const statusText = index === 0 ? '全部' : this.data.statusOptions[index - 1].name;
+    this.setData({ filterStatus: status, filterStatusText: statusText }, () => {
       this.loadScripts();
     });
   },
