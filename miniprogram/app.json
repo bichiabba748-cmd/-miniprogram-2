@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 {
   "pages": [
     "pages/index/index",
@@ -10,7 +8,6 @@
     "pages/admin/admin",
     "pages/admin/art-manage/art-manage",
     "pages/admin/course-manage/course-manage",
-    "pages/admin/script-manage/script-manage",
     "pages/admin/store-manage/store-manage",
     "pages/admin/settings/settings",
     "pages/admin/tools/tools",
@@ -36,9 +33,6 @@
     "pages/crm/client-detail",
     "pages/tools/daily/daily",
     "pages/tools/calculator/calculator",
-    "pages/tools/tax/tax",
-    "pages/tools/script/script",
-    "pages/tools/schedule/schedule",
     "pages/tenant/tenant",
     "pages/tenant/contract",
     "pages/tenant/property",
@@ -100,4 +94,3 @@
   "functionalPages": false,
   "sitemapLocation": "sitemap.json"
 }
->>>>>>> temp-fixes
