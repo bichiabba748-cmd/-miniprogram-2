@@ -1,0 +1,9 @@
+{
+  "name": "init_script_templates",
+  "version": "1.0.0",
+  "description": "初始化脚本模板数据",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
