@@ -1,0 +1,219 @@
+<view class="container">
+  <view class="header">
+    <view class="header-content">
+      <view class="header-line"></view>
+      <text class="title">脚本管理</text>
+    </view>
+    <view class="header-actions">
+      <text class="init-btn" bindtap="onInitScripts">初始化数据</text>
+    </view>
+  </view>
+
+  <view class="filters">
+    <view class="filter-item">
+      <text class="filter-label">分类：</text>
+      <picker mode="selector" range="{{['全部', '每日热点', '学区房专题', '房源讲解', '成交故事', '避坑科普']}}" bindchange="onFilterCategory">
+        <view class="filter-picker">{{filterCategory ? categories.find(c => c.key === filterCategory).name : '全部'}}</view>
+      </picker>
+    </view>
+    <view class="filter-item">
+      <text class="filter-label">状态：</text>
+      <picker mode="selector" range="{{['全部', '草稿', '已发布', '已归档']}}" bindchange="onFilterStatus">
+        <view class="filter-picker">{{filterStatus ? statusOptions.find(s => s.key === filterStatus).name : '全部'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="script-list">
+    <view class="script-item" wx:for="{{scripts}}" wx:key="_id">
+      <view class="script-header">
+        <view class="script-title-row">
+          <text class="script-title">{{item.title}}</text>
+          <view class="script-status {{item.status}}">
+            <text>{{item.status === 'published' ? '已发布' : item.status === 'draft' ? '草稿' : '已归档'}}</text>
+          </view>
+        </view>
+        <view class="script-meta">
+          <text class="script-category">{{categories.find(c => c.key === item.category).name}}</text>
+          <text class="script-duration">{{item.durationMin}}分钟</text>
+          <text class="script-sort">排序:{{item.sort}}</text>
+        </view>
+        <view class="script-scene">{{item.scene}}</view>
+      </view>
+      
+      <view class="script-actions">
+        <view class="action-btn view-btn" bindtap="onViewScript" data-id="{{item._id}}">
+          <text>查看</text>
+        </view>
+        <view class="action-btn edit-btn" bindtap="onEditScript" data-id="{{item._id}}">
+          <text>编辑</text>
+        </view>
+        <view class="action-btn {{item.status === 'published' ? 'archive-btn' : 'publish-btn'}}" bindtap="onToggleStatus" data-id="{{item._id}}">
+          <text>{{item.status === 'published' ? '下架' : '发布'}}</text>
+        </view>
+        <view class="action-btn delete-btn" bindtap="onDeleteScript" data-id="{{item._id}}">
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{scripts.length === 0}}">
+    <text class="empty-text">暂无脚本</text>
+    <view class="empty-actions">
+      <button class="empty-btn" bindtap="onInitScripts">初始化数据</button>
+      <button class="empty-btn secondary" bindtap="onAddScript">手动添加</button>
+    </view>
+  </view>
+
+  <view class="fab-btn" bindtap="onAddScript">
+    <text class="fab-icon">+</text>
+  </view>
+</view>
+
+<view class="modal" wx:if="{{showModal}}">
+  <view class="modal-mask" bindtap="onCloseModal"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">{{isEdit ? '编辑脚本' : '新增脚本'}}</text>
+      <text class="modal-close" bindtap="onCloseModal">×</text>
+    </view>
+    <scroll-view scroll-y class="modal-body">
+      <view class="form-item">
+        <text class="form-label">脚本标题</text>
+        <input class="form-input" placeholder="请输入脚本标题" value="{{form.title}}" bindinput="onTitleInput" maxlength="100"/>
+      </view>
+      <view class="form-item">
+        <text class="form-label">分类</text>
+        <picker mode="selector" range="{{categories}}" range-key="name" bindchange="onCategoryChange" value="{{form.categoryIndex}}">
+          <view class="form-picker">{{categories[form.categoryIndex].name}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">适用场景</text>
+        <input class="form-input" placeholder="请输入适用场景" value="{{form.scene}}" bindinput="onSceneInput" maxlength="100"/>
+      </view>
+      <view class="form-item">
+        <text class="form-label">标签（逗号分隔）</text>
+        <input class="form-input" placeholder="如：热点,资讯,必看" value="{{form.tags}}" bindinput="onTagsInput"/>
+      </view>
+      <view class="form-item">
+        <text class="form-label">时长（分钟）</text>
+        <input class="form-input" type="number" placeholder="请输入时长" value="{{form.durationMin}}" bindinput="onDurationInput"/>
+      </view>
+      <view class="form-item">
+        <text class="form-label">开场白</text>
+        <textarea class="form-textarea" placeholder="请输入开场白" value="{{form.opening}}" bindinput="onOpeningInput" maxlength="500"></textarea>
+      </view>
+      <view class="form-item">
+        <text class="form-label">痛点（每行一条）</text>
+        <textarea class="form-textarea" placeholder="每行输入一个痛点" value="{{form.painPoints}}" bindinput="onPainPointsInput" maxlength="500"></textarea>
+      </view>
+      <view class="form-item">
+        <text class="form-label">价值点（每行一条）</text>
+        <textarea class="form-textarea" placeholder="每行输入一个价值点" value="{{form.valuePoints}}" bindinput="onValuePointsInput" maxlength="500"></textarea>
+      </view>
+      <view class="form-item">
+        <text class="form-label">互动引导（每行一条）</text>
+        <textarea class="form-textarea" placeholder="每行输入一个互动引导" value="{{form.interaction}}" bindinput="onInteractionInput" maxlength="500"></textarea>
+      </view>
+      <view class="form-item">
+        <text class="form-label">收尾行动号召</text>
+        <textarea class="form-textarea" placeholder="请输入收尾行动号召" value="{{form.cta}}" bindinput="onCtaInput" maxlength="500"></textarea>
+      </view>
+      <view class="form-item">
+        <text class="form-label">主播提示（可选）</text>
+        <textarea class="form-textarea" placeholder="请输入主播提示" value="{{form.notes}}" bindinput="onNotesInput" maxlength="200"></textarea>
+      </view>
+      <view class="form-item">
+        <text class="form-label">状态</text>
+        <picker mode="selector" range="{{statusOptions}}" range-key="name" bindchange="onStatusChange" value="{{form.statusIndex}}">
+          <view class="form-picker">{{statusOptions[form.statusIndex].name}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">排序权重（越大越靠前）</text>
+        <input class="form-input" type="number" placeholder="请输入排序权重" value="{{form.sort}}" bindinput="onSortInput"/>
+      </view>
+    </scroll-view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel" bindtap="onCloseModal">取消</button>
+      <button class="modal-btn confirm" bindtap="onSaveScript">保存</button>
+    </view>
+  </view>
+</view>
+
+<view class="modal" wx:if="{{showDetailModal}}">
+  <view class="modal-mask" bindtap="onCloseDetailModal"></view>
+  <view class="modal-content detail-modal">
+    <view class="modal-header">
+      <text class="modal-title">脚本详情</text>
+      <text class="modal-close" bindtap="onCloseDetailModal">×</text>
+    </view>
+    <scroll-view scroll-y class="modal-body">
+      <view class="detail-section" wx:if="{{currentScript}}">
+        <view class="detail-row">
+          <text class="detail-label">标题：</text>
+          <text class="detail-value">{{currentScript.title}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">分类：</text>
+          <text class="detail-value">{{categories.find(c => c.key === currentScript.category).name}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">场景：</text>
+          <text class="detail-value">{{currentScript.scene}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">时长：</text>
+          <text class="detail-value">{{currentScript.durationMin}}分钟</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">标签：</text>
+          <text class="detail-value">{{currentScript.tags.join(' / ')}}</text>
+        </view>
+        
+        <view class="detail-divider"></view>
+        
+        <view class="detail-block">
+          <text class="detail-block-title">开场白</text>
+          <text class="detail-block-content">{{currentScript.content.opening}}</text>
+        </view>
+        
+        <view class="detail-block">
+          <text class="detail-block-title">痛点</text>
+          <view class="detail-list">
+            <text class="detail-list-item" wx:for="{{currentScript.content.painPoints}}" wx:key="*this">• {{item}}</text>
+          </view>
+        </view>
+        
+        <view class="detail-block">
+          <text class="detail-block-title">价值点</text>
+          <view class="detail-list">
+            <text class="detail-list-item" wx:for="{{currentScript.content.valuePoints}}" wx:key="*this">• {{item}}</text>
+          </view>
+        </view>
+        
+        <view class="detail-block">
+          <text class="detail-block-title">互动引导</text>
+          <view class="detail-list">
+            <text class="detail-list-item" wx:for="{{currentScript.content.interaction}}" wx:key="*this">• {{item}}</text>
+          </view>
+        </view>
+        
+        <view class="detail-block">
+          <text class="detail-block-title">收尾行动号召</text>
+          <text class="detail-block-content">{{currentScript.content.cta}}</text>
+        </view>
+        
+        <view class="detail-block" wx:if="{{currentScript.content.notes}}">
+          <text class="detail-block-title">主播提示</text>
+          <text class="detail-block-content notes">{{currentScript.content.notes}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="modal-footer">
+      <button class="modal-btn confirm" bindtap="onCloseDetailModal">关闭</button>
+    </view>
+  </view>
+</view>
