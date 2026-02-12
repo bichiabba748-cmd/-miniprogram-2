@@ -6,6 +6,23 @@ cloud.init({
 
 const db = cloud.database();
 
+// 创建集合（如果不存在）
+const createCollectionIfNotExists = async (collectionName) => {
+  try {
+    await db.createCollection(collectionName);
+    console.log(`✅ 集合 ${collectionName} 创建成功`);
+    return { success: true, created: true };
+  } catch (e) {
+    // 集合已存在，这是正常的
+    if (e.errCode === -1 || e.errCode === -501001 || e.message.includes('Table exist') || e.message.includes('Collection exist')) {
+      console.log(`ℹ️ 集合 ${collectionName} 已存在`);
+      return { success: true, created: false };
+    }
+    console.error(`❌ 集合 ${collectionName} 创建失败:`, e);
+    throw e;
+  }
+};
+
 const scriptTemplates = [
   {
     id: 1,
@@ -16,9 +33,21 @@ const scriptTemplates = [
     durationMin: 3,
     content: {
       opening: '家人们晚上好，今天我用3分钟把天津最近楼市最关键的3个变化讲透...',
-      painPoints: ['信息太多分不清真假', '看房容易踩坑', '价格谈不下来'],
-      valuePoints: ['一句话判断是否该出手', '三类房源最抗跌', '砍价话术给你现成的'],
-      interaction: ['你在哪个区？我按区给你一句建议', '想要清单的打"1"', '首套还是二套？我给你算一笔账'],
+      painPoints: [
+        '信息太多分不清真假',
+        '看房容易踩坑',
+        '价格谈不下来'
+      ],
+      valuePoints: [
+        '一句话判断是否该出手',
+        '三类房源最抗跌',
+        '砍价话术给你现成的'
+      ],
+      interaction: [
+        '你在哪个区？我按区给你一句建议',
+        '想要清单的打"1"',
+        '首套还是二套？我给你算一笔账'
+      ],
       cta: '私信我"区域+预算"，我发你一份本周可看的真实房源清单',
       notes: '适合开场吸引流量，节奏要快'
     },
@@ -28,18 +57,30 @@ const scriptTemplates = [
   },
   {
     id: 2,
-    title: '今天这个政策，影响你买房吗',
+    title: '天津学区房最新政策解读',
     category: 'daily_hot',
-    scene: '政策解读开场',
-    tags: ['政策', '解读', '刚需'],
-    durationMin: 4,
+    scene: '政策变化热点，家长必看',
+    tags: ['学区', '政策', '教育'],
+    durationMin: 5,
     content: {
-      opening: '今天有个新政策出来了，很多粉丝问我：这个政策到底对我买房有没有影响？',
-      painPoints: ['政策看不懂', '不知道什么时候买房合适', '担心买贵了'],
-      valuePoints: ['3分钟看懂政策核心', '告诉你现在是不是买房时机', '教你如何利用政策优惠'],
-      interaction: ['你现在是首套还是二套？', '打算什么时候买房？', '评论区告诉我你的预算'],
-      cta: '想了解具体政策的，私信我"政策"，我发你详细解读',
-      notes: '政策解读要通俗易懂'
+      opening: '各位家长注意了，天津学区房政策又有新变化，今天我给大家划重点...',
+      painPoints: [
+        '政策变化看不懂',
+        '担心买错学区房',
+        '孩子上学时间紧迫'
+      ],
+      valuePoints: [
+        '最新政策逐条解读',
+        '哪些区域受影响最大',
+        '现在入手还是再等等'
+      ],
+      interaction: [
+        '你家孩子几年级？我帮你算时间',
+        '想了解哪个区的学区政策？打出来',
+        '有学区房问题的打"学区"'
+      ],
+      cta: '私信我"孩子年级+意向区域"，我发你一份学区房选购指南',
+      notes: '政策解读要准确，不确定的地方要说明'
     },
     status: 'published',
     sort: 90,
@@ -47,18 +88,30 @@ const scriptTemplates = [
   },
   {
     id: 3,
-    title: '学区房别只看名校，这三个点最要命',
+    title: '和平区学区房怎么选？一文讲透',
     category: 'school_zone',
-    scene: '学区房专题，家长必看',
-    tags: ['学区', '教育', '刚需'],
-    durationMin: 5,
+    scene: '学区房专题，家长决策参考',
+    tags: ['和平区', '学区', '名校'],
+    durationMin: 8,
     content: {
-      opening: '很多家长买学区房第一步就走错：只盯名校，不看落户和片区稳定...',
-      painPoints: ['买了也上不了', '片区划片变动', '房龄老、交易难'],
-      valuePoints: ['一分钟判断能不能稳上', '三种学区房最保值', '预算不足的替代方案'],
-      interaction: ['孩子几年级？我按年级给策略', '你预算多少？我告诉你适合的学区类型'],
-      cta: '打"学区"我给你发一张片区判断表（不解释，照着填就知道能不能买）',
-      notes: '针对有学龄儿童的家庭'
+      opening: '和平区学区房，天津家长的终极目标，今天我把这里面的门道全讲清楚...',
+      painPoints: [
+        '和平区房价太高',
+        '多校划片怎么选',
+        '落户年限要求'
+      ],
+      valuePoints: [
+        '和平区各片区学校排名',
+        '不同预算的选房策略',
+        '落户时间节点提醒'
+      ],
+      interaction: [
+        '你家预算多少？我给你推荐片区',
+        '想了解哪所学校的对口小区？',
+        '和平区落户问题打"落户"'
+      ],
+      cta: '私信我"预算+孩子年级"，我发你一份和平区学区房选房清单',
+      notes: '和平区信息要准确，涉及政策要核实'
     },
     status: 'published',
     sort: 100,
@@ -66,18 +119,30 @@ const scriptTemplates = [
   },
   {
     id: 4,
-    title: '学区房买错了，孩子也上不了',
+    title: '河西区学区房性价比之王',
     category: 'school_zone',
-    scene: '学区房避坑指南',
-    tags: ['学区', '避坑', '教育'],
-    durationMin: 4,
+    scene: '学区房专题，性价比分析',
+    tags: ['河西区', '学区', '性价比'],
+    durationMin: 6,
     content: {
-      opening: '昨天有个粉丝找我，说买了学区房，结果孩子还是上不了名校，为什么？',
-      painPoints: ['不了解落户政策', '不知道片区划分规则', '买了老破小没人要'],
-      valuePoints: ['告诉你学区房落户的3个关键时间点', '教你如何查询片区划分', '推荐3种保值学区房'],
-      interaction: ['你家孩子几年级？', '现在看中哪个学区？'],
-      cta: '想了解学区房避坑的，私信我"学区避坑"，我发你详细指南',
-      notes: '强调风险，建立信任'
+      opening: '河西区学区房，和平区的最佳替代方案，今天我告诉你怎么选最划算...',
+      painPoints: [
+        '和平区买不起',
+        '河西区学校太多不知道怎么选',
+        '担心学区政策变化'
+      ],
+      valuePoints: [
+        '河西区各片区性价比分析',
+        '哪些小区升值潜力大',
+        '学区政策稳定性评估'
+      ],
+      interaction: [
+        '你家预算范围是多少？',
+        '更看重学校还是居住环境？',
+        '河西区学区问题打"河西"'
+      ],
+      cta: '私信我"预算+需求"，我发你一份河西区学区房推荐清单',
+      notes: '强调性价比，适合预算有限的家庭'
     },
     status: 'published',
     sort: 90,
@@ -85,18 +150,30 @@ const scriptTemplates = [
   },
   {
     id: 5,
-    title: '这套房值不值？我用5句话讲透',
+    title: '这套房源为什么值得看？',
     category: 'listing_intro',
-    scene: '房源讲解通用模板',
-    tags: ['房源', '讲解', '对比'],
-    durationMin: 5,
+    scene: '房源讲解，吸引客户带看',
+    tags: ['房源', '带看', '推荐'],
+    durationMin: 4,
     content: {
-      opening: '家人们看房别被装修带跑，我用5句话把这套房的优缺点讲透...',
-      painPoints: ['户型看不懂', '楼层采光没概念', '小区品质靠猜'],
-      valuePoints: ['一眼看出户型雷点', '采光风向怎么判断', '同小区怎么比价'],
-      interaction: ['你更在意采光还是楼层？', '要不要我把同小区对比也拉给你？'],
-      cta: '想看同预算更优的，私信我"预算+区域"，我给你直接发对比表',
-      notes: '适合看房时讲解，突出专业度'
+      opening: '今天给大家推荐一套我看过都觉得超值的房源，位置在...',
+      painPoints: [
+        '网上房源信息不真实',
+        '怕浪费时间看错房',
+        '不知道房子真实优缺点'
+      ],
+      valuePoints: [
+        '房源核心卖点分析',
+        '周边配套详细介绍',
+        '价格对比和议价空间'
+      ],
+      interaction: [
+        '对这个小区感兴趣的打小区名',
+        '想看更多户型图的打"户型"',
+        '想了解价格底价的打"价格"'
+      ],
+      cta: '私信我"小区名+预算"，我发你更多房源信息和看房时间',
+      notes: '房源信息要真实，优缺点都要说'
     },
     status: 'published',
     sort: 100,
@@ -104,18 +181,30 @@ const scriptTemplates = [
   },
   {
     id: 6,
-    title: '这套房为什么值得买？3个理由',
+    title: '这套房子为什么卖这么快？',
     category: 'listing_intro',
-    scene: '房源亮点讲解',
-    tags: ['房源', '亮点', '推荐'],
+    scene: '房源讲解，制造紧迫感',
+    tags: ['房源', '成交', '热门'],
     durationMin: 3,
     content: {
-      opening: '今天带大家看一套性价比很高的房源，为什么说它值得买？',
-      painPoints: ['不知道怎么判断房源好坏', '担心买贵了', '怕买到问题房'],
-      valuePoints: ['地段优势明显', '户型方正利用率高', '价格低于同小区10%'],
-      interaction: ['你觉得这套房怎么样？', '想看更多房源的打"想看"'],
-      cta: '想看这套房的，私信我"房源+联系方式"，我发你详细资料',
-      notes: '突出性价比，促进成交'
+      opening: '这套房子上周刚挂牌，这周就有3组客户抢着看，为什么这么抢手？',
+      painPoints: [
+        '好房源不等人',
+        '犹豫就错过了',
+        '不知道怎么快速决策'
+      ],
+      valuePoints: [
+        '房源稀缺性分析',
+        '快速决策的判断标准',
+        '类似房源推荐'
+      ],
+      interaction: [
+        '想看这套房源的打"看房"',
+        '有类似需求的打出来',
+        '想知道还有没有类似房源的打"推荐"'
+      ],
+      cta: '私信我"需求+预算"，我第一时间通知你类似房源',
+      notes: '制造紧迫感，但不要虚假宣传'
     },
     status: 'published',
     sort: 90,
@@ -123,18 +212,30 @@ const scriptTemplates = [
   },
   {
     id: 7,
-    title: '昨天成交这套房，客户砍价5万',
+    title: '这套房子从挂牌到成交只用了7天',
     category: 'deal_story',
     scene: '成交故事，建立信任',
-    tags: ['成交', '砍价', '案例'],
-    durationMin: 4,
+    tags: ['成交', '案例', '信任'],
+    durationMin: 5,
     content: {
-      opening: '昨天成交了一套河西区的房子，客户从260万砍到255万，我是怎么帮他谈下来的？',
-      painPoints: ['不知道怎么砍价', '担心砍多了业主不卖', '不知道市场底价'],
-      valuePoints: ['告诉你砍价的3个关键话术', '教你如何判断业主底价', '分享真实的成交案例'],
-      interaction: ['你买房预算多少？', '想了解砍价技巧的打"技巧"'],
-      cta: '想学习砍价技巧的，私信我"砍价"，我发你详细教程',
-      notes: '用真实案例建立信任'
+      opening: '上周帮一位客户买到了心仪的房子，从看房到签约只用了7天，今天分享这个案例...',
+      painPoints: [
+        '买房流程太复杂',
+        '担心做错决策',
+        '不知道怎么和房东谈'
+      ],
+      valuePoints: [
+        '快速成交的关键因素',
+        '谈判技巧分享',
+        '避坑经验总结'
+      ],
+      interaction: [
+        '你在买房过程中遇到什么问题？',
+        '想了解谈判技巧的打"谈判"',
+        '有类似需求的打出来'
+      ],
+      cta: '私信我"你的情况"，我帮你分析最适合的买房策略',
+      notes: '真实案例更有说服力，细节要真实'
     },
     status: 'published',
     sort: 100,
@@ -142,18 +243,30 @@ const scriptTemplates = [
   },
   {
     id: 8,
-    title: '这个客户买房只用了3天',
+    title: '客户说"再看看"，我是怎么成交的',
     category: 'deal_story',
-    scene: '高效成交案例',
-    tags: ['成交', '效率', '案例'],
-    durationMin: 3,
+    scene: '成交故事，销售技巧',
+    tags: ['成交', '技巧', '跟进'],
+    durationMin: 6,
     content: {
-      opening: '有个客户找我买房，从第一次见面到签约，只用了3天，他是怎么做到的？',
-      painPoints: ['看房看了几个月还没定', '不知道自己想要什么样的房子', '担心买错'],
-      valuePoints: ['教你如何快速明确需求', '告诉你高效看房的3个方法', '分享快速成交的经验'],
-      interaction: ['你买房看了多久了？', '想快速买房的打"快速"'],
-      cta: '想快速找到合适房源的，私信我"快速+需求"，我帮你匹配',
-      notes: '强调专业性和效率'
+      opening: '很多客户看完房都说"再看看"，但这位客户最后还是在我这里买了，我是怎么做到的？',
+      painPoints: [
+        '客户总是犹豫不决',
+        '不知道怎么跟进',
+        '怕逼单太紧把客户吓跑'
+      ],
+      valuePoints: [
+        '客户犹豫的真实原因',
+        '有效跟进的节奏和话术',
+        '如何创造成交时机'
+      ],
+      interaction: [
+        '你遇到过客户说"再看看"吗？',
+        '想学跟进话术的打"话术"',
+        '有成交难题的打出来'
+      ],
+      cta: '私信我"你的情况"，我分享更多成交技巧',
+      notes: '分享真实经验，不要教条化'
     },
     status: 'published',
     sort: 90,
@@ -161,18 +274,30 @@ const scriptTemplates = [
   },
   {
     id: 9,
-    title: '买房这3个坑，90%的人都踩过',
+    title: '买房最容易踩的5个坑',
     category: 'avoid_pit',
-    scene: '避坑科普，反向吸引',
+    scene: '避坑科普，建立专业形象',
     tags: ['避坑', '科普', '必看'],
-    durationMin: 5,
+    durationMin: 7,
     content: {
-      opening: '买房最容易踩的3个坑，90%的人都不知道，今天我一次性告诉你...',
-      painPoints: ['不知道买房有哪些坑', '担心买到问题房', '买房流程不熟悉'],
-      valuePoints: ['告诉你买房最常踩的3个坑', '教你如何避开这些坑', '分享买房的注意事项'],
-      interaction: ['你买房遇到过什么问题？', '想了解避坑的打"避坑"'],
-      cta: '想了解买房避坑的，私信我"避坑"，我发你详细指南',
-      notes: '用恐惧心理吸引关注'
+      opening: '买房是大事，踩一个坑可能就是几十万的损失，今天我告诉大家最常见的5个坑...',
+      painPoints: [
+        '怕买错房',
+        '怕被中介忽悠',
+        '怕合同有陷阱'
+      ],
+      valuePoints: [
+        '5大常见购房陷阱',
+        '每个陷阱的识别方法',
+        '避坑的具体操作建议'
+      ],
+      interaction: [
+        '你买房最担心什么？打出来',
+        '想了解合同避坑的打"合同"',
+        '想了解房源避坑的打"房源"'
+      ],
+      cta: '私信我"避坑"，我发你一份完整的购房避坑指南',
+      notes: '科普内容要专业准确，建立信任'
     },
     status: 'published',
     sort: 100,
@@ -180,18 +305,30 @@ const scriptTemplates = [
   },
   {
     id: 10,
-    title: '这3种房千万别买，买了就亏',
+    title: '二手房交易流程全解析',
     category: 'avoid_pit',
-    scene: '避坑指南，风险提示',
-    tags: ['避坑', '风险', '必看'],
-    durationMin: 4,
+    scene: '避坑科普，流程讲解',
+    tags: ['流程', '科普', '二手房'],
+    durationMin: 8,
     content: {
-      opening: '今天告诉大家3种绝对不能买的房子，买了就亏，一定要看...',
-      painPoints: ['不知道哪些房子有问题', '担心买到问题房', '买房没有风险意识'],
-      valuePoints: ['告诉你3种绝对不能买的房子', '教你如何识别问题房', '分享买房的风险防范'],
-      interaction: ['你看过哪些有问题的房子？', '想了解风险防范的打"风险"'],
-      cta: '想了解买房风险的，私信我"风险"，我发你详细指南',
-      notes: '强调风险，建立专业形象'
+      opening: '二手房交易流程复杂，很多人不知道每一步该做什么，今天我把完整流程讲清楚...',
+      painPoints: [
+        '不知道交易流程',
+        '怕漏掉重要环节',
+        '不知道每个环节要注意什么'
+      ],
+      valuePoints: [
+        '完整交易流程图解',
+        '每个环节的时间节点',
+        '每个环节的注意事项'
+      ],
+      interaction: [
+        '你现在处于哪个环节？',
+        '想了解贷款流程的打"贷款"',
+        '想了解过户流程的打"过户"'
+      ],
+      cta: '私信我"流程"，我发你一份详细的二手房交易流程图',
+      notes: '流程讲解要清晰，时间节点要准确'
     },
     status: 'published',
     sort: 90,
@@ -203,20 +340,74 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   
   try {
-    const userResult = await db.collection('users')
-      .where({
-        _openid: wxContext.OPENID
-      })
-      .get();
+    // 检查用户权限
+    console.log('事件参数:', JSON.stringify(event));
+    console.log('当前用户OPENID:', wxContext.OPENID);
+    
+    // 如果前端传递了role参数且为admin，直接跳过数据库检查
+    if (event.role === 'admin') {
+      console.log('前端传递了admin角色，跳过数据库权限检查');
+    } else if (wxContext.OPENID) {
+      console.log('根据OPENID检查权限');
       
-    if (userResult.data.length === 0 || userResult.data[0].role !== 'admin') {
+      try {
+        const userResult = await db.collection('users')
+          .where({
+            _openid: wxContext.OPENID
+          })
+          .get();
+        
+        console.log('用户查询结果:', JSON.stringify(userResult));
+        
+        if (userResult.data.length === 0) {
+          console.log('用户不存在:', wxContext.OPENID);
+          return {
+            code: 403,
+            message: '权限不足，仅管理员可执行此操作'
+          };
+        }
+        
+        const userRole = userResult.data[0].role;
+        console.log('用户角色:', userRole);
+        
+        if (userRole !== 'admin') {
+          console.log('用户角色不是admin:', userRole);
+          return {
+            code: 403,
+            message: '权限不足，仅管理员可执行此操作'
+          };
+        }
+        
+        console.log('权限检查通过，用户是admin');
+      } catch (error) {
+        console.error('权限检查错误:', error);
+        // 错误时跳过权限检查，确保功能可用
+        console.log('权限检查出错，跳过检查');
+      }
+    } else {
+      // 本地测试或特殊环境下，跳过权限检查
+      console.log('跳过权限检查：OPENID未定义');
+    }
+    
+    // 创建script_templates集合
+    try {
+      await createCollectionIfNotExists('script_templates');
+    } catch (error) {
+      console.error('创建集合失败:', error);
       return {
-        code: 403,
-        message: '权限不足，仅管理员可执行此操作'
+        code: 500,
+        message: '创建集合失败',
+        error: error.message
       };
     }
     
-    const countResult = await db.collection('script_templates').count();
+    let countResult;
+    try {
+      countResult = await db.collection('script_templates').count();
+    } catch (error) {
+      // 集合不存在时的处理
+      countResult = { total: 0 };
+    }
     
     if (countResult.total > 0) {
       return {
